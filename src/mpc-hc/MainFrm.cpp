@@ -816,6 +816,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+    if (m_DefaultDarkMenu != nullptr) delete m_DefaultDarkMenu;
 }
 
 int CMainFrame::OnNcCreate(LPCREATESTRUCT lpCreateStruct)
