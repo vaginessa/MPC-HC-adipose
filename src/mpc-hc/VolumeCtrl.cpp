@@ -23,6 +23,7 @@
 #include "mplayerc.h"
 #include "VolumeCtrl.h"
 #include "AppSettings.h"
+#include "CDarkTheme.h"
 
 
 // CVolumeCtrl
@@ -91,6 +92,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 
     LRESULT lr = CDRF_DODEFAULT;
 
+    const CAppSettings& s = AfxGetAppSettings();
     if (m_fSelfDrawn)
         switch (pNMCD->dwDrawStage) {
             case CDDS_PREPAINT:
@@ -98,9 +100,16 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                 break;
 
             case CDDS_ITEMPREPAINT:
+
                 if (pNMCD->dwItemSpec == TBCD_CHANNEL) {
                     CDC dc;
                     dc.Attach(pNMCD->hdc);
+
+                    if (s.bDarkThemeLoaded) {
+                        CRect rect;
+                        GetClientRect(rect);
+                        dc.FillSolidRect(&rect, CDarkTheme::DarkBGColor);
+                    }
 
                     CRect channelRect;
                     GetChannelRect(channelRect);
@@ -108,8 +117,16 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     GetThumbRect(thumbRect);
 
                     CopyRect(&pNMCD->rc, CRect(channelRect.left, thumbRect.top + 2, channelRect.right - 2, thumbRect.bottom - 2));
-                    CPen shadow(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
-                    CPen light(PS_SOLID, 1, GetSysColor(COLOR_3DHILIGHT));
+
+                    CPen shadow;
+                    CPen light;
+                    if (s.bDarkThemeLoaded) {
+                        shadow.CreatePen(PS_SOLID, 1, CDarkTheme::DarkShadowColor);
+                        light.CreatePen(PS_SOLID, 1, CDarkTheme::DarkLightColor);
+                    } else {
+                        shadow.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
+                        light.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DHILIGHT));
+                    }
                     CPen* old = dc.SelectObject(&light);
                     dc.MoveTo(pNMCD->rc.right, pNMCD->rc.top);
                     dc.LineTo(pNMCD->rc.right, pNMCD->rc.bottom);
@@ -129,12 +146,21 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 
                     COLORREF shadow = GetSysColor(COLOR_3DSHADOW);
                     COLORREF light = GetSysColor(COLOR_3DHILIGHT);
+                    if (s.bDarkThemeLoaded) {
+                        shadow = CDarkTheme::DarkShadowColor;
+                        light = CDarkTheme::DarkLightColor;
+                    }
                     dc.Draw3dRect(&r, light, 0);
                     r.DeflateRect(0, 0, 1, 1);
                     dc.Draw3dRect(&r, light, shadow);
                     r.DeflateRect(1, 1, 1, 1);
-                    dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
-                    dc.SetPixel(r.left + 7, r.top - 1, GetSysColor(COLOR_BTNFACE));
+                    if (s.bDarkThemeLoaded) {
+                        dc.FillSolidRect(&r, CDarkTheme::DarkBGColor);
+                        dc.SetPixel(r.left + 7, r.top - 1, CDarkTheme::DarkBGColor);
+                    } else {
+                        dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
+                        dc.SetPixel(r.left + 7, r.top - 1, GetSysColor(COLOR_BTNFACE));
+                    }
 
                     dc.Detach();
                     lr = CDRF_SKIPDEFAULT;

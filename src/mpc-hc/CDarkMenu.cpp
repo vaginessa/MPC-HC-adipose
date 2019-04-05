@@ -1,0 +1,310 @@
+﻿#include "stdafx.h"
+#include "CDarkMenu.h"
+#include <strsafe.h>
+#include "AppSettings.h"
+#include "PPageAccelTbl.h"
+
+
+wchar_t* const CDarkMenu::uiTextFont = L"Segoe UI";
+wchar_t* const CDarkMenu::uiSymbolFont = L"MS UI Gothic";
+std::map<UINT, CDarkMenu*> CDarkMenu::subMenuIDs;
+
+IMPLEMENT_DYNAMIC(CDarkMenu, CMenu);
+
+CDarkMenu::CDarkMenu(){
+}
+
+
+CDarkMenu::~CDarkMenu() {
+    std::map<UINT, CDarkMenu*>::iterator itr = subMenuIDs.begin();
+    while (itr != subMenuIDs.end()) {
+        if (itr->second == this) {
+            itr = subMenuIDs.erase(itr);
+        } else {
+            ++itr;
+        }
+    }
+
+    for (int i = 0; i < allocatedItems.size(); i++) {
+        delete allocatedItems[i];
+    }
+    for (int i = 0; i < allocatedMenus.size(); i++) {
+        delete allocatedMenus[i];
+    }
+}
+
+void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
+
+    MENUINFO MenuInfo = { 0 };
+    MenuInfo.cbSize = sizeof(MENUINFO);
+    MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
+    MenuInfo.dwStyle = MNS_AUTODISMISS;
+    MenuInfo.hbrBack = ::CreateSolidBrush(DarkBGColor);
+    SetMenuInfo(&MenuInfo);
+
+    int iMaxItems = GetMenuItemCount();
+    for (int i = 0; i < iMaxItems; i++) {
+		CString nameHolder;
+        MenuObject* pObject = new MenuObject;
+        allocatedItems.push_back(pObject);
+        pObject->m_hIcon = NULL;
+        pObject->isMenubar = isMenubar;
+        if (i == 0) pObject->isFirstMenuInMenuBar = true;
+
+        GetMenuString(i, pObject->m_strCaption, MF_BYPOSITION);
+
+        UINT nID = GetMenuItemID(i);
+        pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
+
+        subMenuIDs[nID] = this;
+        
+        MENUITEMINFO mInfo;
+        ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+
+        mInfo.fMask = MIIM_FTYPE | MIIM_DATA;
+        mInfo.fType = MF_OWNERDRAW;
+        mInfo.cbSize = sizeof(MENUITEMINFO);
+        mInfo.dwItemData = (ULONG_PTR)pObject;
+        bool b= SetMenuItemInfo(i, &mInfo, true);
+
+        CMenu *t = GetSubMenu(i);
+        if (nullptr != t) {
+            CDarkMenu* pSubMenu = new CDarkMenu;
+            allocatedMenus.push_back(pSubMenu);
+            pSubMenu->Attach(t->GetSafeHmenu());
+            pSubMenu->ActivateDarkTheme();
+        }
+    }
+}
+
+CDarkMenu* CDarkMenu::getParentMenu(UINT itemID) {
+    if (subMenuIDs.count(itemID) == 1) {
+        CDarkMenu *m = subMenuIDs.at(itemID);
+        /* // checks if submenu for overriding of onmeasureitem (win32 limitation).
+           // but mpc-hc doesn't set up some submenus until later
+           // which is too late for measureitem to take place
+           // so we return all items for measuring
+        MENUITEMINFO mInfo;
+        ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+        mInfo.fMask = MIIM_SUBMENU;
+        mInfo.cbSize = sizeof(MENUITEMINFO);
+        m->GetMenuItemInfo(itemID, &mInfo);
+        if (mInfo.hSubMenu)      //  */
+            return m;
+    }
+
+    return nullptr;
+}
+
+
+void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
+
+    MenuObject* menuObject = (MenuObject*)lpDrawItemStruct->itemData;
+
+    MENUITEMINFO mInfo;
+    ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+
+    mInfo.fMask = MIIM_FTYPE | MIIM_STATE | MIIM_SUBMENU;
+    mInfo.cbSize = sizeof(MENUITEMINFO);
+    GetMenuItemInfo(lpDrawItemStruct->itemID, &mInfo);
+  
+
+    CRect rectFull(lpDrawItemStruct->rcItem);
+
+
+    //CRect rectM(0, 0, rectFull.right - rectFull.left, rectFull.bottom - rectFull.top);
+    CRect rectM = rectFull;
+    CRect rectIcon(rectM.left, rectM.top, rectM.left + iconSpacing, rectM.bottom);
+    CRect rectText(rectM.left + iconSpacing + iconPadding, rectM.top, rectM.right - subMenuPadding, rectM.bottom);
+    CRect rectArrow(rectM.right - subMenuPadding, rectM.top, rectM.right, rectM.bottom);
+    UINT captionAlign = DT_LEFT;
+
+
+    COLORREF ArrowColor = DarkSubmenuColor;
+    COLORREF TextFGColor;
+    COLORREF TextBGColor = DarkBGColor;
+    //TextBGColor = R255; //test
+    COLORREF TextSelectColor = DarkSelectedColor;
+
+    CDC* mDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+
+    /* for fake grayscale smoothing
+    CDC* cDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+    CDC *mDC = new mDC;
+    CBitmap bitmap;
+    CBitmap *pOldBmp;
+    mDC->CreateCompatibleDC(cDC);
+    bitmap.CreateCompatibleBitmap(cDC, rectM.right, rectM.bottom);
+    pOldBmp = mDC->SelectObject(&bitmap);
+    */
+
+    if ((lpDrawItemStruct->itemState & ODS_DISABLED)) {
+        TextFGColor = DarkDisabledColor;
+        ArrowColor = DarkDisabledColor;
+    } else {
+        TextFGColor = DarkTextFGColor;
+    }
+
+    int oldBKMode = mDC->SetBkMode(TRANSPARENT);
+    mDC->FillSolidRect(&rectM, TextBGColor);
+
+    if (menuObject->isMenubar) {
+        if (menuObject->isFirstMenuInMenuBar) { //clean up white borders
+            CRect wndSize;
+            GetWindowRect(AfxGetMainWnd()->m_hWnd, &wndSize);
+
+            CRect rectBorder(rectM.left, rectM.bottom, rectM.left + wndSize.right - wndSize.left, rectM.bottom+1);
+            mDC->FillSolidRect(&rectBorder, DarkDisabledColor);
+            ExcludeClipRect(lpDrawItemStruct->hDC, rectBorder.left, rectBorder.top, rectBorder.right, rectBorder.bottom);
+        }
+        rectM = rectFull;
+        rectText = rectFull;
+        captionAlign = DT_CENTER;
+    }
+
+
+    COLORREF oldTextFGColor = mDC->SetTextColor(TextFGColor);
+    CFont *font = getUIFont(lpDrawItemStruct->hDC, uiTextFont, 9);
+    CFont* pOldFont = mDC->SelectObject(font);
+    delete font;
+
+
+    if ((lpDrawItemStruct->itemState & ODS_SELECTED) && (lpDrawItemStruct->itemAction & (ODA_SELECT | ODA_DRAWENTIRE))) {
+        mDC->FillSolidRect(&rectM, TextSelectColor);
+    }
+
+    if (lpDrawItemStruct->itemState & ODS_NOACCEL) { //removing single &s before drawtext
+        CString t = menuObject->m_strCaption;
+        t.Replace(TEXT("&&"), TEXT("{{amp}}"));
+        t.Remove(TEXT('&'));
+        t.Replace(TEXT("{{amp}}"), TEXT("&&"));
+
+        mDC->DrawText(t, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+    } else {
+        mDC->DrawText(menuObject->m_strCaption, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+    }
+
+    if (!menuObject->isMenubar) {
+
+        if (menuObject->m_strAccel.GetLength() > 0) {
+            mDC->DrawText(menuObject->m_strAccel, rectText, DT_VCENTER | DT_RIGHT | DT_SINGLELINE);
+        }
+
+
+        if (mInfo.hSubMenu) {
+            font = getUIFont(lpDrawItemStruct->hDC, uiSymbolFont,14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+
+            mDC->SelectObject(font);
+            mDC->SetTextColor(ArrowColor);
+            mDC->DrawText(TEXT(">"), rectArrow, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+            delete font;
+        }
+
+        if (mInfo.fState & MFS_CHECKED) {
+            CString check;
+            int size;
+            if (mInfo.fType & MFT_RADIOCHECK) {
+                check = TEXT("\u25CF"); //bullet
+                size = 6;
+            } else {
+                check = TEXT("\u2714"); //checkmark
+                size = 10;
+            }
+            font = getUIFont(lpDrawItemStruct->hDC, uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+            mDC->SelectObject(font);
+            mDC->SetTextColor(TextFGColor);
+            mDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+            delete font;
+        }
+    }
+
+    mDC->SetBkMode(oldBKMode);
+    mDC->SetTextColor(oldTextFGColor);
+    mDC->SelectObject(pOldFont);
+
+
+    //fake greyscale anti-aliasing to emulate explorer (using directdraw?) SLOW!
+    /*
+    for (int y = 0; y < rectM.bottom; y++) {
+        for (int x = 0; x < rectM.right; x++) {
+            COLORREF rgb = mDC->GetPixel(x, y);
+            BYTE r = GetRValue(rgb);
+            BYTE g = GetGValue(rgb);
+            BYTE b = GetBValue(rgb);
+            BYTE bw = (BYTE)(0.299 * r + 0.587 * g + 0.114 * b);
+         //   mDC->SetPixel(x, y, RGB(bw, bw, bw));
+        }
+    }
+    cDC->BitBlt(rectFull.left, rectFull.top, rectM.right, rectM.bottom, &mDC, 0, 0, SRCCOPY);
+    mDC->DeleteDC();
+    */
+
+    ExcludeClipRect(lpDrawItemStruct->hDC, rectFull.left, rectFull.top, rectFull.right, rectFull.bottom);
+}
+
+CFont* CDarkMenu::getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight) {
+    LOGFONT lf;
+    memset(&lf, 0, sizeof(LOGFONT));
+
+    lf.lfHeight = -MulDiv(size, GetDeviceCaps(hDC, LOGPIXELSY), 72);
+    lf.lfQuality = CLEARTYPE_QUALITY;
+    
+    //lf.lfQuality = ANTIALIASED_QUALITY;
+    lf.lfWeight = weight;
+    wcsncpy(lf.lfFaceName, fontName, LF_FACESIZE);
+
+    CFont* font=new CFont();
+    font->CreateFontIndirect(&lf);
+
+    return font;
+}
+
+CSize CDarkMenu::GetTextSize(CString str, HDC hDC) {
+    CDC* cDC = CDC::FromHandle(hDC);
+    CFont *font = getUIFont(hDC, uiTextFont, 9);
+    CFont* pOldFont = cDC->SelectObject(font);
+
+    CSize cs = cDC->GetTextExtent(str);
+
+    cDC->SelectObject(pOldFont);
+    delete font;
+
+    return cs;
+}
+
+void CDarkMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
+    lpMeasureItemStruct->itemHeight = rowHeight;
+    MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
+    HDC hDC = ::GetDC(NULL);
+    CSize cs = GetTextSize(mo->m_strCaption, hDC);
+    if (!mo->isMenubar) {
+        lpMeasureItemStruct->itemWidth = iconSpacing + cs.cx + postTextSpacing + subMenuPadding;
+        if (mo->m_strAccel.GetLength() > 0) {
+            cs = GetTextSize(mo->m_strAccel, hDC);
+            lpMeasureItemStruct->itemWidth += accelSpacing + cs.cx;
+        }
+    } else {
+        lpMeasureItemStruct->itemWidth = cs.cx;
+    }
+}
+
+CDarkMenu* CDarkMenu::GetSubMenu(int nPos) {
+    return (CDarkMenu*) CMenu::GetSubMenu(nPos);
+}
+
+void CDarkMenu::updateItem(CCmdUI* pCmdUI) {
+    CMenu* cm = pCmdUI->m_pMenu;
+
+    if (DYNAMIC_DOWNCAST(CDarkMenu, cm)) {
+        MENUITEMINFO mInfo;
+        ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+
+        mInfo.fMask = MIIM_DATA;
+        mInfo.cbSize = sizeof(MENUITEMINFO);
+        VERIFY(cm->GetMenuItemInfo(pCmdUI->m_nID, &mInfo));
+        
+        MenuObject* menuObject = (MenuObject*)mInfo.dwItemData;
+        cm->GetMenuString(pCmdUI->m_nID, menuObject->m_strCaption, MF_BYCOMMAND);
+    }
+}
+

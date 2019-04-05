@@ -23,4 +23,5 @@
 namespace ImageGrayer
 {
     bool Gray(const CImage& imgSource, CImage& imgDest);
+    bool UpdateColor(const CImage& imgSource, CImage& imgDest, bool disabled, bool darkTheme);
 }

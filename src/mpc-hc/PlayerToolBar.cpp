@@ -84,8 +84,14 @@ void CPlayerToolBar::LoadToolbarImage()
     float dpiScaling = (float)std::min(m_pMainFrame->m_dpi.ScaleFactorX(), m_pMainFrame->m_dpi.ScaleFactorY());
     float defaultToolbarScaling = AfxGetAppSettings().nDefaultToolbarSize / 16.0f;
 
-    CImage image;
+    CImage image, darkImage, origImage;
     if (LoadExternalToolBar(image) || (!AfxGetAppSettings().bUseLegacyToolbar && SUCCEEDED(SVGImage::Load(IDF_SVG_TOOLBAR, image, dpiScaling * defaultToolbarScaling)))) {
+        origImage = image;
+        const CAppSettings& s = AfxGetAppSettings();
+        if (s.bDarkThemeLoaded) {
+            ImageGrayer::UpdateColor(image, darkImage, false, s.bDarkThemeLoaded);
+            image = darkImage;
+        }
         CBitmap* bmp = CBitmap::FromHandle(image);
         int width = image.GetWidth();
         int height = image.GetHeight();
@@ -100,7 +106,7 @@ void CPlayerToolBar::LoadToolbarImage()
                 m_pButtonsImages->Add(bmp, nullptr); // alpha is the mask
 
                 CImage imageDisabled;
-                if (ImageGrayer::Gray(image, imageDisabled)) {
+                if (ImageGrayer::UpdateColor(origImage, imageDisabled, true, s.bDarkThemeLoaded)) {
                     m_pDisabledButtonsImages.reset(DEBUG_NEW CImageList());
                     m_pDisabledButtonsImages->Create(height, height, ILC_COLOR32 | ILC_MASK, 1, 0);
                     m_pDisabledButtonsImages->Add(CBitmap::FromHandle(imageDisabled), nullptr); // alpha is the mask
@@ -285,7 +291,12 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             dc.Attach(pTBCD->nmcd.hdc);
             RECT r;
             GetClientRect(&r);
-            dc.FillSolidRect(&r, ::GetSysColor(COLOR_BTNFACE));
+            const CAppSettings& s = AfxGetAppSettings();
+            if (s.bDarkThemeLoaded) {
+                dc.FillSolidRect(&r, CDarkMenu::DarkBGColor);
+            } else {
+                dc.FillSolidRect(&r, ::GetSysColor(COLOR_BTNFACE));
+            }
             dc.Detach();
         }
         lr |= CDRF_NOTIFYITEMDRAW;
@@ -301,7 +312,13 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             dc.Attach(pTBCD->nmcd.hdc);
             RECT r;
             GetItemRect(11, &r);
-            dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
+            const CAppSettings& s = AfxGetAppSettings();
+            if (s.bDarkThemeLoaded) {
+                dc.FillSolidRect(&r, CDarkMenu::DarkBGColor);
+            }
+            else {
+                dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
+            }
             dc.Detach();
             lr |= CDRF_SKIPDEFAULT;
             break;
@@ -357,7 +374,12 @@ void CPlayerToolBar::OnNcPaint() // when using XP styles the NC area isn't drawn
     cr.OffsetRect(-wr.left, -wr.top);
     wr.OffsetRect(-wr.left, -wr.top);
     dc.ExcludeClipRect(&cr);
-    dc.FillSolidRect(wr, GetSysColor(COLOR_BTNFACE));
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        dc.FillSolidRect(wr, CDarkMenu::DarkBGColor);
+    } else {
+        dc.FillSolidRect(wr, ::GetSysColor(COLOR_BTNFACE));
+    }
 
     // Do not call CToolBar::OnNcPaint() for painting messages
 

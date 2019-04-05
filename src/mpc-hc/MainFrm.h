@@ -43,6 +43,7 @@
 #include "SubtitleUpDlg.h"
 #include "TimerWrappers.h"
 #include "VMROSD.h"
+#include "CDarkMenu.h"
 
 #define AfxGetMainFrame() dynamic_cast<CMainFrame*>(AfxGetMainWnd())
 
@@ -297,13 +298,13 @@ private:
     void OnStreamSelect(bool forward, DWORD dwSelGroup);
     static CString GetStreamOSDString(CString name, LCID lcid, DWORD dwSelGroup);
 
-    CMenu m_mainPopupMenu, m_popupMenu;
-    CMenu m_openCDsMenu;
-    CMenu m_filtersMenu, m_subtitlesMenu, m_audiosMenu, m_videoStreamsMenu;
-    CMenu m_chaptersMenu, m_titlesMenu, m_playlistMenu, m_BDPlaylistMenu, m_channelsMenu;
-    CMenu m_favoritesMenu;
-    CMenu m_shadersMenu;
-    CMenu m_recentFilesMenu;
+    CDarkMenu m_mainPopupMenu, m_popupMenu;
+    CDarkMenu m_openCDsMenu;
+    CDarkMenu m_filtersMenu, m_subtitlesMenu, m_audiosMenu, m_videoStreamsMenu;
+    CDarkMenu m_chaptersMenu, m_titlesMenu, m_playlistMenu, m_BDPlaylistMenu, m_channelsMenu;
+    CDarkMenu m_favoritesMenu;
+    CDarkMenu m_shadersMenu;
+    CDarkMenu m_recentFilesMenu;
 
     UINT m_nJumpToSubMenusCount;
 
@@ -789,6 +790,8 @@ public:
     afx_msg void OnUpdateViewCapture(CCmdUI* pCmdUI);
     afx_msg void OnViewDebugShaders();
     afx_msg void OnUpdateViewDebugShaders(CCmdUI* pCmdUI);
+    afx_msg void OnViewDarkTheme();
+    afx_msg void OnUpdateViewDarkTheme(CCmdUI* pCmdUI);
     afx_msg void OnViewMinimal();
     afx_msg void OnUpdateViewMinimal(CCmdUI* pCmdUI);
     afx_msg void OnViewCompact();
@@ -1037,8 +1040,17 @@ public:
     HRESULT UpdateThumbarButton();
     HRESULT UpdateThumbarButton(MPC_PLAYSTATE iPlayState);
     HRESULT UpdateThumbnailClip();
-
+    BOOL Create(LPCTSTR lpszClassName,
+        LPCTSTR lpszWindowName,
+        DWORD dwStyle = WS_OVERLAPPEDWINDOW,
+        const RECT& rect = rectDefault,
+        CWnd* pParentWnd = NULL,        // != NULL for popups
+        LPCTSTR lpszMenuName = NULL,
+        DWORD dwExStyle = 0,
+        CCreateContext* pContext = NULL);
+    CDarkMenu *m_DefaultDarkMenu = nullptr;
 protected:
+    afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
     // GDI+
     virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     void WTSRegisterSessionNotification();

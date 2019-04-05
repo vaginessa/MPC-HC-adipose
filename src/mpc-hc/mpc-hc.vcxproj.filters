@@ -469,6 +469,8 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="YoutubeDL.cpp" />
+    <ClCompile Include="CDarkMenu.cpp" />
+    <ClCompile Include="CDarkTheme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -877,6 +879,8 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="YoutubeDL.h" />
+    <ClInclude Include="CDarkMenu.h" />
+    <ClInclude Include="CDarkTheme.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

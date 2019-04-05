@@ -199,6 +199,15 @@ void CPlayerSeekBar::CreateThumb(bool bEnabled, CDC& parentDC)
         light  = GetSysColor(COLOR_3DHILIGHT),
         bkg    = GetSysColor(COLOR_BTNFACE);
 
+        const CAppSettings& s = AfxGetAppSettings();
+        if (s.bDarkThemeLoaded) {
+            white = CDarkTheme::DarkSelectedColor;
+            shadow = CDarkTheme::DarkShadowColor;
+            light = CDarkTheme::DarkLightColor;
+            bkg = CDarkTheme::DarkBGColor;
+        }
+
+
         CRect r(GetThumbRect());
         r.MoveToXY(0, 0);
         CRect ri(GetInnerThumbRect(bEnabled, r));
@@ -483,6 +492,15 @@ void CPlayerSeekBar::OnPaint()
     shadow = GetSysColor(COLOR_3DSHADOW),
     light  = GetSysColor(COLOR_3DHILIGHT),
     bkg    = GetSysColor(COLOR_BTNFACE);
+
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        dark = CDarkTheme::DarkBGColor;
+        white = CDarkTheme::DarkSelectedColor;
+        shadow = CDarkTheme::DarkShadowColor;
+        light = CDarkTheme::DarkLightColor;
+        bkg = CDarkTheme::DarkBGColor;
+    }
 
     // Thumb
     {
