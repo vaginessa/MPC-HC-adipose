@@ -16647,7 +16647,7 @@ void CMainFrame::UpdateControlState(UpdateControlTarget target)
 
 void CMainFrame::UpdateUILanguage()
 {
-    CMenu  defaultMenu;
+//    CMenu  defaultMenu;
     CMenu* oldMenu;
 
     // Destroy the dynamic menus before reloading the main menus
@@ -16656,18 +16656,30 @@ void CMainFrame::UpdateUILanguage()
     // Reload the main menus
     m_popupMenu.DestroyMenu();
     m_popupMenu.LoadMenu(IDR_POPUP);
+
     m_mainPopupMenu.DestroyMenu();
     m_mainPopupMenu.LoadMenu(IDR_POPUPMAIN);
 
     oldMenu = GetMenu();
-    defaultMenu.LoadMenu(IDR_MAINFRAME);
+    m_DefaultDarkMenu = new CDarkMenu(); //will have been destroyed
+    m_DefaultDarkMenu->LoadMenu(IDR_MAINFRAME);
     if (oldMenu) {
         // Attach the new menu to the window only if there was a menu before
-        SetMenu(&defaultMenu);
+        SetMenu(m_DefaultDarkMenu);
         // and then destroy the old one
         oldMenu->DestroyMenu();
     }
-    m_hMenuDefault = defaultMenu.Detach();
+    //we don't detach because we retain the cmenu
+    //m_hMenuDefault = defaultMenu.Detach();
+    m_hMenuDefault = m_DefaultDarkMenu->GetSafeHmenu();
+
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        m_popupMenu.ActivateDarkTheme();
+        m_mainPopupMenu.ActivateDarkTheme();
+        m_DefaultDarkMenu->ActivateDarkTheme(true);
+    }
+
 
     // Reload the dynamic menus
     CreateDynamicMenus();
