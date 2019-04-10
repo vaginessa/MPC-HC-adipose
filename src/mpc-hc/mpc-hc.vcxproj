@@ -126,6 +126,9 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Lite|Win32'">taskkill /IM mpc-hc.exe /FI "STATUS eq RUNNING"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="!$(Configuration.Contains('Lite'))">
     <Link>
@@ -140,6 +143,7 @@
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="AuthDlg.cpp" />
     <ClCompile Include="BaseGraph.cpp" />
+    <ClCompile Include="CDarkDockBar.cpp" />
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
     <ClCompile Include="ChildView.cpp" />
@@ -282,6 +286,7 @@
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="AuthDlg.h" />
     <ClInclude Include="BaseGraph.h" />
+    <ClInclude Include="CDarkDockBar.h" />
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkTheme.h" />
     <ClInclude Include="ChildView.h" />

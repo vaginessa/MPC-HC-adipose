@@ -471,6 +471,7 @@
     <ClCompile Include="YoutubeDL.cpp" />
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
+    <ClCompile Include="CDarkDockBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -881,6 +882,7 @@
     <ClInclude Include="YoutubeDL.h" />
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkTheme.h" />
+    <ClInclude Include="CDarkDockBar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">
