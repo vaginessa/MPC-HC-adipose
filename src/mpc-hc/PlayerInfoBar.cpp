@@ -23,6 +23,7 @@
 #include "mplayerc.h"
 #include "PlayerInfoBar.h"
 #include "MainFrm.h"
+#include "CDarkTheme.h"
 
 
 // CPlayerInfoBar
@@ -228,7 +229,14 @@ BOOL CPlayerInfoBar::OnEraseBkgnd(CDC* pDC)
         r.InflateRect(1, 0, 1, 0);
     }
 
-    pDC->Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        pDC->FillSolidRect(&r, CDarkTheme::NoBorderColor);
+        //pDC->Draw3dRect(&r, CDarkTheme::DarkShadowColor, CDarkTheme::DarkLightColor);
+    }
+    else {
+        pDC->Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    }
 
     r.DeflateRect(1, 1);
 

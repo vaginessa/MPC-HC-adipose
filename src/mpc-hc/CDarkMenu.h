@@ -7,6 +7,7 @@ struct MenuObject {
     CString m_strCaption;
     CString m_strAccel;
     bool isMenubar = false;
+    bool isSeparator = false;
     bool isFirstMenuInMenuBar = false;
 };
 
@@ -18,19 +19,24 @@ public:
 	CDarkMenu();
 	virtual ~CDarkMenu();
 
-    static const int subMenuPadding = 20;
-    static const int iconSpacing = 22;
-    static const int rowHeight = 24;
-    static const int iconPadding = 10;
-    static const int postTextSpacing = 20;
-    static const int accelSpacing = 30;
+    static const int subMenuPadding;
+    static const int iconSpacing;
+    static const int rowHeight;
+    static const int iconPadding;
+    static const int separatorPadding;
+    static const int separatorHeight;
+    static const int postTextSpacing;
+    static const int accelSpacing;
     static wchar_t* const uiTextFont;
     static wchar_t* const uiSymbolFont;
 
     std::vector<MenuObject *> allocatedItems;
     std::vector<CDarkMenu *> allocatedMenus;
     static std::map<UINT, CDarkMenu *> subMenuIDs;
-    void ActivateDarkTheme(bool menubar=false);
+    void ActivateDarkTheme(bool menubar = false);
+    void ActivateItemDarkTheme(UINT i, bool byCommand=false);
+    static void ActivateItemDarkTheme(CMenu* parent, UINT i, bool byCommand=false);
+    static UINT getPosFromID(CMenu* parent, UINT nID);
     static CDarkMenu* getParentMenu(UINT itemID);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
     virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);

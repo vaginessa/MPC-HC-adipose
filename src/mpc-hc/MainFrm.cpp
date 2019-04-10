@@ -107,6 +107,7 @@
 
 #include "YoutubeDL.h"
 #include "CDarkMenu.h"
+#include "CDarkDockBar.h"
 
 
 // IID_IAMLine21Decoder
@@ -1240,6 +1241,26 @@ void CMainFrame::RecalcLayout(BOOL bNotify)
         r |= CRect(r.TopLeft(), CSize(min));
         MoveWindow(r);
     }
+}
+
+void CMainFrame::EnableDocking(DWORD dwDockStyle) {
+    ASSERT((dwDockStyle & ~(CBRS_ALIGN_ANY | CBRS_FLOAT_MULTI)) == 0);
+
+    m_pFloatingFrameClass = RUNTIME_CLASS(CMiniDockFrameWnd);
+    for (int i = 0; i < 4; i++) {
+        if (dwDockBarMap[i][1] & dwDockStyle & CBRS_ALIGN_ANY) {
+            CDarkDockBar* pDock = (CDarkDockBar*)GetControlBar(dwDockBarMap[i][0]);
+            if (pDock == NULL) {
+                pDock = new CDarkDockBar;
+                if (!pDock->Create(this,
+                    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE |
+                    dwDockBarMap[i][1], dwDockBarMap[i][0])) {
+                    AfxThrowResourceException();
+                }
+            }
+        }
+    }
+    //CFrameWnd::EnableDocking( dwDockStyle);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3043,11 +3064,19 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             int k = 0;
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
+            if (s.bDarkThemeLoaded) {
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+            }
         }
         //if (j > 0)
         {
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, ResStr(IDS_PANSCAN_EDIT)));
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND | MF_SEPARATOR));
+            if (s.bDarkThemeLoaded) {
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                UINT pos = CDarkMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, pos-1);
+            }
         }
     }
 
@@ -8319,7 +8348,7 @@ void CMainFrame::OnUpdateAfterplayback(CCmdUI* pCmdUI)
 
         mii.cbSize = sizeof(mii);
         mii.fMask = MIIM_FTYPE | MIIM_STATE;
-        mii.fType = (bRadio ? MFT_RADIOCHECK : 0) | (cii.fType & MF_OWNERDRAW); //preserve owner draw flag
+        mii.fType = (bRadio ? MFT_RADIOCHECK : 0) | (cii.fType & MFT_OWNERDRAW); //preserve owner draw flag
         mii.fState = (bRadio ? MFS_DISABLED : 0) | (bChecked || bRadio ? MFS_CHECKED : 0);
 
         VERIFY(pCmdUI->m_pMenu->SetMenuItemInfo(pCmdUI->m_nID, &mii));
@@ -13107,6 +13136,7 @@ void CMainFrame::SetupVideoStreamsSubMenu()
 
 void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInsertPos /*= -1*/)
 {
+    const CAppSettings& s = AfxGetAppSettings();
     auto emptyMenu = [&](CMenu & menu) {
         while (menu.RemoveMenu(0, MF_BYPOSITION));
     };
@@ -13144,6 +13174,9 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
         if (parentMenu && iInsertPos >= 0) {
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
+                if (s.bDarkThemeLoaded) {
+                    CDarkMenu::ActivateItemDarkTheme(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
+                }
                 m_nJumpToSubMenusCount++;
             } else {
                 ASSERT(FALSE);
@@ -13264,8 +13297,6 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
             addSubMenuIfPossible(StrRes(IDS_NAVIGATE_CHAPTERS), m_chaptersMenu);
         }
     } else if (GetPlaybackMode() == PM_DIGITAL_CAPTURE) {
-        const CAppSettings& s = AfxGetAppSettings();
-
         menuStartRadioSection();
         for (const auto& channel : s.m_DVBChannels) {
             UINT flags = MF_BYCOMMAND | MF_STRING | MF_ENABLED;

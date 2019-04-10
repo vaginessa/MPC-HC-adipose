@@ -160,4 +160,7 @@ public:
     afx_msg void OnXButtonDown(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    void NcPaintGripper(CDC* pDC, CRect rcClient);
+    void mpc_fillNcBG(CDC *mdc, CRect rcDraw);
 };

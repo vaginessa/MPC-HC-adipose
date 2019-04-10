@@ -24,6 +24,7 @@
 #include "PlayerBar.h"
 #include "PlayerListCtrl.h"
 #include "WinHotkeyCtrl.h"
+#include "CDarkTheme.h"
 
 // CInPlaceHotKey
 
@@ -401,6 +402,7 @@ BEGIN_MESSAGE_MAP(CInPlaceListBox, CListBox)
     ON_WM_CHAR()
     ON_WM_NCDESTROY()
     //}}AFX_MSG_MAP
+    ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -860,6 +862,7 @@ BEGIN_MESSAGE_MAP(CPlayerListCtrl, CListCtrl)
     ON_WM_XBUTTONDOWN()
     ON_WM_XBUTTONUP()
     ON_WM_XBUTTONDBLCLK()
+    ON_WM_NCPAINT()
 END_MESSAGE_MAP()
 
 // CPlayerListCtrl message handlers
@@ -1107,5 +1110,28 @@ void CPlayerListCtrl::OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point)
     if (CWnd* pParent = GetParent()) {
         MapWindowPoints(pParent, &point, 1);
         pParent->SendMessage(WM_XBUTTONDBLCLK, MAKEWPARAM(nFlags, nButton), MAKELPARAM(point.x, point.y));
+    }
+}
+
+
+
+
+void CPlayerListCtrl::OnNcPaint() {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        CRect wr, cr;
+
+        CWindowDC dc(this);
+        GetClientRect(&cr);
+        ClientToScreen(&cr);
+        GetWindowRect(&wr);
+        cr.OffsetRect(-wr.left, -wr.top);
+        wr.OffsetRect(-wr.left, -wr.top);
+        dc.ExcludeClipRect(&cr);
+        CBrush brush(CDarkTheme::DarkMenuSeparatorColor);
+        dc.FillSolidRect(wr, CDarkTheme::DarkBGColor);
+        dc.FrameRect(wr, &brush);
+    } else {
+        __super::OnNcPaint();
     }
 }

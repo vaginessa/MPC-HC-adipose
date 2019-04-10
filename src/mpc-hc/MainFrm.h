@@ -573,6 +573,7 @@ public:
     virtual BOOL PreTranslateMessage(MSG* pMsg);
     virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
     virtual void RecalcLayout(BOOL bNotify = TRUE);
+    void EnableDocking(DWORD dwDockStyle);
 
     // DVB capture
     void UpdateCurrentChannelInfo(bool bShowOSD = true, bool bShowInfoBar = false);
