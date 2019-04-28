@@ -34,6 +34,7 @@
 #include "CDarkTheme.h"
 
 
+
 IMPLEMENT_DYNAMIC(CPlayerPlaylistBar, CPlayerBar)
 CPlayerPlaylistBar::CPlayerPlaylistBar(CMainFrame* pMainFrame)
     : m_pMainFrame(pMainFrame)
@@ -83,12 +84,6 @@ BOOL CPlayerPlaylistBar::Create(CWnd* pParentWnd, UINT defDockBarID)
     m_list.SetImageList(&m_fakeImageList, LVSIL_SMALL);
 
     m_dropTarget.Register(this);
-
-
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        m_list.SetBkColor(CDarkTheme::DarkBGColor);
-    }
 
     return TRUE;
 }
@@ -549,6 +544,7 @@ void CPlayerPlaylistBar::Append(CAtlList<CString>& fns, bool fMulti, CAtlList<CS
         if (iFirstAdded) { // Select the first added item only if some were already present
             m_list.SetItemState(iFirstAdded, LVIS_SELECTED, LVIS_SELECTED);
         }
+        m_list.hideSB();
     }
 }
 
@@ -931,11 +927,15 @@ BEGIN_MESSAGE_MAP(CPlayerPlaylistBar, CPlayerBar)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolTipNotify)
     ON_WM_TIMER()
     ON_WM_CONTEXTMENU()
+    ON_NOTIFY(LVN_BEGINLABELEDIT, IDC_PLAYLIST, OnLvnBeginlabeleditList)
     ON_NOTIFY(LVN_ENDLABELEDIT, IDC_PLAYLIST, OnLvnEndlabeleditList)
+    ON_NOTIFY(LVN_ITEMCHANGED, IDC_PLAYLIST, OnLvnItemchangedList)
+    ON_MESSAGE(PLAYER_PLAYLIST_LVN_ITEMCHANGED, OnDelayed_updateListCtrl)
     ON_WM_XBUTTONDOWN()
     ON_WM_XBUTTONUP()
     ON_WM_XBUTTONDBLCLK()
     ON_WM_ERASEBKGND()
+    ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -992,6 +992,7 @@ void CPlayerPlaylistBar::ResizeListColumn()
         m_list.SetRedraw(TRUE);
 
         Invalidate();
+        m_list.hideSB();
         m_list.RedrawWindow(nullptr, nullptr, RDW_FRAME | RDW_INVALIDATE);
     }
 }
@@ -1130,6 +1131,7 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
         return;
     }
 
+
     int nItem = lpDrawItemStruct->itemID;
     CRect rcItem = lpDrawItemStruct->rcItem;
     POSITION pos = FindPos(nItem);
@@ -1141,14 +1143,14 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
         if (s.bDarkThemeLoaded) {
-            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::DarkSelectedColor));
+            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::ContentSelectedColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(0xf1dacc));
             FrameRect(pDC->m_hDC, rcItem, CBrush(0xc56a31));
         }
     } else {
         if (s.bDarkThemeLoaded) {
-            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::DarkBGColor));
+            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::ContentBGColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(GetSysColor(COLOR_WINDOW)));
         }
@@ -1157,9 +1159,9 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
     COLORREF textcolor;
 
     if (s.bDarkThemeLoaded) {
-        textcolor = CDarkTheme::DarkTextFGColor;
+        textcolor = CDarkTheme::TextFGColor;
         if (pli.m_fInvalid) {
-            textcolor = CDarkTheme::DarkDisabledColor;
+            textcolor = CDarkTheme::MenuItemDisabledColor;
         }
     } else {
         textcolor = fSelected ? 0xff : 0;
@@ -1809,6 +1811,18 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     }
 }
 
+//evil macro breaking the CWnd::SubclassWindow
+#undef SubclassWindow
+
+void CPlayerPlaylistBar::OnLvnBeginlabeleditList(NMHDR* pNMHDR, LRESULT* pResult) {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        HWND e_hwnd = (HWND)m_list.SendMessage(LVM_GETEDITCONTROL);
+        if (::IsWindow(m_edit.m_hWnd)) m_edit.UnsubclassWindow();
+        m_edit.SubclassWindow(e_hwnd);
+    }
+}
+
 void CPlayerPlaylistBar::OnLvnEndlabeleditList(NMHDR* pNMHDR, LRESULT* pResult)
 {
     NMLVDISPINFO* pDispInfo = reinterpret_cast<NMLVDISPINFO*>(pNMHDR);
@@ -1818,7 +1832,10 @@ void CPlayerPlaylistBar::OnLvnEndlabeleditList(NMHDR* pNMHDR, LRESULT* pResult)
         pli.m_label = pDispInfo->item.pszText;
         m_list.SetItemText(pDispInfo->item.iItem, 0, pDispInfo->item.pszText);
     }
-
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        if (::IsWindow(m_edit.m_hWnd)) m_edit.UnsubclassWindow();
+    }
     *pResult = 0;
 }
 
@@ -1860,7 +1877,7 @@ BOOL CPlayerPlaylistBar::OnEraseBkgnd(CDC * pDC) {
     if (s.bDarkThemeLoaded) {
         CRect rect;
         pDC->GetClipBox(&rect);
-        pDC->FillSolidRect(rect.left, rect.top, rect.Width(), rect.Height(), CDarkTheme::DarkBGColor);
+        pDC->FillSolidRect(rect.left, rect.top, rect.Width(), rect.Height(), CDarkTheme::WindowBGColor);
 
         return TRUE;
     } else {
@@ -1873,12 +1890,12 @@ void biHidePaintDark(CDC* pDC, CSCBButton b) //derived from CSCBButton::Paint
     CRect rc = b.GetRect();
 
     if (b.bPushed)
-        pDC->FillSolidRect(rc, CDarkTheme::DarkClosePushColor);
+        pDC->FillSolidRect(rc, CDarkTheme::ClosePushColor);
     else if (b.bRaised)
-        pDC->FillSolidRect(rc, CDarkTheme::DarkCloseHoverColor);
+        pDC->FillSolidRect(rc, CDarkTheme::CloseHoverColor);
 
     COLORREF clrOldTextColor = pDC->GetTextColor();
-    pDC->SetTextColor(CDarkTheme::DarkTextFGColor);
+    pDC->SetTextColor(CDarkTheme::TextFGColor);
     int nPrevBkMode = pDC->SetBkMode(TRANSPARENT);
     CFont font;
     int ppi = pDC->GetDeviceCaps(LOGPIXELSX);
@@ -1937,7 +1954,7 @@ void CPlayerPlaylistBar::NcPaintGripper(CDC * pDC, CRect rcClient){ //derived fr
     gb.CreateCompatibleBitmap(pDC, memRect.right, memRect.bottom);
     dcMemory.CreateCompatibleDC(pDC);
     dcMemory.SelectObject(&gb);
-    dcMemory.SetTextColor(CDarkTheme::DarkBGColor);
+    dcMemory.SetTextColor(CDarkTheme::WindowBGColor);
     dcMemory.SetBkColor(CDarkTheme::GripperPatternColor);
     dcMemory.FillRect(memRect, &brush);
 
@@ -1952,8 +1969,28 @@ void CPlayerPlaylistBar::mpc_fillNcBG(CDC* mdc, CRect rcDraw) {
         if (IsFloating()) {
             rcDraw.DeflateRect(1, 1);
         }
-        mdc->FillSolidRect(rcDraw, CDarkTheme::DarkBGColor);
+        mdc->FillSolidRect(rcDraw, CDarkTheme::WindowBGColor);
     } else {
         __super::mpc_fillNcBG(mdc, rcDraw);
+    }
+}
+
+void CPlayerPlaylistBar::OnLvnItemchangedList(NMHDR* pNMHDR, LRESULT* pResult) {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);
+    }
+    *pResult = 0;
+}
+
+LRESULT CPlayerPlaylistBar::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
+    m_list.updateDarkScrollInfo();
+    return 0;
+}
+
+VOID CPlayerPlaylistBar::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+    int nID = pScrollBar->GetDlgCtrlID();
+    if (nID == IDC_DARKVSCROLLBAR) { //we are getting scroll messages for the dark scrollbars
+        m_list.SendMessage(WM_VSCROLL, MAKELONG(nSBCode, nPos), 0); //forces a scroll event, which will update the darkscrollbar too
     }
 }

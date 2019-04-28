@@ -45,15 +45,16 @@ void CDarkDockBar::OnNcPaint() {
 
     CWindowDC dc(this); // the HDC will be released by the destructor
 
-    CRect rcClient, rcBar;
+    CRect rcClient, rcWindow;
     GetClientRect(rcClient);
-    GetWindowRect(rcBar);
-    ScreenToClient(rcBar);
+    GetWindowRect(rcWindow);
+    ScreenToClient(rcWindow);
+    rcClient.OffsetRect(-rcWindow.TopLeft());
+    rcWindow.OffsetRect(-rcWindow.TopLeft());
 
-    CRect rcDraw = rcBar;
+    CRect rcDraw = rcWindow;
 
-    dc.FillSolidRect(rcDraw, CDarkTheme::DarkBGColor);
-
-    dc.IntersectClipRect(rcBar);
+    dc.IntersectClipRect(rcWindow);
     dc.ExcludeClipRect(rcClient);
+    dc.FillSolidRect(rcDraw, CDarkTheme::WindowBGColor);
 }

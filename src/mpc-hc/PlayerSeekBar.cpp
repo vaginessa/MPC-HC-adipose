@@ -23,6 +23,8 @@
 #include "PlayerSeekBar.h"
 #include "MainFrm.h"
 #include "mplayerc.h"
+#include "CDarkTheme.h"
+
 
 #define TOOLTIP_SHOW_DELAY 100
 #define TOOLTIP_HIDE_TIMEOUT 3000
@@ -201,10 +203,10 @@ void CPlayerSeekBar::CreateThumb(bool bEnabled, CDC& parentDC)
 
         const CAppSettings& s = AfxGetAppSettings();
         if (s.bDarkThemeLoaded) {
-            white = CDarkTheme::DarkSelectedColor;
-            shadow = CDarkTheme::DarkShadowColor;
-            light = CDarkTheme::DarkLightColor;
-            bkg = CDarkTheme::DarkBGColor;
+            white = CDarkTheme::MenuSelectedColor;
+            shadow = CDarkTheme::ShadowColor;
+            light = CDarkTheme::LightColor;
+            bkg = CDarkTheme::PlayerBGColor;
         }
 
 
@@ -495,11 +497,11 @@ void CPlayerSeekBar::OnPaint()
 
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        dark = CDarkTheme::DarkBGColor;
-        white = CDarkTheme::DarkSelectedColor;
-        shadow = CDarkTheme::DarkShadowColor;
-        light = CDarkTheme::DarkLightColor;
-        bkg = CDarkTheme::DarkBGColor;
+        dark = CDarkTheme::PlayerBGColor;
+        white = CDarkTheme::MenuSelectedColor;
+        shadow = CDarkTheme::ShadowColor;
+        light = CDarkTheme::LightColor;
+        bkg = CDarkTheme::PlayerBGColor;
     }
 
     // Thumb

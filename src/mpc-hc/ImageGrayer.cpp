@@ -162,9 +162,9 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
     RGBQUAD newColor;
     COLORREF themeColor;
     if (disabled) {
-        themeColor = CDarkTheme::DarkDisabledColor;
+        themeColor = CDarkTheme::MenuItemDisabledColor;
     } else {
-        themeColor = CDarkTheme::DarkTextFGColor;
+        themeColor = CDarkTheme::TextFGColor;
     }
     newColor.rgbRed = GetRValue(themeColor);
     newColor.rgbGreen = GetGValue(themeColor);

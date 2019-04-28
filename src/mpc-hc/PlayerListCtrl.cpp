@@ -495,6 +495,7 @@ CPlayerListCtrl::CPlayerListCtrl(int tStartEditingDelay)
 {
 }
 
+
 CPlayerListCtrl::~CPlayerListCtrl()
 {
 }
@@ -863,6 +864,9 @@ BEGIN_MESSAGE_MAP(CPlayerListCtrl, CListCtrl)
     ON_WM_XBUTTONUP()
     ON_WM_XBUTTONDBLCLK()
     ON_WM_NCPAINT()
+    ON_WM_NCCALCSIZE()
+    ON_WM_CREATE()
+    ON_NOTIFY_REFLECT(LVN_ENDSCROLL, &CPlayerListCtrl::OnLvnEndScroll)
 END_MESSAGE_MAP()
 
 // CPlayerListCtrl message handlers
@@ -1122,16 +1126,136 @@ void CPlayerListCtrl::OnNcPaint() {
         CRect wr, cr;
 
         CWindowDC dc(this);
-        GetClientRect(&cr);
-        ClientToScreen(&cr);
-        GetWindowRect(&wr);
-        cr.OffsetRect(-wr.left, -wr.top);
-        wr.OffsetRect(-wr.left, -wr.top);
+        setDarkDrawingArea(cr, wr, false); //temporarily allow full clipping window
         dc.ExcludeClipRect(&cr);
-        CBrush brush(CDarkTheme::DarkMenuSeparatorColor);
-        dc.FillSolidRect(wr, CDarkTheme::DarkBGColor);
+        CBrush brush(CDarkTheme::WindowBorderColorLight); //color used for column sep in explorer
+        dc.FillSolidRect(wr, CDarkTheme::ContentBGColor);
+
         dc.FrameRect(wr, &brush);
+        hideSB(); //set back scrollbar clipping window
     } else {
         __super::OnNcPaint();
     }
+}
+
+
+void CPlayerListCtrl::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp) {
+//    ModifyStyle(WS_HSCROLL | WS_VSCROLL, 0);
+
+    CListCtrl::OnNcCalcSize(bCalcValidRects, lpncsp);
+}
+
+void CPlayerListCtrl::setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping) {
+    GetClientRect(&cr);
+    ClientToScreen(&cr);
+    GetWindowRect(&wr);
+
+    CRect rect;
+    CHeaderCtrl* pHdr = GetHeaderCtrl();
+    pHdr->GetWindowRect(rect);
+    int nWidth = rect.Width(); //this will be about where the scrollbar starts
+    cr.OffsetRect(-wr.left, -wr.top);
+    wr.OffsetRect(-wr.left, -wr.top);
+
+    if (clipping) {
+        LONG sbRight = wr.right;
+        int width = GetSystemMetrics(SM_CXVSCROLL);
+        wr.right = wr.left + nWidth - 1; //1 pixel bleed of scrollbar, list items must be drawn 1 pix short?
+        if (GetStyle()&WS_VSCROLL) {
+            darkVSB.MoveWindow(sbRight - width - 1, cr.top + 1, width, cr.bottom - cr.top + 2);
+            darkVSB.ShowWindow(SW_SHOW);
+            updateDarkScrollInfo();
+        } else {
+            darkVSB.ShowWindow(SW_HIDE);
+        }
+    }
+
+    HRGN iehrgn = CreateRectRgn(wr.left, wr.top, wr.right, wr.bottom);
+    SetWindowRgn(iehrgn, false);
+}
+
+void CPlayerListCtrl::hideSB() {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        CRect wr, cr;
+        setDarkDrawingArea(cr, wr, true);
+    }
+}
+
+
+int CPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
+    if (CListCtrl::OnCreate(lpCreateStruct) == -1)
+        return -1;
+
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        if (CWnd* pParent = GetParent()) {
+            VERIFY(darkVSB.Create(SBS_VERT | WS_CHILD |
+                WS_VISIBLE, CRect(0, 0, 0, 0), pParent, IDC_DARKVSCROLLBAR));
+            darkVSB.setScrollWindow(this); //we want messages from this SB
+        }
+        SetBkColor(CDarkTheme::ContentBGColor);
+    }
+
+    return 0;
+}
+
+void CPlayerListCtrl::updateDarkScrollInfo() {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        darkVSB.updateScrollInfo();
+    }
+}
+
+
+void CPlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
+//    LPNMLVSCROLL pStateChanged = reinterpret_cast<LPNMLVSCROLL>(pNMHDR);
+    updateDarkScrollInfo();
+    *pResult = 0;
+}
+
+//clistctrl does not seem to scroll when receiving thumb messages, so we handle them here
+//this will allow the darkscrollbar to update as well
+//thanks to flyhigh for this solution https://www.codeproject.com/Articles/14724/Replace-a-Window-s-Internal-Scrollbar-with-a-custo 
+LRESULT CPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        if (message == WM_VSCROLL || message == WM_HSCROLL) {
+            WORD sbCode = LOWORD(wParam);
+            if (sbCode == SB_THUMBTRACK || sbCode == SB_THUMBPOSITION) {
+                SCROLLINFO siv = { 0 };
+                siv.cbSize = sizeof(SCROLLINFO);
+                siv.fMask = SIF_ALL;
+                SCROLLINFO sih = siv;
+                int nPos = HIWORD(wParam);
+                CRect rcClient;
+                GetClientRect(&rcClient);
+                GetScrollInfo(SB_VERT, &siv);
+                GetScrollInfo(SB_HORZ, &sih);
+                SIZE sizeAll;
+                if (sih.nPage == 0) {
+                    sizeAll.cx = rcClient.right;
+                } else {
+                    sizeAll.cx = rcClient.right*(sih.nMax + 1) / sih.nPage;
+                }
+                if (siv.nPage == 0) {
+                    sizeAll.cy = rcClient.bottom;
+                } else {
+                    sizeAll.cy = rcClient.bottom*(siv.nMax + 1) / siv.nPage;
+                }
+
+                SIZE size = { 0,0 };
+                if (WM_VSCROLL == message) {
+                    size.cx = sizeAll.cx*sih.nPos / (sih.nMax + 1);
+                    size.cy = sizeAll.cy*(nPos - siv.nPos) / (siv.nMax + 1);
+                } else {
+                    size.cx = sizeAll.cx*(nPos - sih.nPos) / (sih.nMax + 1);
+                    size.cy = sizeAll.cy*siv.nPos / (siv.nMax + 1);
+                }
+                Scroll(size);
+                return 1;
+            }
+        }
+    }
+    return CListCtrl::WindowProc(message, wParam, lParam);
 }

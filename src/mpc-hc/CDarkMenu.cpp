@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "CDarkMenu.h"
+#include "CDarkTheme.h"
 #include <strsafe.h>
 #include "AppSettings.h"
 #include "PPageAccelTbl.h"
@@ -48,7 +49,7 @@ void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
     MenuInfo.cbSize = sizeof(MENUINFO);
     MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
     MenuInfo.dwStyle = MNS_AUTODISMISS;
-    MenuInfo.hbrBack = ::CreateSolidBrush(DarkBGColor);
+    MenuInfo.hbrBack = ::CreateSolidBrush(CDarkTheme::MenuBGColor);
     SetMenuInfo(&MenuInfo);
 
     int iMaxItems = GetMenuItemCount();
@@ -173,7 +174,7 @@ UINT CDarkMenu::getPosFromID(CMenu * parent, UINT nID) {
             return j;
         }
     }
-    return -1;
+    return (UINT)-1;
 }
 
 CDarkMenu* CDarkMenu::getParentMenu(UINT itemID) {
@@ -220,11 +221,11 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     UINT captionAlign = DT_LEFT;
 
 
-    COLORREF ArrowColor = DarkSubmenuColor;
+    COLORREF ArrowColor = CDarkTheme::SubmenuColor;
     COLORREF TextFGColor;
-    COLORREF TextBGColor = DarkBGColor;
+    COLORREF TextBGColor = CDarkTheme::MenuBGColor;
     //TextBGColor = R255; //test
-    COLORREF TextSelectColor = DarkSelectedColor;
+    COLORREF TextSelectColor = CDarkTheme::MenuSelectedColor;
 
     CDC* mDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
@@ -239,10 +240,10 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     */
 
     if ((lpDrawItemStruct->itemState & ODS_DISABLED)) {
-        TextFGColor = DarkDisabledColor;
-        ArrowColor = DarkDisabledColor;
+        TextFGColor = CDarkTheme::MenuItemDisabledColor;
+        ArrowColor = CDarkTheme::MenuItemDisabledColor;
     } else {
-        TextFGColor = DarkTextFGColor;
+        TextFGColor = CDarkTheme::TextFGColor;
     }
 
     int oldBKMode = mDC->SetBkMode(TRANSPARENT);
@@ -254,7 +255,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
             GetWindowRect(AfxGetMainWnd()->m_hWnd, &wndSize);
 
             CRect rectBorder(rectM.left, rectM.bottom, rectM.left + wndSize.right - wndSize.left, rectM.bottom+1);
-            mDC->FillSolidRect(&rectBorder, DarkDisabledColor);
+            mDC->FillSolidRect(&rectBorder, CDarkTheme::MenuItemDisabledColor);
             ExcludeClipRect(lpDrawItemStruct->hDC, rectBorder.left, rectBorder.top, rectBorder.right, rectBorder.bottom);
         }
         rectM = rectFull;
@@ -265,7 +266,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     if (mInfo.fType & MFT_SEPARATOR) {
         int centerOffset = (separatorHeight - 1) / 2;
         CRect rectSeparator(rectM.left + separatorPadding, rectM.top + centerOffset, rectM.right - separatorPadding, rectM.top + centerOffset + 1);
-        mDC->FillSolidRect(&rectSeparator, DarkMenuSeparatorColor);
+        mDC->FillSolidRect(&rectSeparator, CDarkTheme::MenuSeparatorColor);
     } else {
 
 
@@ -360,7 +361,7 @@ CFont* CDarkMenu::getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight) {
     
     //lf.lfQuality = ANTIALIASED_QUALITY;
     lf.lfWeight = weight;
-    wcsncpy(lf.lfFaceName, fontName, LF_FACESIZE);
+    wcsncpy_s(lf.lfFaceName, fontName, LF_FACESIZE);
 
     CFont* font=new CFont();
     font->CreateFontIndirect(&lf);

@@ -472,6 +472,9 @@
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
     <ClCompile Include="CDarkDockBar.cpp" />
+    <ClCompile Include="CDarkScrollBar.cpp" />
+    <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
+    <ClCompile Include="CDarkEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -883,6 +886,9 @@
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkTheme.h" />
     <ClInclude Include="CDarkDockBar.h" />
+    <ClInclude Include="CDarkScrollBar.h" />
+    <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
+    <ClInclude Include="CDarkEdit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

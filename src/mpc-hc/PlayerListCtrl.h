@@ -22,6 +22,7 @@
 #pragma once
 
 #include "WinHotkeyCtrl.h"
+#include "CDarkScrollBar.h"
 
 #define LVN_DOLABELEDIT (LVN_FIRST+1)
 
@@ -148,6 +149,7 @@ private:
     int m_nItemClicked, m_nSubItemClicked;
     int m_tStartEditingDelay;
     UINT_PTR m_nTimerID;
+    CDarkScrollBar darkVSB;
 
     bool PrepareInPlaceControl(int nRow, int nCol, CRect& rect);
 
@@ -196,4 +198,11 @@ public:
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnNcPaint();
+    afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
+    void setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping);
+    void hideSB();
+    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+    void updateDarkScrollInfo();
+    afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
+    LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };

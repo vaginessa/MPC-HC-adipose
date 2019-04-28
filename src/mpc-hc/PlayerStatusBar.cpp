@@ -399,7 +399,7 @@ void CPlayerStatusBar::OnPaint()
         //dc.Draw3dRect(&r, CDarkTheme::DarkShadowColor, CDarkTheme::DarkLightColor);
         dc.FillSolidRect(&r, CDarkTheme::NoBorderColor);
         CRect top(r.left, r.top, r.right, r.top+1);
-        dc.FillSolidRect(&top, CDarkTheme::DarkBGColor);
+        dc.FillSolidRect(&top, CDarkTheme::WindowBGColor);
     } else {
         dc.Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
     }

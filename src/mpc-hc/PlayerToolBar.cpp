@@ -30,6 +30,7 @@
 #include "PathUtils.h"
 #include "SVGImage.h"
 #include "ImageGrayer.h"
+#include "CDarkTheme.h"
 
 // CPlayerToolBar
 
@@ -293,7 +294,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             GetClientRect(&r);
             const CAppSettings& s = AfxGetAppSettings();
             if (s.bDarkThemeLoaded) {
-                dc.FillSolidRect(&r, CDarkMenu::DarkBGColor);
+                dc.FillSolidRect(&r, CDarkTheme::PlayerBGColor);
             } else {
                 dc.FillSolidRect(&r, ::GetSysColor(COLOR_BTNFACE));
             }
@@ -314,7 +315,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             GetItemRect(11, &r);
             const CAppSettings& s = AfxGetAppSettings();
             if (s.bDarkThemeLoaded) {
-                dc.FillSolidRect(&r, CDarkMenu::DarkBGColor);
+                dc.FillSolidRect(&r, CDarkTheme::PlayerBGColor);
             }
             else {
                 dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
@@ -376,7 +377,7 @@ void CPlayerToolBar::OnNcPaint() // when using XP styles the NC area isn't drawn
     dc.ExcludeClipRect(&cr);
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        dc.FillSolidRect(wr, CDarkMenu::DarkBGColor);
+        dc.FillSolidRect(wr, CDarkTheme::PlayerBGColor);
     } else {
         dc.FillSolidRect(wr, ::GetSysColor(COLOR_BTNFACE));
     }

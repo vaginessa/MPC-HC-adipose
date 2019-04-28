@@ -685,6 +685,8 @@
 #define ID_FILE_RECYCLE                 24044
 #define ID_VIEW_DARKTHEME               24045
 #define IDS_AG_TOGGLE_DARKTHEME         24046
+#define IDC_DARKVSCROLLBAR              24047
+#define PLAYER_PLAYLIST_LVN_ITEMCHANGED 24048
 #define ID_VIEW_TEARING_TEST            32769
 #define ID_FILE_OPENDISC                32774
 #define ID_SHADERS                      32775
@@ -1584,6 +1586,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        20023
 #define _APS_NEXT_COMMAND_VALUE         33452
 #define _APS_NEXT_CONTROL_VALUE         22086
-#define _APS_NEXT_SYMED_VALUE           24047
+#define _APS_NEXT_SYMED_VALUE           24050
 #endif
 #endif

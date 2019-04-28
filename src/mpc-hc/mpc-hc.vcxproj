@@ -139,12 +139,15 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="AuthDlg.cpp" />
     <ClCompile Include="BaseGraph.cpp" />
     <ClCompile Include="CDarkDockBar.cpp" />
+    <ClCompile Include="CDarkEdit.cpp" />
     <ClCompile Include="CDarkMenu.cpp" />
+    <ClCompile Include="CDarkScrollBar.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
@@ -282,12 +285,15 @@
     <ClCompile Include="YoutubeDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="AuthDlg.h" />
     <ClInclude Include="BaseGraph.h" />
     <ClInclude Include="CDarkDockBar.h" />
+    <ClInclude Include="CDarkEdit.h" />
     <ClInclude Include="CDarkMenu.h" />
+    <ClInclude Include="CDarkScrollBar.h" />
     <ClInclude Include="CDarkTheme.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />

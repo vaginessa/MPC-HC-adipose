@@ -27,6 +27,7 @@
 #include "Playlist.h"
 #include "DropTarget.h"
 #include "../Subtitles/TextFile.h"
+#include "CDarkEdit.h"
 
 
 class OpenMediaData;
@@ -41,6 +42,7 @@ private:
     enum { COL_NAME, COL_TIME };
 
     CMainFrame* m_pMainFrame;
+    CDarkEdit m_edit;
 
     CFont m_font;
     void ScaleFont();
@@ -156,11 +158,15 @@ public:
     afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint point);
+    afx_msg void OnLvnBeginlabeleditList(NMHDR * pNMHDR, LRESULT * pResult);
     afx_msg void OnLvnEndlabeleditList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnXButtonDown(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
+    afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     void NcPaintGripper(CDC* pDC, CRect rcClient);
     void mpc_fillNcBG(CDC *mdc, CRect rcDraw);
+    void OnLvnItemchangedList(NMHDR * pNMHDR, LRESULT * pResult);
+    LRESULT OnDelayed_updateListCtrl(WPARAM, LPARAM);
 };

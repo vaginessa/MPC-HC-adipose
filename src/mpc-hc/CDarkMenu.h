@@ -1,6 +1,5 @@
 #pragma once
 #include <afxwin.h>
-#include "CDarkTheme.h"
 
 struct MenuObject {
     HICON m_hIcon;
@@ -13,7 +12,7 @@ struct MenuObject {
 
 
 
-class CDarkMenu :public CMenu, public CDarkTheme {
+class CDarkMenu :public CMenu {
     DECLARE_DYNCREATE(CDarkMenu)
 public:
 	CDarkMenu();
