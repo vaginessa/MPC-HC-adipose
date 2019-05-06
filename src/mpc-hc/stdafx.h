@@ -78,6 +78,8 @@ class CAtlStringMap : public CAtlMap<S, T, CStringElementTraits<S>> {};
 #define CheckNoLog(x)        hr = ##x; if (FAILED(hr)) { return hr; }
 #define CheckNoLogBool(x)    if (FAILED(x)) { return false; }
 
+
+
 #include "DSUtil.h"
 #include "mpc-hc_config.h"
 #include "resource.h"

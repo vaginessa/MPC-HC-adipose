@@ -24,6 +24,7 @@
 #include "VolumeCtrl.h"
 #include "AppSettings.h"
 #include "CDarkTheme.h"
+#undef SubclassWindow
 
 
 // CVolumeCtrl
@@ -31,6 +32,8 @@
 IMPLEMENT_DYNAMIC(CVolumeCtrl, CSliderCtrl)
 CVolumeCtrl::CVolumeCtrl(bool fSelfDrawn)
     : m_fSelfDrawn(fSelfDrawn)
+    ,m_bDrag(false)
+    ,m_bHover(false)
 {
 }
 
@@ -51,6 +54,13 @@ bool CVolumeCtrl::Create(CWnd* pParentWnd)
     SetPageSize(s.nVolumeStep);
     SetLineSize(0);
 
+    if (s.bDarkThemeLoaded) {
+        CToolTipCtrl* pTip = GetToolTips();
+        if (NULL != pTip) {
+            darkTT.SubclassWindow(pTip->m_hWnd);
+        }
+    }
+
     return true;
 }
 
@@ -58,6 +68,7 @@ void CVolumeCtrl::SetPosInternal(int pos)
 {
     SetPos(pos);
     GetParent()->PostMessage(WM_HSCROLL, MAKEWPARAM(static_cast<WORD>(pos), SB_THUMBPOSITION), reinterpret_cast<LPARAM>(m_hWnd)); // this will be reflected back on us
+    m_bDrag = true;
 }
 
 void CVolumeCtrl::IncreaseVolume()
@@ -82,6 +93,8 @@ BEGIN_MESSAGE_MAP(CVolumeCtrl, CSliderCtrl)
     ON_WM_SETCURSOR()
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolTipNotify)
     ON_WM_MOUSEWHEEL()
+    ON_WM_MOUSEMOVE()
+    ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 // CVolumeCtrl message handlers
@@ -123,17 +136,23 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     if (s.bDarkThemeLoaded) {
                         shadow.CreatePen(PS_SOLID, 1, CDarkTheme::ShadowColor);
                         light.CreatePen(PS_SOLID, 1, CDarkTheme::LightColor);
+                        CRect r(pNMCD->rc);
+                        r.DeflateRect(0, 6, 0, 6);
+                        dc.FillSolidRect(r, CDarkTheme::ScrollBGColor);
+                        CBrush fb;
+                        fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+                        dc.FrameRect(r, &fb);
                     } else {
                         shadow.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
                         light.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DHILIGHT));
+                        CPen* old = dc.SelectObject(&light);
+                        dc.MoveTo(pNMCD->rc.right, pNMCD->rc.top);
+                        dc.LineTo(pNMCD->rc.right, pNMCD->rc.bottom);
+                        dc.LineTo(pNMCD->rc.left, pNMCD->rc.bottom);
+                        dc.SelectObject(&shadow);
+                        dc.LineTo(pNMCD->rc.right, pNMCD->rc.top);
+                        dc.SelectObject(old);
                     }
-                    CPen* old = dc.SelectObject(&light);
-                    dc.MoveTo(pNMCD->rc.right, pNMCD->rc.top);
-                    dc.LineTo(pNMCD->rc.right, pNMCD->rc.bottom);
-                    dc.LineTo(pNMCD->rc.left, pNMCD->rc.bottom);
-                    dc.SelectObject(&shadow);
-                    dc.LineTo(pNMCD->rc.right, pNMCD->rc.top);
-                    dc.SelectObject(old);
 
                     dc.Detach();
                     lr = CDRF_SKIPDEFAULT;
@@ -147,17 +166,22 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     COLORREF shadow = GetSysColor(COLOR_3DSHADOW);
                     COLORREF light = GetSysColor(COLOR_3DHILIGHT);
                     if (s.bDarkThemeLoaded) {
-                        shadow = CDarkTheme::ShadowColor;
-                        light = CDarkTheme::LightColor;
-                    }
-                    dc.Draw3dRect(&r, light, 0);
-                    r.DeflateRect(0, 0, 1, 1);
-                    dc.Draw3dRect(&r, light, shadow);
-                    r.DeflateRect(1, 1, 1, 1);
-                    if (s.bDarkThemeLoaded) {
-                        dc.FillSolidRect(&r, CDarkTheme::PlayerBGColor);
-                        dc.SetPixel(r.left + 7, r.top - 1, CDarkTheme::PlayerBGColor);
+                        CBrush fb;
+                        if (m_bDrag) {
+                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbDragColor);
+                        } else if(m_bHover) {
+                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbHoverColor);
+                        } else {
+                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbColor);
+                        }
+                        fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+                        dc.FrameRect(r, &fb);
                     } else {
+
+                        dc.Draw3dRect(&r, light, 0);
+                        r.DeflateRect(0, 0, 1, 1);
+                        dc.Draw3dRect(&r, light, shadow);
+                        r.DeflateRect(1, 1, 1, 1);
                         dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
                         dc.SetPixel(r.left + 7, r.top - 1, GetSysColor(COLOR_BTNFACE));
                     }
@@ -199,7 +223,8 @@ void CVolumeCtrl::OnLButtonDown(UINT nFlags, CPoint point)
             SetPosInternal(start + ((stop - start) * (point.x - r.left) + (w / 2)) / w);
         }
     }
-
+    m_bDrag = true;
+    invalidateThumb();
     CSliderCtrl::OnLButtonDown(nFlags, point);
 }
 
@@ -249,4 +274,35 @@ BOOL CVolumeCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint point)
         return FALSE;
     }
     return TRUE;
+}
+
+void CVolumeCtrl::invalidateThumb() {
+    SetRangeMax(100, TRUE);
+}
+
+
+void CVolumeCtrl::checkHover(CPoint point) {
+    CRect thumbRect;
+    GetThumbRect(thumbRect);
+    bool oldHover = m_bHover;
+    m_bHover = false;
+    if (thumbRect.PtInRect(point)) {
+        m_bHover = true;
+    }
+
+    if (m_bHover != oldHover)
+        invalidateThumb();
+}
+
+void CVolumeCtrl::OnMouseMove(UINT nFlags, CPoint point) {
+    checkHover(point);
+    CSliderCtrl::OnMouseMove(nFlags, point);
+}
+
+
+void CVolumeCtrl::OnLButtonUp(UINT nFlags, CPoint point) {
+    m_bDrag = false;
+    invalidateThumb();
+    checkHover(point);
+    CSliderCtrl::OnLButtonUp(nFlags, point);
 }

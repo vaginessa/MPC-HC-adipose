@@ -108,7 +108,7 @@
 #include "YoutubeDL.h"
 #include "CDarkMenu.h"
 #include "CDarkDockBar.h"
-
+#undef SubclassWindow
 
 // IID_IAMLine21Decoder
 DECLARE_INTERFACE_IID_(IAMLine21Decoder_2, IAMLine21Decoder, "6E8D4A21-310C-11d0-B79A-00AA003767A7") {};

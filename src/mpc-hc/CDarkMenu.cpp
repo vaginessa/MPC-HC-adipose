@@ -6,8 +6,6 @@
 #include "PPageAccelTbl.h"
 
 
-wchar_t* const CDarkMenu::uiTextFont = L"Segoe UI";
-wchar_t* const CDarkMenu::uiSymbolFont = L"MS UI Gothic";
 std::map<UINT, CDarkMenu*> CDarkMenu::subMenuIDs;
 const int CDarkMenu::subMenuPadding = 20;
 const int CDarkMenu::iconSpacing = 22;
@@ -35,10 +33,10 @@ CDarkMenu::~CDarkMenu() {
         }
     }
 
-    for (int i = 0; i < allocatedItems.size(); i++) {
+    for (u_int i = 0; i < allocatedItems.size(); i++) {
         delete allocatedItems[i];
     }
-    for (int i = 0; i < allocatedMenus.size(); i++) {
+    for (u_int i = 0; i < allocatedMenus.size(); i++) {
         delete allocatedMenus[i];
     }
 }
@@ -85,7 +83,7 @@ void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
         mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
         mInfo.cbSize = sizeof(MENUITEMINFO);
         mInfo.dwItemData = (ULONG_PTR)pObject;
-        bool b= SetMenuItemInfo(i, &mInfo, true);
+        SetMenuItemInfo(i, &mInfo, true);
 
         CMenu *t = GetSubMenu(i);
         if (nullptr != t) {
@@ -114,7 +112,6 @@ void CDarkMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
     UINT nID;
     if (byCommand) {
         nID = i;
-        int iMaxItems = GetMenuItemCount();
         bool found = false;
         for (int j = 0; j < iMaxItems; j++) {
             if (nID == GetMenuItemID(j)) {
@@ -149,7 +146,7 @@ void CDarkMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
     mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
     mInfo.cbSize = sizeof(MENUITEMINFO);
     mInfo.dwItemData = (ULONG_PTR)pObject;
-    bool b = SetMenuItemInfo(i, &mInfo, true);
+    SetMenuItemInfo(i, &mInfo, true);
 
     CMenu *t = GetSubMenu(i);
     if (nullptr != t) {
@@ -162,7 +159,7 @@ void CDarkMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
 
 void CDarkMenu::ActivateItemDarkTheme(CMenu* parent, UINT i, bool byCommand) {
     CDarkMenu* t;
-    if (t = DYNAMIC_DOWNCAST(CDarkMenu, parent)) {
+    if ((t = DYNAMIC_DOWNCAST(CDarkMenu, parent)) != nullptr) {
         t->ActivateItemDarkTheme(i, byCommand);
     }
 }
@@ -272,7 +269,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
         COLORREF oldTextFGColor = mDC->SetTextColor(TextFGColor);
-        CFont *font = getUIFont(lpDrawItemStruct->hDC, uiTextFont, 9);
+        CFont *font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiTextFont, 9);
         CFont* pOldFont = mDC->SelectObject(font);
         delete font;
 
@@ -301,7 +298,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
             if (mInfo.hSubMenu) {
-                font = getUIFont(lpDrawItemStruct->hDC, uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
 
                 mDC->SelectObject(font);
                 mDC->SetTextColor(ArrowColor);
@@ -320,7 +317,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
                     check = TEXT("\u2714"); //checkmark
                     size = 10;
                 }
-                font = getUIFont(lpDrawItemStruct->hDC, uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
                 mDC->SelectObject(font);
                 mDC->SetTextColor(TextFGColor);
                 mDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
@@ -352,36 +349,6 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     ExcludeClipRect(lpDrawItemStruct->hDC, rectFull.left, rectFull.top, rectFull.right, rectFull.bottom);
 }
 
-CFont* CDarkMenu::getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight) {
-    LOGFONT lf;
-    memset(&lf, 0, sizeof(LOGFONT));
-
-    lf.lfHeight = -MulDiv(size, GetDeviceCaps(hDC, LOGPIXELSY), 72);
-    lf.lfQuality = CLEARTYPE_QUALITY;
-    
-    //lf.lfQuality = ANTIALIASED_QUALITY;
-    lf.lfWeight = weight;
-    wcsncpy_s(lf.lfFaceName, fontName, LF_FACESIZE);
-
-    CFont* font=new CFont();
-    font->CreateFontIndirect(&lf);
-
-    return font;
-}
-
-CSize CDarkMenu::GetTextSize(CString str, HDC hDC) {
-    CDC* cDC = CDC::FromHandle(hDC);
-    CFont *font = getUIFont(hDC, uiTextFont, 9);
-    CFont* pOldFont = cDC->SelectObject(font);
-
-    CSize cs = cDC->GetTextExtent(str);
-
-    cDC->SelectObject(pOldFont);
-    delete font;
-
-    return cs;
-}
-
 void CDarkMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
     lpMeasureItemStruct->itemHeight = rowHeight;
     MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
@@ -390,13 +357,13 @@ void CDarkMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
         lpMeasureItemStruct->itemWidth = 0;
         lpMeasureItemStruct->itemHeight = separatorHeight;
     } else {
-        CSize cs = GetTextSize(mo->m_strCaption, hDC);
+        CSize cs = CDarkTheme::GetTextSize(mo->m_strCaption, hDC);
         if (mo->isMenubar) {
             lpMeasureItemStruct->itemWidth = cs.cx;
         } else {
             lpMeasureItemStruct->itemWidth = iconSpacing + cs.cx + postTextSpacing + subMenuPadding;
             if (mo->m_strAccel.GetLength() > 0) {
-                cs = GetTextSize(mo->m_strAccel, hDC);
+                cs = CDarkTheme::GetTextSize(mo->m_strAccel, hDC);
                 lpMeasureItemStruct->itemWidth += accelSpacing + cs.cx;
             }
         }

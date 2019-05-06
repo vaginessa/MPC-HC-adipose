@@ -25,6 +25,7 @@
 #include "PlayerListCtrl.h"
 #include "WinHotkeyCtrl.h"
 #include "CDarkTheme.h"
+#include "CDarkToolTipCtrl.h"
 
 // CInPlaceHotKey
 
@@ -502,8 +503,10 @@ CPlayerListCtrl::~CPlayerListCtrl()
 
 void CPlayerListCtrl::PreSubclassWindow()
 {
-    EnableToolTips(TRUE);
-
+    const CAppSettings& s = AfxGetAppSettings();
+    if (!s.bDarkThemeLoaded) {
+        EnableToolTips(TRUE);
+    }
     CListCtrl::PreSubclassWindow();
 }
 
@@ -867,6 +870,7 @@ BEGIN_MESSAGE_MAP(CPlayerListCtrl, CListCtrl)
     ON_WM_NCCALCSIZE()
     ON_WM_CREATE()
     ON_NOTIFY_REFLECT(LVN_ENDSCROLL, &CPlayerListCtrl::OnLvnEndScroll)
+    ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // CPlayerListCtrl message handlers
@@ -988,6 +992,7 @@ void CPlayerListCtrl::OnLvnInsertitem(NMHDR* pNMHDR, LRESULT* pResult)
     LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
     UNREFERENCED_PARAMETER(pNMLV);
     m_nItemClicked = -1;
+
     *pResult = 0;
 }
 
@@ -1069,6 +1074,13 @@ INT_PTR CPlayerListCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
     pTI->rect = rect;
 
     return pTI->uId;
+}
+
+BOOL CPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
+    if (IsWindow(darkTT.m_hWnd)) {
+        darkTT.RelayEvent(pMsg);
+    }
+    return CListCtrl::PreTranslateMessage(pMsg);
 }
 
 BOOL CPlayerListCtrl::OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult)
@@ -1195,6 +1207,8 @@ int CPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
             darkVSB.setScrollWindow(this); //we want messages from this SB
         }
         SetBkColor(CDarkTheme::ContentBGColor);
+
+        darkTT.Create(this, TTS_ALWAYSTIP);
     }
 
     return 0;
@@ -1258,4 +1272,34 @@ LRESULT CPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
         }
     }
     return CListCtrl::WindowProc(message, wParam, lParam);
+}
+
+
+void CPlayerListCtrl::OnMouseMove(UINT nFlags, CPoint point) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        TOOLINFO ti = { 0 };
+        UINT_PTR tid = OnToolHitTest(point, &ti);
+        //OnToolHitTest returns -1 on failure but doesn't update uId to match
+        if (tid != -1 && darkTTcid != ti.uId) {
+            darkTTcid = ti.uId;
+
+            TOOLTIPTEXT ttt = { 0 };
+            ttt.hdr.idFrom = ti.uId;
+            ttt.hdr.hwndFrom = darkTT.m_hWnd;
+            ttt.hdr.code = TTN_NEEDTEXT;
+            ttt.lParam = (LPARAM)m_hWnd;
+            ttt.lpszText = (LPWSTR)&ttt.szText; //by default point at internal buffer
+
+            //TTN_NEEDTEXT is normally reflected to parent, so we will just send it there directly for our custom tooltip
+            GetParent()->SendNotifyMessage(WM_NOTIFY, ttt.hdr.idFrom, (LPARAM)&ttt);
+            if (darkTT.GetToolCount() > 0) {
+                darkTT.DelTool(this);
+                darkTT.Activate(FALSE);
+            }
+
+            darkTT.AddTool(this, ttt.lpszText);
+            darkTT.Activate(TRUE);
+        }
+    }
+    CListCtrl::OnMouseMove(nFlags, point);
 }

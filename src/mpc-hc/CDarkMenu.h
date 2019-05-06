@@ -26,8 +26,6 @@ public:
     static const int separatorHeight;
     static const int postTextSpacing;
     static const int accelSpacing;
-    static wchar_t* const uiTextFont;
-    static wchar_t* const uiSymbolFont;
 
     std::vector<MenuObject *> allocatedItems;
     std::vector<CDarkMenu *> allocatedMenus;
@@ -39,8 +37,6 @@ public:
     static CDarkMenu* getParentMenu(UINT itemID);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
     virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
-    CSize GetTextSize(CString str, HDC hDC);
-    CFont* getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight=FW_REGULAR);
     CDarkMenu* GetSubMenu(int nPos);
     static void updateItem(CCmdUI* pCmdUI);
 };

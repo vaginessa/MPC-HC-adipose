@@ -23,6 +23,7 @@
 
 #include "WinHotkeyCtrl.h"
 #include "CDarkScrollBar.h"
+#include "CDarkToolTipCtrl.h"
 
 #define LVN_DOLABELEDIT (LVN_FIRST+1)
 
@@ -150,6 +151,8 @@ private:
     int m_tStartEditingDelay;
     UINT_PTR m_nTimerID;
     CDarkScrollBar darkVSB;
+    CDarkToolTipCtrl darkTT;
+    UINT_PTR darkTTcid;
 
     bool PrepareInPlaceControl(int nRow, int nCol, CRect& rect);
 
@@ -174,6 +177,7 @@ protected:
     virtual void PreSubclassWindow();
     virtual INT_PTR OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
     virtual ULONG GetGestureStatus(CPoint) override { return 0; };
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
 
     DECLARE_MESSAGE_MAP()
 
@@ -205,4 +209,5 @@ public:
     void updateDarkScrollInfo();
     afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

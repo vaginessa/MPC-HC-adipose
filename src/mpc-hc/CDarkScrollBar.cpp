@@ -59,7 +59,7 @@ void CDarkScrollBar::DrawScrollBar(CDC* pDC) {
 
         if (stArea.IsButton()) {
             CBrush brushButton;
-            COLORREF buttonClr;
+            COLORREF buttonClr=RGB(0,0,0);
             switch (eState) {
             case eDisabled:
                 //no example found of disabled dark scrollbar, but when disabled, button bg = scroll bg

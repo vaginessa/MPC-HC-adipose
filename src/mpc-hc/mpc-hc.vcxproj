@@ -149,6 +149,7 @@
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkScrollBar.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
+    <ClCompile Include="CDarkToolTipCtrl.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
     <ClCompile Include="ColorButton.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkScrollBar.h" />
     <ClInclude Include="CDarkTheme.h" />
+    <ClInclude Include="CDarkToolTipCtrl.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
     <ClInclude Include="ColorButton.h" />

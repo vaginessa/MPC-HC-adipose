@@ -475,6 +475,7 @@
     <ClCompile Include="CDarkScrollBar.cpp" />
     <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="CDarkEdit.cpp" />
+    <ClCompile Include="CDarkToolTipCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -889,6 +890,7 @@
     <ClInclude Include="CDarkScrollBar.h" />
     <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="CDarkEdit.h" />
+    <ClInclude Include="CDarkToolTipCtrl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

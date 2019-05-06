@@ -32,6 +32,7 @@
 #include "PathUtils.h"
 #include "WinAPIUtils.h"
 #include "CDarkTheme.h"
+#undef SubclassWindow
 
 
 
@@ -1161,7 +1162,7 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
     if (s.bDarkThemeLoaded) {
         textcolor = CDarkTheme::TextFGColor;
         if (pli.m_fInvalid) {
-            textcolor = CDarkTheme::MenuItemDisabledColor;
+            textcolor = CDarkTheme::ContentTextDisabledFGColor;
         }
     } else {
         textcolor = fSelected ? 0xff : 0;
@@ -1810,9 +1811,6 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
             break;
     }
 }
-
-//evil macro breaking the CWnd::SubclassWindow
-#undef SubclassWindow
 
 void CPlayerPlaylistBar::OnLvnBeginlabeleditList(NMHDR* pNMHDR, LRESULT* pResult) {
     const CAppSettings& s = AfxGetAppSettings();
