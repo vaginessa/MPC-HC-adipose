@@ -1393,7 +1393,6 @@ END
 
 IDB_PLAYERTOOLBAR       BITMAP                  "res\\toolbar.bmp"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
@@ -2233,6 +2232,24 @@ BEGIN
         MENUITEM "E&xit",                       ID_FILE_EXIT
     END
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDB_PNG_DARKCBHOVER     PNG                     "res\\darktheme\\checkbox.png"
+
+IDB_PNG_DARKCB          PNG                     "res\\darktheme\\checkboxhover.png"
+
+IDB_PNG_DARKRADIO       PNG                     "res\\darktheme\\radio.png"
+
+IDB_PNG_DARKRADIOHOVER  PNG                     "res\\darktheme\\radiohover.png"
+
+IDB_PNG_DARKRADIOSET    PNG                     "res\\darktheme\\radioset.png"
+
+IDB_PNG_DARKRADIOSETHOVER PNG                     "res\\darktheme\\radiosethover.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

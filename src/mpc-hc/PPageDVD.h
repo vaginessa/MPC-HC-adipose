@@ -21,11 +21,13 @@
 
 #pragma once
 
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
+#include "CDarkListBox.h"
+#include "CDarkButton.h"
 
 // CPPageDVD dialog
 
-class CPPageDVD : public CPPageBase
+class CPPageDVD : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageDVD)
 
@@ -36,10 +38,10 @@ public:
     CPPageDVD();
     virtual ~CPPageDVD();
 
-    CListBox m_lcids;
+    CDarkListBox m_lcids;
     CString m_dvdpath;
     CEdit m_dvdpathctrl;
-    CButton m_dvdpathselctrl;
+    CDarkButton m_dvdpathselctrl;
     int m_iDVDLocation;
     int m_iDVDLangType;
 

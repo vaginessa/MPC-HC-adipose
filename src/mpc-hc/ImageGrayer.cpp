@@ -137,7 +137,6 @@ bool ImageGrayer::Gray(const CImage& imgSource, CImage& imgDest)
     return true;
 }
 
-
 bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool disabled, bool darkTheme)
 {
     // Only support 32-bit image for now
@@ -150,6 +149,7 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
     }
 
     imgDest.Destroy();
+
     if (!imgDest.Create(imgSource.GetWidth(), imgSource.GetHeight(), imgSource.GetBPP())) {
         return false;
     }
@@ -162,7 +162,7 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
     RGBQUAD newColor;
     COLORREF themeColor;
     if (disabled) {
-        themeColor = CDarkTheme::MenuItemDisabledColor;
+        themeColor = CDarkTheme::ImageDisabledColor;
     } else {
         themeColor = CDarkTheme::TextFGColor;
     }
@@ -170,7 +170,6 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
     newColor.rgbGreen = GetGValue(themeColor);
     newColor.rgbBlue = GetBValue(themeColor);
     newColor.rgbReserved = 0;
-
 
     BYTE* bits = static_cast<BYTE*>(imgDest.GetBits());
     for (int y = 0; y < imgDest.GetHeight(); y++, bits += imgDest.GetPitch()) {
@@ -180,7 +179,7 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
 
             RGBQUAD rgb = hls.toRGBQUAD();
 
-            if (rgb.rgbRed == 0 && rgb.rgbGreen == 0 && rgb.rgbBlue == 0) {
+            if (p[x].rgbReserved != 0) { //ignore the transparent bits
                 p[x].rgbRed = newColor.rgbRed;
                 p[x].rgbBlue = newColor.rgbBlue;
                 p[x].rgbGreen = newColor.rgbGreen;

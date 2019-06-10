@@ -23,8 +23,10 @@
 #include "EventDispatcher.h"
 #include "PPageBase.h"
 #include "Shaders.h"
+#include "CDarkPPageBase.h"
+#include "CDarkListBox.h"
 
-class CShaderListBox : public CListBox
+class CShaderListBox : public CDarkListBox
 {
 public:
     CShaderListBox();
@@ -58,8 +60,9 @@ protected:
     DECLARE_MESSAGE_MAP();
 };
 
-class CPPageShaders : public CPPageBase
+class CPPageShaders : public CDarkPPageBase
 {
+    DECLARE_DYNAMIC(CPPageShaders)
 public:
     CPPageShaders();
 
@@ -109,4 +112,6 @@ protected:
     void OnUpdateRemoveShader(CCmdUI* pCmdUI);
 
     DECLARE_MESSAGE_MAP()
+public:
+    afx_msg void OnLbnSelchangeList1();
 };

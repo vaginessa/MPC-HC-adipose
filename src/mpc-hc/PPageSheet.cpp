@@ -23,6 +23,8 @@
 #include "mplayerc.h"
 #include "PPageSheet.h"
 #include "SettingsDefines.h"
+#include "CDarkTheme.h"
+#include <prsht.h>
 
 // CPPageSheet
 
@@ -80,10 +82,32 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
             }
         }
     }
+
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST2, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST3, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+/* no owner draw, override onpaint() instead
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_VIDRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_RMRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_QTRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_AUDRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_COMBO1, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_D3D9DEVICE_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_DX9RESIZER_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
+*/
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageDVD), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+    }
+
 }
 
-CPPageSheet::~CPPageSheet()
-{
+CPPageSheet::~CPPageSheet() {
+}
+
+void CPPageSheet::enableDarkThemeIfActive() {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this);
+    }
 }
 
 void CPPageSheet::EventCallback(MpcEvent ev)
@@ -105,7 +129,10 @@ CTreeCtrl* CPPageSheet::CreatePageTreeObject()
 BEGIN_MESSAGE_MAP(CPPageSheet, CTreePropSheet)
     ON_WM_CONTEXTMENU()
     ON_COMMAND(ID_APPLY_NOW, OnApply)
+    ON_WM_CTLCOLOR()
+    ON_WM_DRAWITEM()
 END_MESSAGE_MAP()
+
 
 BOOL CPPageSheet::OnInitDialog()
 {
@@ -121,6 +148,7 @@ BOOL CPPageSheet::OnInitDialog()
         GetPageTreeControl()->EnableWindow(FALSE);
     }
 
+    enableDarkThemeIfActive();
     return bResult;
 }
 
@@ -140,6 +168,27 @@ void CPPageSheet::OnApply()
         EndDialog(APPLY_LANGUAGE_CHANGE);
     }
 }
+
+TreePropSheet::CPropPageFrame* CPPageSheet::CreatePageFrame() {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        return DEBUG_NEW CDarkPropPageFrame;
+    } else {
+        return __super::CreatePageFrame();
+    }
+}
+
+
+HBRUSH CPPageSheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        pDC->SetTextColor(CDarkTheme::TextFGColor);
+        pDC->SetBkColor(CDarkTheme::ControlAreaBGColor);
+        return darkControlAreaBrush;
+    } else {
+        HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
+        return hbr;
+    }
+}
+
 
 // CTreePropSheetTreeCtrl
 

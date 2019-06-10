@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "CDarkScrollBar.h"
 #include "CDarkTheme.h"
-
+#include "CDarkListBox.h"
 
 IMPLEMENT_DYNAMIC(CDarkScrollBar, CXeScrollBarBase)
 
 BEGIN_MESSAGE_MAP(CDarkScrollBar, CXeScrollBarBase)
+    ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 CDarkScrollBar::CDarkScrollBar() {
@@ -144,12 +145,11 @@ void CDarkScrollBar::DrawScrollBar(CDC* pDC) {
 
 void CDarkScrollBar::SendScrollMsg(WORD wSBcode, WORD wHiWPARAM /*= 0*/) {
     ASSERT(::IsWindow(m_hWnd));
-    if (m_scrollWindow && ::IsWindow(m_scrollWindow->m_hWnd)) {
-        m_scrollWindow->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL,
-            MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
-    } else if (m_pParent && ::IsWindow(m_pParent->m_hWnd)) {
-        m_pParent->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL,
-            MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
+    if (nullptr != m_scrollWindow && ::IsWindow(m_scrollWindow->m_hWnd)) {
+        if (SB_ENDSCROLL != wSBcode)
+        m_scrollWindow->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL, MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
+    } else if (nullptr != m_pParent && ::IsWindow(m_pParent->m_hWnd)) {
+        m_pParent->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL, MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
     }
 }
 
@@ -166,3 +166,4 @@ void CDarkScrollBar::updateScrollInfo() {
         }
     }
 }
+

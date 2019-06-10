@@ -269,9 +269,9 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
         COLORREF oldTextFGColor = mDC->SetTextColor(TextFGColor);
-        CFont *font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiTextFont, 9);
-        CFont* pOldFont = mDC->SelectObject(font);
-        delete font;
+        CFont font;
+        CDarkTheme::getUIFont(font, lpDrawItemStruct->hDC, CDarkTheme::CDMenuFont);
+        CFont* pOldFont = mDC->SelectObject(&font);
 
 
         if ((lpDrawItemStruct->itemState & ODS_SELECTED) && (lpDrawItemStruct->itemAction & (ODA_SELECT | ODA_DRAWENTIRE))) {
@@ -298,12 +298,12 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
             if (mInfo.hSubMenu) {
-                font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CFont sfont;
+                CDarkTheme::getUIFont(sfont, lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
 
-                mDC->SelectObject(font);
+                mDC->SelectObject(&sfont);
                 mDC->SetTextColor(ArrowColor);
                 mDC->DrawText(TEXT(">"), rectArrow, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-                delete font;
             }
 
             if (mInfo.fState & MFS_CHECKED) {
@@ -317,11 +317,11 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
                     check = TEXT("\u2714"); //checkmark
                     size = 10;
                 }
-                font = CDarkTheme::getUIFont(lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
-                mDC->SelectObject(font);
+                CFont bFont;
+                CDarkTheme::getUIFont(bFont, lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                mDC->SelectObject(&bFont);
                 mDC->SetTextColor(TextFGColor);
                 mDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-                delete font;
             }
         }
 
@@ -357,13 +357,13 @@ void CDarkMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
         lpMeasureItemStruct->itemWidth = 0;
         lpMeasureItemStruct->itemHeight = separatorHeight;
     } else {
-        CSize cs = CDarkTheme::GetTextSize(mo->m_strCaption, hDC);
+        CSize cs = CDarkTheme::GetTextSize(mo->m_strCaption, hDC, CDarkTheme::CDMenuFont);
         if (mo->isMenubar) {
             lpMeasureItemStruct->itemWidth = cs.cx;
         } else {
             lpMeasureItemStruct->itemWidth = iconSpacing + cs.cx + postTextSpacing + subMenuPadding;
             if (mo->m_strAccel.GetLength() > 0) {
-                cs = CDarkTheme::GetTextSize(mo->m_strAccel, hDC);
+                cs = CDarkTheme::GetTextSize(mo->m_strAccel, hDC, CDarkTheme::CDMenuFont);
                 lpMeasureItemStruct->itemWidth += accelSpacing + cs.cx;
             }
         }

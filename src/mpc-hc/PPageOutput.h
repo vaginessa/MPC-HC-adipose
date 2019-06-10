@@ -23,11 +23,13 @@
 
 #include "PPageBase.h"
 #include "resource.h"
+#include "CDarkPPageBase.h"
+#include "CDarkComboBox.h"
 
 
 // CPPageOutput dialog
 
-class CPPageOutput : public CPPageBase
+class CPPageOutput : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageOutput)
 
@@ -37,15 +39,15 @@ private:
     CImageList m_tickcross;
     HICON m_tick, m_cross;
 
-    CComboBox m_iDSVideoRendererTypeCtrl;
-    CComboBox m_iAudioRendererTypeCtrl;
-    CComboBox m_SubtitleRendererCtrl;
-    CComboBox m_iRMVideoRendererTypeCtrl;
-    CComboBox m_iQTVideoRendererTypeCtrl;
-    CComboBox m_iD3D9RenderDeviceCtrl;
-    CComboBox m_APSurfaceUsageCtrl;
-    CComboBox m_DX9ResizerCtrl;
-    CComboBox m_EVRBuffersCtrl;
+    CDarkComboBox m_iDSVideoRendererTypeCtrl;
+    CDarkComboBox m_iAudioRendererTypeCtrl;
+    CDarkComboBox m_SubtitleRendererCtrl;
+    CDarkComboBox m_iRMVideoRendererTypeCtrl;
+    CDarkComboBox m_iQTVideoRendererTypeCtrl;
+    CDarkComboBox m_iD3D9RenderDeviceCtrl;
+    CDarkComboBox m_APSurfaceUsageCtrl;
+    CDarkComboBox m_DX9ResizerCtrl;
+    CDarkComboBox m_EVRBuffersCtrl;
 
     CStatic m_iDSDXVASupport;
     CStatic m_iDSSubtitleSupport;

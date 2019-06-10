@@ -476,6 +476,16 @@
     <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="CDarkEdit.cpp" />
     <ClCompile Include="CDarkToolTipCtrl.cpp" />
+    <ClCompile Include="CDarkButton.cpp" />
+    <ClCompile Include="CDarkGroupBox.cpp" />
+    <ClCompile Include="CDarkLinkCtrl.cpp" />
+    <ClCompile Include="CDarkDialog.cpp" />
+    <ClCompile Include="CDarkPPageBase.cpp" />
+    <ClCompile Include="CDarkChildHelper.cpp" />
+    <ClCompile Include="CDarkListBox.cpp" />
+    <ClCompile Include="CDarkPropPageFrame.cpp" />
+    <ClCompile Include="CDarkComboBox.cpp" />
+    <ClCompile Include="CDarkRadioOrCheck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -891,6 +901,16 @@
     <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="CDarkEdit.h" />
     <ClInclude Include="CDarkToolTipCtrl.h" />
+    <ClInclude Include="CDarkButton.h" />
+    <ClInclude Include="CDarkGroupBox.h" />
+    <ClInclude Include="CDarkLinkCtrl.h" />
+    <ClInclude Include="CDarkDialog.h" />
+    <ClInclude Include="CDarkPPageBase.h" />
+    <ClInclude Include="CDarkChildHelper.h" />
+    <ClInclude Include="CDarkListBox.h" />
+    <ClInclude Include="CDarkPropPageFrame.h" />
+    <ClInclude Include="CDarkComboBox.h" />
+    <ClInclude Include="CDarkRadioOrCheck.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">
@@ -1126,6 +1146,12 @@
     <Image Include="res\uncheck_all.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\darktheme\checkbox.png" />
+    <Image Include="res\darktheme\checkboxhover.png" />
+    <Image Include="res\darktheme\radioset.png" />
+    <Image Include="res\darktheme\radiosethover.png" />
+    <Image Include="res\darktheme\radio.png" />
+    <Image Include="res\darktheme\radiohover.png" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\subtitles\favicon_opensubtitles.ico">

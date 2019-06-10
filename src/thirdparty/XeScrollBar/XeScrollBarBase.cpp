@@ -191,6 +191,9 @@ CXeScrollBarBase::CXeScrollBarBase()
 	m_dblPx_SU = 0;
 	m_ptMenu.SetPoint(0,0);
 	m_xyThumbDragOffset = 0;
+    if (!SystemParametersInfoA(SPI_GETWHEELSCROLLLINES, 0, &scrollLines, 0)) { //added to support multiple rows per mouse notch
+        scrollLines = 3;
+    }
 }
 
 CXeScrollBarBase::~CXeScrollBarBase()
@@ -783,7 +786,8 @@ BOOL CXeScrollBarBase::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
         }
         if (wSBcode != 0xFFFF) {
             do {
-                SendScrollMsg(wSBcode);
+                for (UINT i=0; i<scrollLines; i++) //windows scrolls more than 1 line per tick
+                    SendScrollMsg(wSBcode);
             } while ((zDelta -= WHEEL_DELTA) >= WHEEL_DELTA);
             SendScrollMsg(SB_ENDSCROLL);
         }

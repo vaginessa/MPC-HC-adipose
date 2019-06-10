@@ -896,7 +896,10 @@ BOOL CPlayerListCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     if (GetFocus() != this) {
         SetFocus();
     }
-    return CListCtrl::OnMouseWheel(nFlags, zDelta, pt);
+    BOOL ret = CListCtrl::OnMouseWheel(nFlags, zDelta, pt);
+    ScreenToClient(&pt);
+    updateToolTip(pt);
+    return ret;
 }
 
 void CPlayerListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
@@ -1209,6 +1212,7 @@ int CPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
         SetBkColor(CDarkTheme::ContentBGColor);
 
         darkTT.Create(this, TTS_ALWAYSTIP);
+        darkTT.enableFlickerHelper();
     }
 
     return 0;
@@ -1274,32 +1278,29 @@ LRESULT CPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
     return CListCtrl::WindowProc(message, wParam, lParam);
 }
 
-
-void CPlayerListCtrl::OnMouseMove(UINT nFlags, CPoint point) {
+void CPlayerListCtrl::updateToolTip(CPoint point) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
         if (tid != -1 && darkTTcid != ti.uId) {
-            darkTTcid = ti.uId;
-
-            TOOLTIPTEXT ttt = { 0 };
-            ttt.hdr.idFrom = ti.uId;
-            ttt.hdr.hwndFrom = darkTT.m_hWnd;
-            ttt.hdr.code = TTN_NEEDTEXT;
-            ttt.lParam = (LPARAM)m_hWnd;
-            ttt.lpszText = (LPWSTR)&ttt.szText; //by default point at internal buffer
-
-            //TTN_NEEDTEXT is normally reflected to parent, so we will just send it there directly for our custom tooltip
-            GetParent()->SendNotifyMessage(WM_NOTIFY, ttt.hdr.idFrom, (LPARAM)&ttt);
             if (darkTT.GetToolCount() > 0) {
                 darkTT.DelTool(this);
                 darkTT.Activate(FALSE);
             }
 
-            darkTT.AddTool(this, ttt.lpszText);
+            darkTTcid = ti.uId;
+
+            CRect cr;
+            GetClientRect(&cr); //we reset the tooltip every time we move anyway, so this rect is adequate
+
+            darkTT.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
             darkTT.Activate(TRUE);
         }
     }
+}
+
+void CPlayerListCtrl::OnMouseMove(UINT nFlags, CPoint point) {
     CListCtrl::OnMouseMove(nFlags, point);
+    updateToolTip(point);
 }

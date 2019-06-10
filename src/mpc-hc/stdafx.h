@@ -50,6 +50,7 @@ namespace Gdiplus
     using std::max;
 };
 
+#include <afxbutton.h>
 #include <afxole.h>
 #include <afxinet.h>
 #include <atlcoll.h>
@@ -58,6 +59,7 @@ namespace Gdiplus
 #include <atlpath.h>
 #include <atlsync.h>
 #include <atlutil.h>
+#include <atlwin.h>
 #include <comdef.h>
 #include <commdlg.h>
 

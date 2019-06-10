@@ -3,9 +3,13 @@
 
 const COLORREF CDarkTheme::MenuBGColor = COLORREF(RGB(43, 43, 43));
 const COLORREF CDarkTheme::WindowBGColor = COLORREF(RGB(25, 25, 25));
+const COLORREF CDarkTheme::ControlAreaBGColor = COLORREF(RGB(56, 56, 56));
+
 const COLORREF CDarkTheme::ContentBGColor = COLORREF(RGB(32, 32, 32));
 const COLORREF CDarkTheme::ContentSelectedColor = COLORREF(RGB(119, 119, 119));
 const COLORREF CDarkTheme::PlayerBGColor = COLORREF(RGB(32, 32, 32));
+
+const COLORREF CDarkTheme::HighLightColor = GetSysColor(COLOR_HIGHLIGHT);
 
 const COLORREF CDarkTheme::MenuSelectedColor = COLORREF(RGB(65, 65, 65));
 const COLORREF CDarkTheme::MenuSeparatorColor = COLORREF(RGB(128, 128, 128));
@@ -36,6 +40,9 @@ const COLORREF CDarkTheme::ScrollButtonClickColor = COLORREF(RGB(166, 166, 166))
 const COLORREF CDarkTheme::EditBorderColor = COLORREF(RGB(255, 255, 255));
 const COLORREF CDarkTheme::TooltipBorderColor = COLORREF(RGB(118, 118, 118));
 
+const COLORREF CDarkTheme::GroupBoxBorderColor = COLORREF(RGB(118, 118, 118));
+const int CDarkTheme::GroupBoxTextIndent = 8;
+
 const COLORREF CDarkTheme::PlayerButtonHotColor = COLORREF(RGB(43, 43, 43));
 const COLORREF CDarkTheme::PlayerButtonCheckedColor = COLORREF(RGB(66, 66, 66)); 
 const COLORREF CDarkTheme::PlayerButtonClickedColor = COLORREF(RGB(55, 55, 55));
@@ -45,8 +52,27 @@ const COLORREF CDarkTheme::DebugColorRed = COLORREF(RGB(255, 0, 0));
 const COLORREF CDarkTheme::DebugColorYellow = COLORREF(RGB(255, 255, 0));
 const COLORREF CDarkTheme::DebugColorGreen = COLORREF(RGB(0, 255, 0));
 
+const COLORREF CDarkTheme::ButtonBorderOuterColor = COLORREF(RGB(240, 240, 240));
+const COLORREF CDarkTheme::ButtonBorderInnerFocusedColor = COLORREF(RGB(255, 255, 255));
+const COLORREF CDarkTheme::ButtonBorderInnerColor = COLORREF(RGB(155, 155, 155));
+const COLORREF CDarkTheme::ButtonBorderSelectedKBFocusColor = COLORREF(RGB(150, 150, 150));
+const COLORREF CDarkTheme::ButtonBorderHoverKBFocusColor = COLORREF(RGB(181, 181, 181));
+const COLORREF CDarkTheme::ButtonBorderKBFocusColor = COLORREF(RGB(195, 195, 195));
+const COLORREF CDarkTheme::ButtonFillColor = COLORREF(RGB(51, 51, 51));
+const COLORREF CDarkTheme::ButtonFillHoverColor = COLORREF(RGB(69, 69, 69));
+const COLORREF CDarkTheme::ButtonFillSelectedColor = COLORREF(RGB(102, 102, 102));
+const COLORREF CDarkTheme::ButtonDisabledFGColor = COLORREF(RGB(109, 109, 109));
+
+const COLORREF CDarkTheme::CheckboxBorderColor = COLORREF(RGB(137, 137, 137));
+const COLORREF CDarkTheme::CheckboxBGColor = COLORREF(RGB(0, 0, 0));
+const COLORREF CDarkTheme::CheckboxBorderHoverColor = COLORREF(RGB(121, 121, 121));
+const COLORREF CDarkTheme::CheckboxBGHoverColor = COLORREF(RGB(8, 8, 8));
+
+const COLORREF CDarkTheme::ImageDisabledColor = COLORREF(RGB(109, 109, 109));
+
 
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
+wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
 wchar_t* const CDarkTheme::uiSymbolFont = L"MS UI Gothic";
 
 const int CDarkTheme::gripPatternLong = 5;
@@ -79,8 +105,36 @@ const BYTE CDarkTheme::ScrollArrowBitsV[12] = {
     0x82, 0x00,
 };
 
+const BYTE CDarkTheme::ComboArrowBits[10] = {
+    0x80, 0x40,
+    0x40, 0x80,
+    0x21, 0x00,
+    0x12, 0x00,
+    0x0C, 0x00,
+};
+const int CDarkTheme::ComboArrowWidth = 10;
+const int CDarkTheme::ComboArrowHeight = 5;
 
-CFont* CDarkTheme::getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight) {
+const COLORREF CDarkTheme::ComboboxArrowColor[3] = {
+    COLORREF(RGB(113, 113, 113)),
+    COLORREF(RGB(173, 173, 173)),
+    COLORREF(RGB(62, 62, 62)),
+};
+
+const COLORREF CDarkTheme::ComboboxArrowColorHover[3] = {
+    COLORREF(RGB(123, 123, 123)),
+    COLORREF(RGB(177, 177, 177)),
+    COLORREF(RGB(78, 78, 78)),
+};
+
+const COLORREF CDarkTheme::ComboboxArrowColorClick[3] = {
+    COLORREF(RGB(143, 143, 143)),
+    COLORREF(RGB(183, 183, 183)),
+    COLORREF(RGB(109, 109, 109)),
+};
+
+
+void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight) {
     LOGFONT lf;
     memset(&lf, 0, sizeof(LOGFONT));
 
@@ -91,22 +145,97 @@ CFont* CDarkTheme::getUIFont(HDC hDC, wchar_t *fontName, int size, LONG weight) 
     lf.lfWeight = weight;
     wcsncpy_s(lf.lfFaceName, fontName, LF_FACESIZE);
 
-    CFont* font = new CFont();
-    font->CreateFontIndirect(&lf);
-
-    return font;
+    font.CreateFontIndirect(&lf);
 }
 
+void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type) {
+    NONCLIENTMETRICS m = GetMetrics();
+    LOGFONT *lf;
+    if (type == CDCaptionFont) {
+        lf = &m.lfCaptionFont;
+    } else if (type == CDSmallCaptionFont) {
+        lf = &m.lfSmCaptionFont;
+    } else if (type == CDMenuFont) {
+        lf = &m.lfMenuFont;
+    } else if (type == CDStatusFont) {
+        lf = &m.lfStatusFont;
+    } else if (type == CDMessageFont) {
+        lf = &m.lfMessageFont;
+    } else if (type == CDDialogFont) { //hack for compatibility with MS SHell Dlg (8) used in dialogs
+        LOGFONT tlf;
+        memset(&tlf, 0, sizeof(LOGFONT));
+        tlf.lfHeight = -MulDiv(8, GetDeviceCaps(hDC, LOGPIXELSY), 72);
+        tlf.lfQuality = CLEARTYPE_QUALITY;
+        tlf.lfWeight = FW_REGULAR;
+        wcsncpy_s(tlf.lfFaceName, m.lfMessageFont.lfFaceName, LF_FACESIZE);
+        lf = &tlf;
+    } else {
+        lf = &m.lfMessageFont;
+    }
+    font.CreateFontIndirect(lf);
+}
 
-CSize CDarkTheme::GetTextSize(CString str, HDC hDC) {
+CSize CDarkTheme::GetTextSize(CString str, HDC hDC, int type) {
     CDC* cDC = CDC::FromHandle(hDC);
-    CFont *font = CDarkTheme::getUIFont(hDC, CDarkTheme::uiTextFont, 9);
-    CFont* pOldFont = cDC->SelectObject(font);
+    CFont font;
+    getUIFont(font, hDC, type);
+    CFont* pOldFont = cDC->SelectObject(&font);
 
     CSize cs = cDC->GetTextExtent(str);
 
     cDC->SelectObject(pOldFont);
-    delete font;
 
     return cs;
 }
+
+CSize CDarkTheme::GetTextSizeDiff(CString str, HDC hDC, int type, CFont * curFont) {
+    CSize cs = GetTextSize(str, hDC, type);
+    CDC* cDC = CDC::FromHandle(hDC);
+    CFont* pOldFont = cDC->SelectObject(curFont);
+    CSize curCs = cDC->GetTextExtent(str);
+    cDC->SelectObject(pOldFont);
+
+    return cs - curCs;
+}
+
+bool CDarkTheme::haveMetrics = false;
+NONCLIENTMETRICS CDarkTheme::_metrics = NONCLIENTMETRICS();
+NONCLIENTMETRICS& CDarkTheme::GetMetrics() {
+    if (!haveMetrics) {
+        CDarkTheme::_metrics.cbSize = sizeof(NONCLIENTMETRICS);
+        ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CDarkTheme::_metrics, 0);
+        haveMetrics = true;
+    }
+    return CDarkTheme::_metrics;
+}
+
+void CDarkTheme::Draw2BitTransparent(CDC & dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor) {
+    COLORREF crOldTextColor = dc.GetTextColor();
+    COLORREF crOldBkColor = dc.GetBkColor();
+
+    CDC dcBMP;
+    dcBMP.CreateCompatibleDC(&dc);
+
+    dcBMP.SelectObject(bmp);
+    dc.BitBlt(left, top, width, height, &dcBMP, 0, 0, SRCINVERT); //SRCINVERT works to create mask from 2-bit image. same result as bitblt with text=0 and bk=0xffffff
+    dc.SetBkColor(fgColor);        //paint: foreground color (1 in 2 bit)
+    dc.SetTextColor(RGB(0, 0, 0)); //paint: black where transparent
+    dc.BitBlt(left, top, width, height, &dcBMP, 0, 0, SRCPAINT);
+
+    dc.SetTextColor(crOldTextColor);
+    dc.SetBkColor(crOldBkColor);
+}
+
+void CDarkTheme::dbg(CString text, ...) {
+    va_list args;
+    va_start(args, text);
+    _TCHAR t[8192] = { 0 };
+    const _TCHAR* b = text.GetBuffer();
+    _sntprintf_s(t, _countof(t), _TRUNCATE, b, args);
+    text.ReleaseBuffer();
+    OutputDebugString(t);
+    OutputDebugString(_T("\n"));
+    va_end(args);
+}
+
+

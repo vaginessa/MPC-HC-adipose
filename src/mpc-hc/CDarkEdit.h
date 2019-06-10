@@ -5,7 +5,7 @@ class CDarkEdit :
 {
 public:
 	CDarkEdit();
-	~CDarkEdit();
+	virtual ~CDarkEdit();
     CBrush   m_brBkgnd;
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);

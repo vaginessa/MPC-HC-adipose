@@ -12,6 +12,7 @@ CDarkToolTipCtrl::CDarkToolTipCtrl() {
 
 CDarkToolTipCtrl::~CDarkToolTipCtrl() {
     if (nullptr != helper) {
+        helper->DestroyWindow();
         delete helper;
     }
 }
@@ -41,14 +42,19 @@ void CDarkToolTipCtrl::paintTT(CPaintDC& dc, CDarkToolTipCtrl* tt) {
     fb.CreateSolidBrush(CDarkTheme::TooltipBorderColor);
     dc.FrameRect(r, &fb);
 
-    CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 9);
-    CFont* pOldFont = dc.SelectObject(font);
-    delete font;
+    CFont font;
+    CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::uiTextFont, 9);
+    CFont* pOldFont = dc.SelectObject(&font);
 
     COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
     CString text;
     tt->GetWindowText(text);
-    dc.DrawText(text, r, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+    int maxWidth = tt->GetMaxTipWidth();
+    r.DeflateRect(6, 2);
+    if (maxWidth == -1)
+        dc.DrawText(text, r, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+    else
+        dc.DrawText(text, r, DT_LEFT | DT_WORDBREAK);
 
 
     dc.SelectObject(pOldFont);
@@ -89,7 +95,7 @@ void CDarkToolTipCtrl::makeHelper() {
     helper = new CDarkToolTipCtrlHelper(this);
     RECT tr = { r.left, r.top, r.right, r.bottom };
     //do it the long way since no menu for parent
-    BOOL b = helper->CreateEx(NULL, AfxRegisterWndClass(0), NULL, WS_POPUP | WS_DISABLED,
+    helper->CreateEx(NULL, AfxRegisterWndClass(0), NULL, WS_POPUP | WS_DISABLED,
         r.left, r.top, r.right - r.left, r.bottom - r.top,
         GetParent()->GetSafeHwnd(), NULL, NULL);
     helper->Invalidate();

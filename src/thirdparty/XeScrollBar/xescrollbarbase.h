@@ -278,7 +278,7 @@ protected:
 	// Send WM_HSCROLL or WM_VSCROLL message to parent window.
 	// [IN]  wSBcode = SB_XXX message (LOWORD of WPARAM).
 	// [IN]  wHiWPARAM = Scroll pos when SB_THUMBTRACK or SB_THUMBPOSITION.
-	void SendScrollMsg( WORD wSBcode, WORD wHiWPARAM = 0 );
+	virtual void SendScrollMsg( WORD wSBcode, WORD wHiWPARAM = 0 );
 
 	// Get UI area (element) from point.
 	// Returns UI area enum if point is within a UI element else eNone.
@@ -390,6 +390,9 @@ protected:
 	// This is used while dragging so mouse x or y rel. pos. in thumb is unchanged.
 
 	///////////////////////////////////////////////////////////////////////////
+
+    UINT scrollLines; //added to support multiple rows per mouse notch
+
 	DECLARE_MESSAGE_MAP()
 };
 

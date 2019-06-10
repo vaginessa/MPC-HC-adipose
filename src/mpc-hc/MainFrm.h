@@ -477,8 +477,8 @@ protected:
     friend class CGraphThread;
     CGraphThread* m_pGraphThread;
     bool m_bOpenedThroughThread;
-    ::CEvent m_evOpenPrivateFinished;
-    ::CEvent m_evClosePrivateFinished;
+    ATL::CEvent m_evOpenPrivateFinished;
+    ATL::CEvent m_evClosePrivateFinished;
 
     void LoadKeyFrames();
     std::vector<REFERENCE_TIME> m_kfs;

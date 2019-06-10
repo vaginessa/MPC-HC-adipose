@@ -46,7 +46,8 @@
 #include "PPageAdvanced.h"
 #include "TreePropSheet/TreePropSheet.h"
 #include "DpiHelper.h"
-
+#include "CDarkChildHelper.h"
+#include "CDarkPropPageFrame.h"
 
 // CTreePropSheetTreeCtrl
 
@@ -65,7 +66,7 @@ protected:
 
 // CPPageSheet
 
-class CPPageSheet : public TreePropSheet::CTreePropSheet
+class CPPageSheet : public TreePropSheet::CTreePropSheet, public CDarkChildHelper
 {
     DECLARE_DYNAMIC(CPPageSheet)
 
@@ -74,7 +75,7 @@ public:
         APPLY_LANGUAGE_CHANGE = 100, // 100 is a magic number than won't collide with WinAPI constants
         RESET_SETTINGS
     };
-
+    CPtrArray& getPages() { return m_pages; };
 private:
     bool m_bLockPage;
     bool m_bLanguageChanged;
@@ -108,10 +109,10 @@ private:
     void EventCallback(MpcEvent ev);
 
     CTreeCtrl* CreatePageTreeObject();
-
 public:
     CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd, UINT idPage = 0);
     virtual ~CPPageSheet();
+    void enableDarkThemeIfActive();
 
     void LockPage() { m_bLockPage = true; };
 
@@ -124,4 +125,7 @@ protected:
 
     afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
     afx_msg void OnApply();
+    virtual TreePropSheet::CPropPageFrame * CreatePageFrame();
+public:
+    afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

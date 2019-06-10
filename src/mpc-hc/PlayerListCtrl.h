@@ -209,5 +209,6 @@ public:
     void updateDarkScrollInfo();
     afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+    void updateToolTip(CPoint point);
     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

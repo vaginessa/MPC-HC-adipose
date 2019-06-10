@@ -19,10 +19,10 @@
  */
 
 
+#include <afxdialogex.h>
 #include "stdafx.h"
 #include "UpdateCheckerDlg.h"
 #include "mpc-hc_config.h"
-#include <afxdialogex.h>
 
 IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CDialog)
 
