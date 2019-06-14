@@ -493,6 +493,7 @@ CPlayerListCtrl::CPlayerListCtrl(int tStartEditingDelay)
     , m_tStartEditingDelay(tStartEditingDelay)
     , m_nTimerID(0)
     , m_fInPlaceDirty(false)
+    , allowDarkTheme(false)
 {
 }
 
@@ -1137,7 +1138,7 @@ void CPlayerListCtrl::OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point)
 
 void CPlayerListCtrl::OnNcPaint() {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bDarkThemeLoaded && nullptr != darkVSB) {
         CRect wr, cr;
 
         CWindowDC dc(this);
@@ -1175,13 +1176,16 @@ void CPlayerListCtrl::setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping) {
     if (clipping) {
         LONG sbRight = wr.right;
         int width = GetSystemMetrics(SM_CXVSCROLL);
-        wr.right = wr.left + nWidth - 1; //1 pixel bleed of scrollbar, list items must be drawn 1 pix short?
-        if (GetStyle()&WS_VSCROLL) {
-            darkVSB.MoveWindow(sbRight - width - 1, cr.top + 1, width, cr.bottom - cr.top + 2);
-            darkVSB.ShowWindow(SW_SHOW);
-            updateDarkScrollInfo();
-        } else {
-            darkVSB.ShowWindow(SW_HIDE);
+        wr.right -= width + 5;
+//        wr.right = wr.left + nWidth - 1; //1 pixel bleed of scrollbar, list items must be drawn 1 pix short?
+        if (nullptr != darkVSB) {
+            if (GetStyle()&WS_VSCROLL) {
+                darkVSB.MoveWindow(sbRight - width - 1, cr.top + 1, width, cr.bottom - cr.top + 2);
+                darkVSB.ShowWindow(SW_SHOW);
+                updateDarkScrollInfo();
+            } else {
+                darkVSB.ShowWindow(SW_HIDE);
+            }
         }
     }
 
@@ -1203,8 +1207,9 @@ int CPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
         return -1;
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        if (CWnd* pParent = GetParent()) {
+    if (s.bDarkThemeLoaded && allowDarkTheme) {
+        CWnd* pParent = GetParent();
+        if (nullptr != pParent ) {
             VERIFY(darkVSB.Create(SBS_VERT | WS_CHILD |
                 WS_VISIBLE, CRect(0, 0, 0, 0), pParent, IDC_DARKVSCROLLBAR));
             darkVSB.setScrollWindow(this); //we want messages from this SB
@@ -1220,7 +1225,7 @@ int CPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 
 void CPlayerListCtrl::updateDarkScrollInfo() {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bDarkThemeLoaded && nullptr != darkVSB) {
         darkVSB.updateScrollInfo();
     }
 }
@@ -1279,7 +1284,7 @@ LRESULT CPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
 }
 
 void CPlayerListCtrl::updateToolTip(CPoint point) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bDarkThemeLoaded && nullptr != darkTT) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match

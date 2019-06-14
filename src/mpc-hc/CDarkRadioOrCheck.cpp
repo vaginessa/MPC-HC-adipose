@@ -45,8 +45,8 @@ void CDarkRadioOrCheck::OnPaint() {
     COLORREF oldBkColor = dc.GetBkColor();
     COLORREF oldTextColor = dc.GetTextColor();
 
-    bool m_bIsDisabled = false;
-    bool m_bIsFocussed = false;
+    bool isDisabled = !IsWindowEnabled();
+    bool isFocused = (GetFocus() == this);
 
     bool isChecked = (SendMessage(BM_GETCHECK) == BST_CHECKED);
 
@@ -134,7 +134,7 @@ void CDarkRadioOrCheck::OnPaint() {
         }
 
         dc.SetBkColor(CDarkTheme::WindowBGColor);
-        if (m_bIsDisabled) {
+        if (isDisabled) {
             dc.SetTextColor(CDarkTheme::ButtonDisabledFGColor);
             dc.DrawText(sTitle, -1, &rectItem, uFormat);
         } else {
@@ -143,9 +143,9 @@ void CDarkRadioOrCheck::OnPaint() {
         }
         dc.SelectObject(pOldFont);
 
-        if (m_bIsFocussed) {
+        if (isFocused) {
             CRect focusRect = rectItem;
-            focusRect.InflateRect(2, 0);
+            focusRect.InflateRect(0, 0);
             dc.SetTextColor(CDarkTheme::ButtonBorderKBFocusColor); //no example of this in explorer, but white seems too harsh
             CBrush *dotted = dc.GetHalftoneBrush();
             dc.FrameRect(focusRect, dotted);

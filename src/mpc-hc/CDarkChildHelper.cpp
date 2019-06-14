@@ -29,6 +29,9 @@ CDarkChildHelper::~CDarkChildHelper() {
     for (u_int i = 0; i < allocatedRadioButtons.size(); i++) {
         delete allocatedRadioButtons[i];
     }
+    for (u_int i = 0; i < allocatedEdits.size(); i++) {
+        delete allocatedEdits[i];
+    }
 }
 
 void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
@@ -44,10 +47,12 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             LRESULT lRes = pChild->SendMessage(WM_GETDLGCODE, 0, 0);
             CWnd* tChild = pChild;
             pChild = pChild->GetNextWindow(); //increment before any unsubclassing
-            CString cls = tChild->GetRuntimeClass()->m_lpszClassName;
+            CString runtimeClass = tChild->GetRuntimeClass()->m_lpszClassName;
+            TCHAR windowClass[MAX_PATH];
+            ::GetClassName(tChild->GetSafeHwnd(), windowClass, _countof(windowClass));
             DWORD style = tChild->GetStyle();
             DWORD type = (style & BS_TYPEMASK);
-            if (cls.Find(_T("CDark")) != 0) { //do not subclass any members already of type CDarkxxx
+            if (runtimeClass.Find(_T("CDark")) != 0) { //do not subclass any members already of type CDarkxxx
                 if (lRes & (DLGC_DEFPUSHBUTTON | DLGC_UNDEFPUSHBUTTON)) {
                     CDarkButton * pObject = new CDarkButton();
                     allocatedButtons.push_back(pObject);
@@ -74,6 +79,12 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                     CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
                     allocatedRadioButtons.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (0 == _tcsicmp(windowClass, _T("EDIT")) ) {
+                    CDarkEdit * pObject = new CDarkEdit();
+                    allocatedEdits.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else {
+//                    int a = 1;
                 }
             }
 

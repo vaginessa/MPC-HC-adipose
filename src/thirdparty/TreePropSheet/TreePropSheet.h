@@ -285,6 +285,9 @@ protected:
     */
     virtual CTreeCtrl* CreatePageTreeObject();
 
+    //added for mpc-hc dark theme
+	virtual void SetTreeCtrlTheme(CTreeCtrl * ctrl);
+
     /**
     Will be called during creation process, to create the object, that
     is responsible for drawing the frame around the pages, drawing the

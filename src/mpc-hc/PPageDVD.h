@@ -24,6 +24,7 @@
 #include "CDarkPPageBase.h"
 #include "CDarkListBox.h"
 #include "CDarkButton.h"
+#include "CDarkEdit.h"
 
 // CPPageDVD dialog
 
@@ -40,7 +41,7 @@ public:
 
     CDarkListBox m_lcids;
     CString m_dvdpath;
-    CEdit m_dvdpathctrl;
+    CDarkEdit m_dvdpathctrl;
     CDarkButton m_dvdpathselctrl;
     int m_iDVDLocation;
     int m_iDVDLangType;

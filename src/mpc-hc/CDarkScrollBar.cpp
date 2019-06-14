@@ -33,10 +33,6 @@ void CDarkScrollBar::DrawScrollBar(CDC* pDC) {
 
     CBrush brushChannel(CDarkTheme::ScrollBGColor);
 
-    CBrush brushRed(CDarkTheme::DebugColorRed);
-    CBrush brushYellow(CDarkTheme::DebugColorYellow);
-    CBrush brushGreen(CDarkTheme::DebugColorGreen);
-
     XSB_EDRAWELEM eState;
     const CRect *prcElem = 0;
     stXSB_AREA stArea;

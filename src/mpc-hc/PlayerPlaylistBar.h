@@ -27,7 +27,7 @@
 #include "Playlist.h"
 #include "DropTarget.h"
 #include "../Subtitles/TextFile.h"
-#include "CDarkEdit.h"
+#include "CDarkInlineEdit.h"
 
 
 class OpenMediaData;
@@ -42,7 +42,7 @@ private:
     enum { COL_NAME, COL_TIME };
 
     CMainFrame* m_pMainFrame;
-    CDarkEdit m_edit;
+    CDarkInlineEdit m_edit;
 
     CFont m_font;
     void ScaleFont();

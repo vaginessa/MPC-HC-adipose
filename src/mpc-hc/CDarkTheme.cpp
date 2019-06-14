@@ -37,7 +37,7 @@ const COLORREF CDarkTheme::ScrollButtonArrowColor = COLORREF(RGB(103, 103, 103))
 const COLORREF CDarkTheme::ScrollButtonHoverColor = COLORREF(RGB(55, 55, 55));
 const COLORREF CDarkTheme::ScrollButtonClickColor = COLORREF(RGB(166, 166, 166));
 
-const COLORREF CDarkTheme::EditBorderColor = COLORREF(RGB(255, 255, 255));
+const COLORREF CDarkTheme::InlineEditBorderColor = COLORREF(RGB(255, 255, 255));
 const COLORREF CDarkTheme::TooltipBorderColor = COLORREF(RGB(118, 118, 118));
 
 const COLORREF CDarkTheme::GroupBoxBorderColor = COLORREF(RGB(118, 118, 118));
@@ -70,6 +70,13 @@ const COLORREF CDarkTheme::CheckboxBGHoverColor = COLORREF(RGB(8, 8, 8));
 
 const COLORREF CDarkTheme::ImageDisabledColor = COLORREF(RGB(109, 109, 109));
 
+const COLORREF CDarkTheme::SliderChannelColor = COLORREF(RGB(109, 109, 109));
+
+const COLORREF CDarkTheme::EditBorderColor = COLORREF(RGB(106, 106, 106));
+
+const COLORREF CDarkTheme::TreeCtrlLineColor = COLORREF(RGB(106, 106, 106));
+const COLORREF CDarkTheme::TreeCtrlHoverColor = COLORREF(RGB(77, 77, 77));;
+const COLORREF CDarkTheme::TreeCtrlFocusColor = COLORREF(RGB(98, 98, 98));;
 
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
@@ -133,6 +140,14 @@ const COLORREF CDarkTheme::ComboboxArrowColorClick[3] = {
     COLORREF(RGB(109, 109, 109)),
 };
 
+const BYTE CDarkTheme::SpinnerArrowBits[6] = {
+    0x20, 0x00,
+    0x70, 0x00,
+    0xF8, 0x00,
+};
+
+const int CDarkTheme::SpinnerArrowWidth = 5;
+const int CDarkTheme::SpinnerArrowHeight = 3;
 
 void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight) {
     LOGFONT lf;
@@ -229,11 +244,9 @@ void CDarkTheme::Draw2BitTransparent(CDC & dc, int left, int top, int width, int
 void CDarkTheme::dbg(CString text, ...) {
     va_list args;
     va_start(args, text);
-    _TCHAR t[8192] = { 0 };
-    const _TCHAR* b = text.GetBuffer();
-    _sntprintf_s(t, _countof(t), _TRUNCATE, b, args);
-    text.ReleaseBuffer();
-    OutputDebugString(t);
+    CString output;
+    output.FormatV(text, args);
+    OutputDebugString(output);
     OutputDebugString(_T("\n"));
     va_end(args);
 }

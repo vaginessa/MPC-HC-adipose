@@ -121,9 +121,17 @@ void CPPageSheet::EventCallback(MpcEvent ev)
     }
 }
 
-CTreeCtrl* CPPageSheet::CreatePageTreeObject()
+CDarkTreeCtrl* CPPageSheet::CreatePageTreeObject()
 {
-    return DEBUG_NEW CTreePropSheetTreeCtrl();
+    return DEBUG_NEW CDarkTreeCtrl();
+}
+
+void CPPageSheet::SetTreeCtrlTheme(CTreeCtrl * ctrl) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        ((CDarkTreeCtrl*)ctrl)->setDarkTheme();
+    } else {
+        __super::SetTreeCtrlTheme(ctrl);
+    }
 }
 
 BEGIN_MESSAGE_MAP(CPPageSheet, CTreePropSheet)
@@ -180,6 +188,10 @@ TreePropSheet::CPropPageFrame* CPPageSheet::CreatePageFrame() {
 
 HBRUSH CPPageSheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        LRESULT lResult;
+        if (pWnd->SendChildNotifyLastMsg(&lResult)) {
+            return (HBRUSH)lResult;
+        }
         pDC->SetTextColor(CDarkTheme::TextFGColor);
         pDC->SetBkColor(CDarkTheme::ControlAreaBGColor);
         return darkControlAreaBrush;

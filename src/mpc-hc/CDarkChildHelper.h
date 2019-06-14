@@ -4,6 +4,7 @@
 #include "CDarkGroupBox.h"
 #include "CDarkLinkCtrl.h"
 #include "CDarkRadioOrCheck.h"
+#include "CDarkEdit.h"
 
 class CDarkChildHelper
 {
@@ -20,6 +21,7 @@ protected:
     std::vector<CDarkLinkCtrl *> allocatedLinkCtrls;
     std::vector<CDarkRadioOrCheck *> allocatedCheckBoxes;
     std::vector<CDarkRadioOrCheck *> allocatedRadioButtons;
+    std::vector<CDarkEdit *> allocatedEdits;
 
     void enableDarkThemeIfActive(CWnd *wnd);
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "VersionHelpersInternal.h"
 #undef SubclassWindow
 
 class CDarkTheme {
@@ -36,7 +37,7 @@ public:
     static const COLORREF ScrollButtonHoverColor;
     static const COLORREF ScrollButtonClickColor;
 
-    static const COLORREF EditBorderColor;
+    static const COLORREF InlineEditBorderColor;
     static const COLORREF TooltipBorderColor;
 
     static const COLORREF GroupBoxBorderColor;
@@ -69,6 +70,15 @@ public:
 
     static const COLORREF ImageDisabledColor;
 
+    static const COLORREF SliderChannelColor;
+
+    static const COLORREF EditBorderColor;
+
+    static const COLORREF TreeCtrlLineColor;
+    static const COLORREF TreeCtrlHoverColor;
+    static const COLORREF TreeCtrlFocusColor;
+
+
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
     static const int gripPatternShort;
@@ -89,6 +99,10 @@ public:
     static const COLORREF ComboboxArrowColor[3];
     static const COLORREF ComboboxArrowColorHover[3];
     static const COLORREF ComboboxArrowColorClick[3];
+
+    static const BYTE SpinnerArrowBits[6];
+    static const int SpinnerArrowWidth;
+    static const int SpinnerArrowHeight;
 
 
     static void getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);

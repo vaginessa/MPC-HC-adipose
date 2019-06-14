@@ -153,6 +153,7 @@ private:
     CDarkScrollBar darkVSB;
     CDarkToolTipCtrl darkTT;
     UINT_PTR darkTTcid;
+    bool allowDarkTheme;
 
     bool PrepareInPlaceControl(int nRow, int nCol, CRect& rect);
 
@@ -160,6 +161,7 @@ public:
     CPlayerListCtrl(int tStartEditingDelay = 500);
     virtual ~CPlayerListCtrl();
 
+    void setAllowDarkTheme() { allowDarkTheme = true; }
     int HitTestEx(const CPoint& point, int* col) const;
     CImageList* CreateDragImageEx(LPPOINT lpPoint);
 

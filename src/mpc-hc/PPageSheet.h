@@ -48,6 +48,7 @@
 #include "DpiHelper.h"
 #include "CDarkChildHelper.h"
 #include "CDarkPropPageFrame.h"
+#include "CDarkTreeCtrl.h"
 
 // CTreePropSheetTreeCtrl
 
@@ -108,7 +109,8 @@ private:
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);
 
-    CTreeCtrl* CreatePageTreeObject();
+    CDarkTreeCtrl* CreatePageTreeObject();
+    virtual void SetTreeCtrlTheme(CTreeCtrl * ctrl);
 public:
     CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd, UINT idPage = 0);
     virtual ~CPPageSheet();

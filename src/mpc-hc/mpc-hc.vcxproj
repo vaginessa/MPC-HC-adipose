@@ -150,6 +150,7 @@
     <ClCompile Include="CDarkDialog.cpp" />
     <ClCompile Include="CDarkDockBar.cpp" />
     <ClCompile Include="CDarkEdit.cpp" />
+    <ClCompile Include="CDarkInlineEdit.cpp" />
     <ClCompile Include="CDarkGroupBox.cpp" />
     <ClCompile Include="CDarkLinkCtrl.cpp" />
     <ClCompile Include="CDarkListBox.cpp" />
@@ -158,8 +159,11 @@
     <ClCompile Include="CDarkPropPageFrame.cpp" />
     <ClCompile Include="CDarkRadioOrCheck.cpp" />
     <ClCompile Include="CDarkScrollBar.cpp" />
+    <ClCompile Include="CDarkSliderCtrl.cpp" />
+    <ClCompile Include="CDarkSpinButtonCtrl.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
     <ClCompile Include="CDarkToolTipCtrl.cpp" />
+    <ClCompile Include="CDarkTreeCtrl.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
     <ClCompile Include="ColorButton.cpp" />
@@ -307,6 +311,7 @@
     <ClInclude Include="CDarkDialog.h" />
     <ClInclude Include="CDarkDockBar.h" />
     <ClInclude Include="CDarkEdit.h" />
+    <ClInclude Include="CDarkInlineEdit.h" />
     <ClInclude Include="CDarkGroupBox.h" />
     <ClInclude Include="CDarkLinkCtrl.h" />
     <ClInclude Include="CDarkListBox.h" />
@@ -315,8 +320,11 @@
     <ClInclude Include="CDarkPropPageFrame.h" />
     <ClInclude Include="CDarkRadioOrCheck.h" />
     <ClInclude Include="CDarkScrollBar.h" />
+    <ClInclude Include="CDarkSliderCtrl.h" />
+    <ClInclude Include="CDarkSpinButtonCtrl.h" />
     <ClInclude Include="CDarkTheme.h" />
     <ClInclude Include="CDarkToolTipCtrl.h" />
+    <ClInclude Include="CDarkTreeCtrl.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
     <ClInclude Include="ColorButton.h" />
