@@ -37,7 +37,7 @@ void CDarkSpinButtonCtrl::OnPaint() {
     COLORREF bgClr = CDarkTheme::ContentBGColor;
 
     CBrush borderBrush(CDarkTheme::EditBorderColor);
-    CBrush butBorderBrush(CDarkTheme::ButtonBorderOuterColor);
+    CBrush butBorderBrush(CDarkTheme::ButtonBorderInnerColor);
     dc.FillSolidRect(rectItem, bgClr);
     dc.ExcludeClipRect(0, 1, 1, rectItem.Height()-1); //don't get left edge of rect
     dc.FrameRect(rectItem, &borderBrush);
@@ -52,10 +52,10 @@ void CDarkSpinButtonCtrl::OnPaint() {
     arrowLeft = rectItem.left + (rectItem.Width() - arrowWidth) / 2;
     arrowBMP.CreateBitmap(arrowWidth, arrowHeight, 1, 1, CDarkTheme::SpinnerArrowBits);
 
-    for (int a = 0; a < 2; a++) {
+    for (int topOrBottom = 0; topOrBottom < 2; topOrBottom++) {
         CRect butRect = rectItem;
         butRect.DeflateRect(1, 1, 2, 1);
-        if (0 == a) {
+        if (0 == topOrBottom) {
             butRect.bottom -= butRect.Height() / 2;
         } else {
             butRect.top += butRect.Height() / 2;
@@ -72,11 +72,11 @@ void CDarkSpinButtonCtrl::OnPaint() {
         dcArrowBMP.SelectObject(&arrowBMP);
 
         dc.FillSolidRect(butRect, bgClr);
-        dc.FrameRect(butRect, &borderBrush);
-        dc.SetBkColor(CDarkTheme::ScrollButtonArrowColor);
+        dc.FrameRect(butRect, &butBorderBrush);
+        dc.SetBkColor(CDarkTheme::TextFGColor);
         dc.SetTextColor(bgClr);
 
-        if (0 == a) { //top
+        if (0 == topOrBottom) { //top
             dc.BitBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, 0, SRCCOPY);
         } else {
             dc.StretchBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, arrowHeight - 1, arrowWidth, -arrowHeight, SRCCOPY);

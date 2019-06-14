@@ -95,6 +95,7 @@ BEGIN_MESSAGE_MAP(CVolumeCtrl, CSliderCtrl)
     ON_WM_MOUSEWHEEL()
     ON_WM_MOUSEMOVE()
     ON_WM_LBUTTONUP()
+    ON_WM_MOUSELEAVE()
 END_MESSAGE_MAP()
 
 // CVolumeCtrl message handlers
@@ -305,4 +306,10 @@ void CVolumeCtrl::OnLButtonUp(UINT nFlags, CPoint point) {
     invalidateThumb();
     checkHover(point);
     CSliderCtrl::OnLButtonUp(nFlags, point);
+}
+
+
+void CVolumeCtrl::OnMouseLeave() {
+    checkHover(CPoint(-1 - 1));
+    CSliderCtrl::OnMouseLeave();
 }

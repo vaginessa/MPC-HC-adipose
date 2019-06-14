@@ -22,8 +22,6 @@
 #pragma once
 
 #include "WinHotkeyCtrl.h"
-#include "CDarkScrollBar.h"
-#include "CDarkToolTipCtrl.h"
 
 #define LVN_DOLABELEDIT (LVN_FIRST+1)
 
@@ -150,10 +148,6 @@ private:
     int m_nItemClicked, m_nSubItemClicked;
     int m_tStartEditingDelay;
     UINT_PTR m_nTimerID;
-    CDarkScrollBar darkVSB;
-    CDarkToolTipCtrl darkTT;
-    UINT_PTR darkTTcid;
-    bool allowDarkTheme;
 
     bool PrepareInPlaceControl(int nRow, int nCol, CRect& rect);
 
@@ -161,7 +155,6 @@ public:
     CPlayerListCtrl(int tStartEditingDelay = 500);
     virtual ~CPlayerListCtrl();
 
-    void setAllowDarkTheme() { allowDarkTheme = true; }
     int HitTestEx(const CPoint& point, int* col) const;
     CImageList* CreateDragImageEx(LPPOINT lpPoint);
 
@@ -176,10 +169,8 @@ public:
     bool m_fInPlaceDirty;
 
 protected:
-    virtual void PreSubclassWindow();
     virtual INT_PTR OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
     virtual ULONG GetGestureStatus(CPoint) override { return 0; };
-    virtual BOOL PreTranslateMessage(MSG* pMsg);
 
     DECLARE_MESSAGE_MAP()
 
@@ -203,14 +194,4 @@ public:
     afx_msg void OnXButtonDown(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
-    afx_msg void OnNcPaint();
-    afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
-    void setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping);
-    void hideSB();
-    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-    void updateDarkScrollInfo();
-    afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
-    LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-    void updateToolTip(CPoint point);
-    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

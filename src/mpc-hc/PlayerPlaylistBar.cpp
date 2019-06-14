@@ -63,7 +63,6 @@ BOOL CPlayerPlaylistBar::Create(CWnd* pParentWnd, UINT defDockBarID)
         return FALSE;
     }
 
-    m_list.setAllowDarkTheme();
     m_list.CreateEx(
         WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE,
         WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP

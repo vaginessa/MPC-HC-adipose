@@ -5,7 +5,7 @@
 
 CDarkTreeCtrl::CDarkTreeCtrl() {
     m_brBkgnd.CreateSolidBrush(CDarkTheme::InlineEditBorderColor);
-    win10 = false;
+    haveExplorerDarkTheme = false;
 }
 
 
@@ -24,9 +24,9 @@ BOOL CDarkTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
 void CDarkTreeCtrl::setDarkTheme() {
     if (IsWindows10OrGreater()) {
         SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
-        win10 = true;
+        haveExplorerDarkTheme = true;
     } else {
-        win10 = false;
+        haveExplorerDarkTheme = false;
     }
 }
 
@@ -52,7 +52,7 @@ void CDarkTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
         isFocus = 0 != (pNMCD->uItemState & CDIS_FOCUS);
         isHot = 0 != (pNMCD->uItemState & CDIS_HOT);
 
-        if (!win10) {
+        if (!haveExplorerDarkTheme) { //regular theme is a bit ugly but better than Explorer theme.  we will clean up the fonts at least
             pNMCD->uItemState &= ~(CDIS_FOCUS | CDIS_HOT | CDIS_SELECTED);
             if (font.m_hObject == nullptr) CDarkTheme::getUIFont(font, ::GetDC(NULL), CDarkTheme::CDMenuFont);
             ::SelectObject(pNMCD->hdc, font.GetSafeHandle());
@@ -66,7 +66,7 @@ void CDarkTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             pstCD->clrTextBk = CDarkTheme::ContentBGColor;
         }
         pstCD->clrText = CDarkTheme::TextFGColor;
-        *pResult = CDRF_DODEFAULT;
+        *pResult = CDRF_NEWFONT;
         break;
     default:
         pResult = CDRF_DODEFAULT;
@@ -90,8 +90,10 @@ void CDarkTreeCtrl::OnNcPaint() {
     CRect r;
     GetWindowRect(r);
     r.OffsetRect(-r.left, -r.top);
-    pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
-    CBrush brush(CDarkTheme::EditBorderColor);
-    pDC->FrameRect(r, &brush);
+    CBrush brushBorder(CDarkTheme::EditBorderColor);
+    pDC->FrameRect(r, &brushBorder);
+    r.DeflateRect(1, 1);
+    CBrush brushBG(CDarkTheme::ContentBGColor);
+    pDC->FrameRect(r, &brushBG);
     ReleaseDC(pDC);
 }

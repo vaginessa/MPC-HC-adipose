@@ -490,6 +490,7 @@
     <ClCompile Include="CDarkInlineEdit.cpp" />
     <ClCompile Include="CDarkEdit.cpp" />
     <ClCompile Include="CDarkTreeCtrl.cpp" />
+    <ClCompile Include="CDarkPlayerListCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -919,6 +920,7 @@
     <ClInclude Include="CDarkInlineEdit.h" />
     <ClInclude Include="CDarkEdit.h" />
     <ClInclude Include="CDarkTreeCtrl.h" />
+    <ClInclude Include="CDarkPlayerListCtrl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

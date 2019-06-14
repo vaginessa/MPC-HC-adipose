@@ -23,7 +23,7 @@
 
 #include <afxcoll.h>
 #include "PlayerBar.h"
-#include "PlayerListCtrl.h"
+#include "CDarkPlayerListCtrl.h"
 #include "Playlist.h"
 #include "DropTarget.h"
 #include "../Subtitles/TextFile.h"
@@ -48,7 +48,7 @@ private:
     void ScaleFont();
 
     CImageList m_fakeImageList;
-    CPlayerListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
 
     int m_itemHeight = 0;
     EventClient m_eventc;
