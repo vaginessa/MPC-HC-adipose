@@ -25,6 +25,7 @@
 #include "Shaders.h"
 #include "CDarkPPageBase.h"
 #include "CDarkListBox.h"
+#include "CDarkComboBox.h"
 
 class CShaderListBox : public CDarkListBox
 {
@@ -74,7 +75,7 @@ private:
 
 protected:
     CShaderListBox m_Shaders, m_PreResize, m_PostResize;
-    CComboBox m_PresetsBox;
+    CDarkComboBox m_PresetsBox;
     ShaderSelection::ShaderPresetMap m_Presets;
 
     virtual void DoDataExchange(CDataExchange* pDX) override;
