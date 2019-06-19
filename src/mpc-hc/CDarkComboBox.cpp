@@ -12,10 +12,12 @@ BEGIN_MESSAGE_MAP(CDarkComboBox, CComboBox)
     ON_WM_MOUSELEAVE()
     ON_WM_LBUTTONUP()
     ON_WM_LBUTTONDOWN()
+    ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 CDarkComboBox::CDarkComboBox() {
     isHover = false;
+    isThemedDropDown = false;
 }
 
 void CDarkComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF bkColor, bool drawDotted) {
@@ -48,6 +50,21 @@ void CDarkComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF bkCol
 CDarkComboBox::~CDarkComboBox() {
 }
 
+void CDarkComboBox::themeDropDown() {
+    if (IsWindows10OrGreater() && false == isThemedDropDown) {
+        COMBOBOXINFO info = { sizeof(COMBOBOXINFO) };
+        if (GetComboBoxInfo(&info)) {
+            SetWindowTheme(info.hwndList, L"DarkMode_Explorer", NULL);
+            isThemedDropDown = true;
+        }
+    }
+}
+
+void CDarkComboBox::PreSubclassWindow() {
+    themeDropDown();
+}
+
+
 void CDarkComboBox::OnPaint() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         CPaintDC dc(this);
@@ -70,6 +87,7 @@ void CDarkComboBox::OnPaint() {
         }
         COMBOBOXINFO info = { sizeof(COMBOBOXINFO) };
         GetComboBoxInfo(&info);
+
         COLORREF bkColor;
         if (::IsWindowVisible(info.hwndList) || info.stateButton == STATE_SYSTEM_PRESSED) { //always looks the same once the list is open
             bkColor = CDarkTheme::ButtonFillSelectedColor;
@@ -159,4 +177,14 @@ void CDarkComboBox::OnLButtonUp(UINT nFlags, CPoint point) {
 void CDarkComboBox::OnLButtonDown(UINT nFlags, CPoint point) {
     checkHover(nFlags, point);
     CComboBox::OnLButtonDown(nFlags, point);
+}
+
+
+int CDarkComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) {
+    if (__super::OnCreate(lpCreateStruct) == -1)
+        return -1;
+
+    themeDropDown();
+
+    return 0;
 }

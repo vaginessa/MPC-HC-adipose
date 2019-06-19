@@ -1393,6 +1393,7 @@ END
 
 IDB_PLAYERTOOLBAR       BITMAP                  "res\\toolbar.bmp"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
@@ -2243,13 +2244,13 @@ IDB_PNG_DARKCBHOVER     PNG                     "res\\darktheme\\checkbox.png"
 
 IDB_PNG_DARKCB          PNG                     "res\\darktheme\\checkboxhover.png"
 
-IDB_PNG_DARKRADIO       PNG                     "res\\darktheme\\radio.png"
+IDB_PNG_DARKRADIO       PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radio.png"
 
-IDB_PNG_DARKRADIOHOVER  PNG                     "res\\darktheme\\radiohover.png"
+IDB_PNG_DARKRADIOHOVER  PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiohover.png"
 
-IDB_PNG_DARKRADIOSET    PNG                     "res\\darktheme\\radioset.png"
+IDB_PNG_DARKRADIOSET    PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radioset.png"
 
-IDB_PNG_DARKRADIOSETHOVER PNG                     "res\\darktheme\\radiosethover.png"
+IDB_PNG_DARKRADIOSETHOVER PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiosethover.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

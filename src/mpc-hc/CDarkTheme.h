@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "VersionHelpersInternal.h"
+#include "mplayerc.h"
 #undef SubclassWindow
 
 class CDarkTheme {
@@ -78,6 +79,7 @@ public:
     static const COLORREF TreeCtrlHoverColor;
     static const COLORREF TreeCtrlFocusColor;
 
+    static const COLORREF CheckColor;
 
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
@@ -104,6 +106,9 @@ public:
     static const int SpinnerArrowWidth;
     static const int SpinnerArrowHeight;
 
+    static const BYTE CheckBits[14];
+    static const int CheckWidth;
+    static const int CheckHeight;
 
     static void getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
     static void getUIFont(CFont &font, HDC hDC, int type);
@@ -122,6 +127,9 @@ public:
     static NONCLIENTMETRICS _metrics;
     static bool haveMetrics;
     static NONCLIENTMETRICS& GetMetrics();
+    static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
     static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
     static void dbg(CString text, ...);
+    static void drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect rectCheck, CDC *pDC);
+    static bool canUseWin10DarkTheme();
 };

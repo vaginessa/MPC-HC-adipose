@@ -14,7 +14,6 @@ public:
 protected:
     CBrush m_brBkgnd;
     CFont font;
-    bool haveExplorerDarkTheme;
 public:
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);

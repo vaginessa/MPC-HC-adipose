@@ -54,8 +54,12 @@ void CDarkPropPageFrame::OnPaint() {
 }
 
 BOOL CDarkPropPageFrame::OnEraseBkgnd(CDC * pDC) {
-    CRect   rect;
-    GetClientRect(rect);
-    pDC->FillSolidRect(rect, CDarkTheme::WindowBGColor);
-    return TRUE;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CRect   rect;
+        GetClientRect(rect);
+        pDC->FillSolidRect(rect, CDarkTheme::WindowBGColor);
+        return TRUE;
+    } else {
+        return __super::OnEraseBkgnd(pDC);
+    }
 }

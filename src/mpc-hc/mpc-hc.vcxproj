@@ -156,10 +156,12 @@
     <ClCompile Include="CDarkListBox.cpp" />
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkPlayerListCtrl.cpp" />
+    <ClCompile Include="CDarkPlayerListCtrlLite.cpp" />
     <ClCompile Include="CDarkPPageBase.cpp" />
     <ClCompile Include="CDarkPropPageFrame.cpp" />
     <ClCompile Include="CDarkRadioOrCheck.cpp" />
     <ClCompile Include="CDarkScrollBar.cpp" />
+    <ClCompile Include="CDarkScrollBarHelper.cpp" />
     <ClCompile Include="CDarkSliderCtrl.cpp" />
     <ClCompile Include="CDarkSpinButtonCtrl.cpp" />
     <ClCompile Include="CDarkTheme.cpp" />
@@ -318,10 +320,12 @@
     <ClInclude Include="CDarkListBox.h" />
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkPlayerListCtrl.h" />
+    <ClInclude Include="CDarkPlayerListCtrlLite.h" />
     <ClInclude Include="CDarkPPageBase.h" />
     <ClInclude Include="CDarkPropPageFrame.h" />
     <ClInclude Include="CDarkRadioOrCheck.h" />
     <ClInclude Include="CDarkScrollBar.h" />
+    <ClInclude Include="CDarkScrollBarHelper.h" />
     <ClInclude Include="CDarkSliderCtrl.h" />
     <ClInclude Include="CDarkSpinButtonCtrl.h" />
     <ClInclude Include="CDarkTheme.h" />

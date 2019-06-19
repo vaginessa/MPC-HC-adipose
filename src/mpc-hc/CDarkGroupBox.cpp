@@ -25,34 +25,39 @@ void CDarkGroupBox::OnNcPaint() {
 
 
 void CDarkGroupBox::OnPaint() {
-    CPaintDC dc(this);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
 
-    CRect r, rborder, rtext;
-    GetClientRect(r);
-    HDC hDC = ::GetDC(NULL);
-    CString text;
-    GetWindowText(text);
-    CSize cs = CDarkTheme::GetTextSize(text, hDC, CDarkTheme::CDCaptionFont);
+        CPaintDC dc(this);
 
-    CBrush fb;
-    fb.CreateSolidBrush(CDarkTheme::GroupBoxBorderColor);
-    rborder = r;
-    rborder.top += cs.cy / 2;
-    dc.FrameRect(rborder, &fb);
+        CRect r, rborder, rtext;
+        GetClientRect(r);
+        HDC hDC = ::GetDC(NULL);
+        CString text;
+        GetWindowText(text);
+        CSize cs = CDarkTheme::GetTextSize(text, hDC, CDarkTheme::CDCaptionFont);
 
-    COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
-    COLORREF oldBkClr = dc.SetBkColor(CDarkTheme::ContentBGColor);
-    //CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 8);
-    CFont font;
-    CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDCaptionFont);
-    CFont* pOldFont = dc.SelectObject(&font);
+        CBrush fb;
+        fb.CreateSolidBrush(CDarkTheme::GroupBoxBorderColor);
+        rborder = r;
+        rborder.top += cs.cy / 2;
+        dc.FrameRect(rborder, &fb);
 
-    rtext = r;
-    rtext.left += CDarkTheme::GroupBoxTextIndent;
+        COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
+        COLORREF oldBkClr = dc.SetBkColor(CDarkTheme::ContentBGColor);
+        //CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 8);
+        CFont font;
+        CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDCaptionFont);
+        CFont* pOldFont = dc.SelectObject(&font);
 
-    dc.DrawText(text, rtext, DT_TOP | DT_LEFT | DT_SINGLELINE | DT_EDITCONTROL);
+        rtext = r;
+        rtext.left += CDarkTheme::GroupBoxTextIndent;
 
-    dc.SelectObject(pOldFont);
-    dc.SetTextColor(oldClr);
-    dc.SetBkColor(oldBkClr);
+        dc.DrawText(text, rtext, DT_TOP | DT_LEFT | DT_SINGLELINE | DT_EDITCONTROL);
+
+        dc.SelectObject(pOldFont);
+        dc.SetTextColor(oldClr);
+        dc.SetBkColor(oldBkClr);
+    } else {
+        __super::OnPaint();
+    }
 }

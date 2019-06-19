@@ -1,16 +1,16 @@
 #pragma once
 #include "PlayerListCtrl.h"
-#include "CDarkScrollBar.h"
+#include "CDarkScrollBarHelper.h"
 #include "CDarkToolTipCtrl.h"
+#include "CDarkChildHelper.h"
 
-class CDarkPlayerListCtrl :	public CPlayerListCtrl {
+class CDarkPlayerListCtrl :	public CPlayerListCtrl, CDarkChildHelper {
 public:
 	CDarkPlayerListCtrl(int tStartEditingDelay = 500);
 	virtual ~CDarkPlayerListCtrl();
     DECLARE_DYNAMIC(CDarkPlayerListCtrl)
 
-    void setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping);
-    void hideSB();
+    void updateSB();
     void updateDarkScrollInfo();
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     void updateToolTip(CPoint point);
@@ -18,16 +18,19 @@ public:
 
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
-    afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
     afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+    afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+    afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
+    afx_msg void OnCustomDraw(NMHDR * pNMHDR, LRESULT * pResult);
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
-    CDarkScrollBar darkVSB;
+    CDarkScrollBarHelper *darkSBHelper;
     CDarkToolTipCtrl darkTT;
     UINT_PTR darkTTcid;
     virtual void PreSubclassWindow();
 public:
-    afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 

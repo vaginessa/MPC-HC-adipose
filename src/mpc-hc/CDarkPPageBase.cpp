@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "mplayerc.h"
 #include "CDarkPPageBase.h"
 #include "CDarkTheme.h"
 #include "ImageGrayer.h"
@@ -53,22 +52,11 @@ END_MESSAGE_MAP()
 
 
 HBRUSH CDarkPPageBase::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        LRESULT lResult;
-        if (pWnd->SendChildNotifyLastMsg(&lResult)) {
-            return (HBRUSH)lResult;
-        }
-        if (CTLCOLOR_LISTBOX == nCtlColor) {
-            pDC->SetTextColor(CDarkTheme::TextFGColor);
-            pDC->SetBkColor(CDarkTheme::ContentBGColor);
-            return darkContentBrush;
-        } else {
-            pDC->SetTextColor(CDarkTheme::TextFGColor);
-            pDC->SetBkColor(CDarkTheme::WindowBGColor);
-            return darkWindowBrush;
-        }
+    HBRUSH ret;
+    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    if (nullptr != ret) {
+        return ret;
     } else {
-        HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
-        return hbr;
+        return __super::OnCtlColor(pDC, pWnd, nCtlColor);
     }
 }

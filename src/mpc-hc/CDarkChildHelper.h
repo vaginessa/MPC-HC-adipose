@@ -13,6 +13,8 @@ public:
 	virtual ~CDarkChildHelper();
     static bool ModifyTemplates(CPropertySheet * sheet, CRuntimeClass* pageClass, DWORD id, DWORD addStyle, DWORD removeStyle = 0);
 
+    HBRUSH DarkCtlColor(CDC * pDC, CWnd * pWnd, UINT nCtlColor);
+
 protected:
     static CBrush darkContentBrush, darkWindowBrush, darkControlAreaBrush;
     static CFont dialogFont;

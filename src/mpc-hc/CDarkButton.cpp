@@ -36,7 +36,7 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     rect.DeflateRect(1, 1);
     COLORREF bg = CDarkTheme::ButtonFillColor, dottedClr;
 
-    u_int imageIndex = 0; //Normal
+    int imageIndex = 0; //Normal
     if (state & ODS_SELECTED) {//mouse down
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerColor);
         bg = CDarkTheme::ButtonFillSelectedColor;
@@ -95,7 +95,7 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     if (CImageList *images = CImageList::FromHandlePermanent(imgList.himl)) { //assume centered
         IMAGEINFO ii;
         int a = images->GetImageCount();
-        if (images->GetImageCount()-1 < imageIndex) imageIndex = 0;
+        if (images->GetImageCount() <= imageIndex) imageIndex = 0;
         images->GetImageInfo(imageIndex, &ii);
         int width = ii.rcImage.right - ii.rcImage.left;
         int height = ii.rcImage.bottom - ii.rcImage.top;

@@ -4,29 +4,45 @@
 #include "mplayerc.h"
 
 CDarkPlayerListCtrl::CDarkPlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
+    darkSBHelper = nullptr;
+    if (!CDarkTheme::canUseWin10DarkTheme()) {
+        darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
+    }
 }
 
 
 CDarkPlayerListCtrl::~CDarkPlayerListCtrl() {
+    if (nullptr != darkSBHelper) {
+        delete darkSBHelper;
+    }
 }
 
 void CDarkPlayerListCtrl::PreSubclassWindow() {
     if (!AfxGetAppSettings().bDarkThemeLoaded) {
         EnableToolTips(TRUE);
+    } else {
+        if (CDarkTheme::canUseWin10DarkTheme()) {
+            SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
+        } else {
+            SetWindowTheme(GetSafeHwnd(), L"", NULL);
+            //ModifyStyle(0, LVS_EX_DOUBLEBUFFER, 0);
+        }
     }
     CPlayerListCtrl::PreSubclassWindow();
 }
 
-
 IMPLEMENT_DYNAMIC(CDarkPlayerListCtrl, CPlayerListCtrl)
 
-BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CListCtrl)
+BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_WM_NCPAINT()
-    ON_WM_NCCALCSIZE()
     ON_WM_CREATE()
     ON_NOTIFY_REFLECT(LVN_ENDSCROLL, &CDarkPlayerListCtrl::OnLvnEndScroll)
     ON_WM_MOUSEMOVE()
     ON_WM_MOUSEWHEEL()
+    ON_WM_NCCALCSIZE()
+    ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw)
+    ON_WM_ERASEBKGND()
+    ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -34,88 +50,45 @@ BOOL CDarkPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
     if (IsWindow(darkTT.m_hWnd)) {
         darkTT.RelayEvent(pMsg);
     }
-    return CListCtrl::PreTranslateMessage(pMsg);
+    return __super::PreTranslateMessage(pMsg);
 }
 
-
 void CDarkPlayerListCtrl::OnNcPaint() {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded && nullptr != darkVSB) {
-        CRect wr, cr;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->BeforeNcPaint();
+        }
 
         CWindowDC dc(this);
-        setDarkDrawingArea(cr, wr, false); //temporarily allow full clipping window
-        dc.ExcludeClipRect(&cr);
+
+        CRect wr, cr;
+        GetWindowRect(wr);
+        ScreenToClient(wr);
+
+        GetClientRect(&cr);
+        cr.OffsetRect(-wr.left, -wr.top);
+        dc.ExcludeClipRect(cr);
+
+        wr.OffsetRect(-wr.left, -wr.top);
         CBrush brush(CDarkTheme::WindowBorderColorLight); //color used for column sep in explorer
         dc.FillSolidRect(wr, CDarkTheme::ContentBGColor);
-
         dc.FrameRect(wr, &brush);
-        hideSB(); //set back scrollbar clipping window
+
+        dc.SelectClipRgn(NULL);
+
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->AfterNcPaint();
+        }
     } else {
         __super::OnNcPaint();
     }
 }
 
-
-void CDarkPlayerListCtrl::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp) {
-    //    ModifyStyle(WS_HSCROLL | WS_VSCROLL, 0);
-
-    CListCtrl::OnNcCalcSize(bCalcValidRects, lpncsp);
-}
-
-void CDarkPlayerListCtrl::setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping) {
-    GetClientRect(&cr);
-    ClientToScreen(&cr);
-    GetWindowRect(&wr);
-
-    CRect rect;
-    CHeaderCtrl* pHdr = GetHeaderCtrl();
-    pHdr->GetWindowRect(rect);
-    int nWidth = rect.Width(); //this will be about where the scrollbar starts
-    cr.OffsetRect(-wr.left, -wr.top);
-    wr.OffsetRect(-wr.left, -wr.top);
-
-    if (clipping) {
-        LONG sbRight = wr.right;
-        int width = GetSystemMetrics(SM_CXVSCROLL);
-        wr.right -= width + 5;
-        //        wr.right = wr.left + nWidth - 1; //1 pixel bleed of scrollbar, list items must be drawn 1 pix short?
-        if (nullptr != darkVSB) {
-            if (GetStyle()&WS_VSCROLL) {
-                darkVSB.MoveWindow(sbRight - width - 1, cr.top + 1, width, cr.bottom - cr.top + 2);
-                darkVSB.ShowWindow(SW_SHOW);
-                updateDarkScrollInfo();
-            } else {
-                darkVSB.ShowWindow(SW_HIDE);
-            }
-        }
-    }
-
-    HRGN iehrgn = CreateRectRgn(wr.left, wr.top, wr.right, wr.bottom);
-    SetWindowRgn(iehrgn, false);
-}
-
-void CDarkPlayerListCtrl::hideSB() {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        CRect wr, cr;
-        setDarkDrawingArea(cr, wr, true);
-    }
-}
-
-
 int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
-    if (CListCtrl::OnCreate(lpCreateStruct) == -1)
+    if (__super::OnCreate(lpCreateStruct) == -1)
         return -1;
 
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        CWnd* pParent = GetParent();
-        if (nullptr != pParent) {
-            VERIFY(darkVSB.Create(SBS_VERT | WS_CHILD |
-                WS_VISIBLE, CRect(0, 0, 0, 0), pParent, IDC_DARKVSCROLLBAR));
-            darkVSB.setScrollWindow(this); //we want messages from this SB
-        }
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
         SetBkColor(CDarkTheme::ContentBGColor);
 
         darkTT.Create(this, TTS_ALWAYSTIP);
@@ -125,64 +98,32 @@ int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     return 0;
 }
 
-void CDarkPlayerListCtrl::updateDarkScrollInfo() {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded && nullptr != darkVSB) {
-        darkVSB.updateScrollInfo();
-    }
-}
-
-
 void CDarkPlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
-    //    LPNMLVSCROLL pStateChanged = reinterpret_cast<LPNMLVSCROLL>(pNMHDR);
-    updateDarkScrollInfo();
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
     *pResult = 0;
 }
 
-//clistctrl does not seem to scroll when receiving thumb messages, so we handle them here
-//this will allow the darkscrollbar to update as well
-//thanks to flyhigh for this solution https://www.codeproject.com/Articles/14724/Replace-a-Window-s-Internal-Scrollbar-with-a-custo 
-LRESULT CDarkPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        if (message == WM_VSCROLL || message == WM_HSCROLL) {
-            WORD sbCode = LOWORD(wParam);
-            if (sbCode == SB_THUMBTRACK || sbCode == SB_THUMBPOSITION) {
-                SCROLLINFO siv = { 0 };
-                siv.cbSize = sizeof(SCROLLINFO);
-                siv.fMask = SIF_ALL;
-                SCROLLINFO sih = siv;
-                int nPos = HIWORD(wParam);
-                CRect rcClient;
-                GetClientRect(&rcClient);
-                GetScrollInfo(SB_VERT, &siv);
-                GetScrollInfo(SB_HORZ, &sih);
-                SIZE sizeAll;
-                if (sih.nPage == 0) {
-                    sizeAll.cx = rcClient.right;
-                } else {
-                    sizeAll.cx = rcClient.right*(sih.nMax + 1) / sih.nPage;
-                }
-                if (siv.nPage == 0) {
-                    sizeAll.cy = rcClient.bottom;
-                } else {
-                    sizeAll.cy = rcClient.bottom*(siv.nMax + 1) / siv.nPage;
-                }
+void CDarkPlayerListCtrl::updateSB() {
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->hideSB();
+    }
+}
 
-                SIZE size = { 0,0 };
-                if (WM_VSCROLL == message) {
-                    size.cx = sizeAll.cx*sih.nPos / (sih.nMax + 1);
-                    size.cy = sizeAll.cy*(nPos - siv.nPos) / (siv.nMax + 1);
-                } else {
-                    size.cx = sizeAll.cx*(nPos - sih.nPos) / (sih.nMax + 1);
-                    size.cy = sizeAll.cy*siv.nPos / (siv.nMax + 1);
-                }
-                Scroll(size);
-                return 1;
-            }
+void CDarkPlayerListCtrl::updateDarkScrollInfo() {
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
+}
+
+LRESULT CDarkPlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
+    if (AfxGetAppSettings().bDarkThemeLoaded && nullptr != darkSBHelper) {
+        if (darkSBHelper->WindowProc(this, message, wParam, lParam)) {
+            return 1;
         }
     }
-    return CListCtrl::WindowProc(message, wParam, lParam);
+    return __super::WindowProc(message, wParam, lParam);
 }
 
 void CDarkPlayerListCtrl::updateToolTip(CPoint point) {
@@ -208,14 +149,117 @@ void CDarkPlayerListCtrl::updateToolTip(CPoint point) {
 }
 
 void CDarkPlayerListCtrl::OnMouseMove(UINT nFlags, CPoint point) {
-    CListCtrl::OnMouseMove(nFlags, point);
+    __super::OnMouseMove(nFlags, point);
     updateToolTip(point);
 }
 
 
 BOOL CDarkPlayerListCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
-    BOOL ret = CPlayerListCtrl::OnMouseWheel(nFlags, zDelta, pt);
+    BOOL ret = __super::OnMouseWheel(nFlags, zDelta, pt);
     ScreenToClient(&pt);
     updateToolTip(pt);
     return ret;
+}
+
+
+void CDarkPlayerListCtrl::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp) {
+    __super::OnNcCalcSize(bCalcValidRects, lpncsp);
+}
+
+void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
+    NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
+
+    *pResult = CDRF_DODEFAULT;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
+            *pResult = CDRF_NOTIFYITEMDRAW;
+        } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
+            *pResult = CDRF_NOTIFYSUBITEMDRAW;
+        } else if (pLVCD->nmcd.dwDrawStage == (CDDS_ITEMPREPAINT | CDDS_SUBITEM)) {
+            int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
+            if (IsItemVisible(nItem)) {
+                int nSubItem = pLVCD->iSubItem;
+
+                COLORREF textColor = CDarkTheme::TextFGColor;
+                COLORREF bgColor = CDarkTheme::ContentBGColor;
+
+                CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
+                COLORREF oldTextColor = pDC->GetTextColor();
+                COLORREF oldBkColor = pDC->GetBkColor();
+
+                CRect rect, rIcon, rText;
+                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+                GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
+                GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
+
+                CString text = GetItemText(nItem, nSubItem);
+                pDC->SetTextColor(textColor);
+                pDC->SetBkColor(bgColor);
+                //            pDC->FillSolidRect(rText, bgColor);
+
+                HDITEM hditem = { 0 };
+                hditem.mask = HDI_FORMAT;
+                GetHeaderCtrl()->GetItem(nSubItem, &hditem);
+                int align = hditem.fmt & HDF_JUSTIFYMASK;
+                UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
+                if (align == HDF_CENTER)
+                    textFormat |= DT_CENTER;
+                else if (align == HDF_LEFT) {
+                    textFormat |= DT_LEFT;
+                    rText.left += 6;
+                } else {
+                    textFormat |= DT_RIGHT;
+                    rText.right -= 6;
+                }
+
+
+                if (nSubItem == 0 && 0 != (GetStyle() & LVS_EX_CHECKBOXES)) {
+                    LVITEM lvi = { 0 };
+                    lvi.iItem = nItem;
+                    lvi.iSubItem = 0;
+                    lvi.mask = LVIF_IMAGE;
+                    GetItem(&lvi);
+
+                    rIcon.DeflateRect(0, 0, 1, 0);
+                    rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
+
+                    //following is a bit of a hack.  mpc-hc often sets the "check" state by changing the image index only (not setcheck), so we will use that to control whether "checked" or not
+                    //better solution might be to load different check images based on theme
+                    CDarkTheme::drawCheckBox(lvi.iImage == BST_CHECKED, false, false, rIcon, pDC);
+
+                    if (align == HDF_LEFT)
+                        rText.left -= 2; //needs less indent when checkboxing
+                } else {
+                }
+                CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
+                //pDC->DrawText(text, rText, textFormat);
+                pDC->SetTextColor(oldTextColor);
+                pDC->SetBkColor(oldBkColor);
+            }
+            *pResult = CDRF_SKIPDEFAULT;
+        }
+    }
+}
+
+
+BOOL CDarkPlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CRect r;
+        GetClientRect(r);
+        pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
+    } else {
+        return __super::OnEraseBkgnd(pDC);
+    }
+    return TRUE;
+}
+
+
+HBRUSH CDarkPlayerListCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
+    HBRUSH ret;
+    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    if (nullptr != ret) {
+        return ret;
+    } else {
+        return __super::OnCtlColor(pDC, pWnd, nCtlColor);
+    }
 }

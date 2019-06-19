@@ -170,3 +170,23 @@ bool CDarkChildHelper::ModifyTemplates(CPropertySheet *sheet, CRuntimeClass* pag
     }
     return true;
 }
+
+
+HBRUSH CDarkChildHelper::DarkCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        LRESULT lResult;
+        if (pWnd->SendChildNotifyLastMsg(&lResult)) {
+            return (HBRUSH)lResult;
+        }
+        if (CTLCOLOR_LISTBOX == nCtlColor) {
+            pDC->SetTextColor(CDarkTheme::TextFGColor);
+            pDC->SetBkColor(CDarkTheme::ContentBGColor);
+            return darkContentBrush;
+        } else {
+            pDC->SetTextColor(CDarkTheme::TextFGColor);
+            pDC->SetBkColor(CDarkTheme::WindowBGColor);
+            return darkWindowBrush;
+        }
+    }
+    return nullptr;
+}

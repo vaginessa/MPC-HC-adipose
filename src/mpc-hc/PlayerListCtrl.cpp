@@ -273,8 +273,8 @@ void CInPlaceFloatEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 // CInPlaceComboBox
 
-CInPlaceComboBox::CInPlaceComboBox(int iItem, int iSubItem, CAtlList<CString>& lstItems, int nSel)
-    : m_iItem(iItem)
+CInPlaceComboBox::CInPlaceComboBox(int iItem, int iSubItem, CAtlList<CString>& lstItems, int nSel) : CDarkComboBox()
+    , m_iItem(iItem)
     , m_iSubItem(iSubItem)
 {
     m_lstItems.AddTailList(&lstItems);
@@ -286,7 +286,7 @@ CInPlaceComboBox::~CInPlaceComboBox()
 {
 }
 
-BEGIN_MESSAGE_MAP(CInPlaceComboBox, CComboBox)
+BEGIN_MESSAGE_MAP(CInPlaceComboBox, CDarkComboBox)
     //{{AFX_MSG_MAP(CInPlaceComboBox)
     ON_WM_CREATE()
     ON_WM_KILLFOCUS()
@@ -301,7 +301,7 @@ END_MESSAGE_MAP()
 
 int CInPlaceComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-    if (CComboBox::OnCreate(lpCreateStruct) == -1) {
+    if (__super::OnCreate(lpCreateStruct) == -1) {
         return -1;
     }
 
@@ -329,12 +329,12 @@ BOOL CInPlaceComboBox::PreTranslateMessage(MSG* pMsg)
         }
     }
 
-    return CComboBox::PreTranslateMessage(pMsg);
+    return __super::PreTranslateMessage(pMsg);
 }
 
 void CInPlaceComboBox::OnKillFocus(CWnd* pNewWnd)
 {
-    CComboBox::OnKillFocus(pNewWnd);
+    __super::OnKillFocus(pNewWnd);
 
     CString str;
     GetWindowText(str);
@@ -364,12 +364,12 @@ void CInPlaceComboBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         return;
     }
 
-    CComboBox::OnChar(nChar, nRepCnt, nFlags);
+    __super::OnChar(nChar, nRepCnt, nFlags);
 }
 
 void CInPlaceComboBox::OnNcDestroy()
 {
-    CComboBox::OnNcDestroy();
+    __super::OnNcDestroy();
 
     delete this;
 }
@@ -995,7 +995,7 @@ void CPlayerListCtrl::OnEnChangeEdit1()
 
 void CPlayerListCtrl::OnCbnDropdownCombo1()
 {
-    CComboBox* pCombo = (CComboBox*)GetDlgItem(IDC_COMBO1);
+    CDarkComboBox* pCombo = (CDarkComboBox*)GetDlgItem(IDC_COMBO1);
 
     CRect ir;
     GetItemRect(m_nItemClicked, &ir, LVIR_BOUNDS);

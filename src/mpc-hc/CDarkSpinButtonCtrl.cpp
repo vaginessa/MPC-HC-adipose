@@ -21,71 +21,75 @@ END_MESSAGE_MAP()
 
 
 void CDarkSpinButtonCtrl::OnPaint() {
-    CWnd *buddy = GetBuddy();
-    CDarkEdit* buddyEdit;
-    if (nullptr != buddy && nullptr != (buddyEdit = DYNAMIC_DOWNCAST(CDarkEdit, buddy))) {
-        buddyEdit->setBuddy(this); //we need to know about the buddy spin ctrl to clip it in ncpaint :-/
-    }
-
-    CPaintDC dc(this);
-    CRect   rectItem;
-    GetClientRect(rectItem);
-
-    COLORREF oldBkColor = dc.GetBkColor();
-    COLORREF oldTextColor = dc.GetTextColor();
-
-    COLORREF bgClr = CDarkTheme::ContentBGColor;
-
-    CBrush borderBrush(CDarkTheme::EditBorderColor);
-    CBrush butBorderBrush(CDarkTheme::ButtonBorderInnerColor);
-    dc.FillSolidRect(rectItem, bgClr);
-    dc.ExcludeClipRect(0, 1, 1, rectItem.Height()-1); //don't get left edge of rect
-    dc.FrameRect(rectItem, &borderBrush);
-
-    CBitmap arrowBMP;
-    CDC dcArrowBMP;
-    dcArrowBMP.CreateCompatibleDC(&dc);
-    int arrowLeft, arrowTop, arrowWidth, arrowHeight;
-
-    arrowWidth = CDarkTheme::SpinnerArrowWidth;
-    arrowHeight = CDarkTheme::SpinnerArrowHeight;
-    arrowLeft = rectItem.left + (rectItem.Width() - arrowWidth) / 2;
-    arrowBMP.CreateBitmap(arrowWidth, arrowHeight, 1, 1, CDarkTheme::SpinnerArrowBits);
-
-    for (int topOrBottom = 0; topOrBottom < 2; topOrBottom++) {
-        CRect butRect = rectItem;
-        butRect.DeflateRect(1, 1, 2, 1);
-        if (0 == topOrBottom) {
-            butRect.bottom -= butRect.Height() / 2;
-        } else {
-            butRect.top += butRect.Height() / 2;
-        }
-        butRect.DeflateRect(0, 1);
-
-        if (butRect.PtInRect(downPos)) {
-            bgClr = CDarkTheme::ButtonFillSelectedColor;
-        } else {
-            bgClr = CDarkTheme::ButtonFillColor;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CWnd *buddy = GetBuddy();
+        CDarkEdit* buddyEdit;
+        if (nullptr != buddy && nullptr != (buddyEdit = DYNAMIC_DOWNCAST(CDarkEdit, buddy))) {
+            buddyEdit->setBuddy(this); //we need to know about the buddy spin ctrl to clip it in ncpaint :-/
         }
 
-        arrowTop = butRect.top + (butRect.Height() - arrowHeight) / 2;
+        CPaintDC dc(this);
+        CRect   rectItem;
+        GetClientRect(rectItem);
+
+        COLORREF oldBkColor = dc.GetBkColor();
+        COLORREF oldTextColor = dc.GetTextColor();
+
+        COLORREF bgClr = CDarkTheme::ContentBGColor;
+
+        CBrush borderBrush(CDarkTheme::EditBorderColor);
+        CBrush butBorderBrush(CDarkTheme::ButtonBorderInnerColor);
+        dc.FillSolidRect(rectItem, bgClr);
+        dc.ExcludeClipRect(0, 1, 1, rectItem.Height() - 1); //don't get left edge of rect
+        dc.FrameRect(rectItem, &borderBrush);
+
+        CBitmap arrowBMP;
+        CDC dcArrowBMP;
+        dcArrowBMP.CreateCompatibleDC(&dc);
+        int arrowLeft, arrowTop, arrowWidth, arrowHeight;
+
+        arrowWidth = CDarkTheme::SpinnerArrowWidth;
+        arrowHeight = CDarkTheme::SpinnerArrowHeight;
+        arrowLeft = rectItem.left + (rectItem.Width() - arrowWidth) / 2;
+        arrowBMP.CreateBitmap(arrowWidth, arrowHeight, 1, 1, CDarkTheme::SpinnerArrowBits);
         dcArrowBMP.SelectObject(&arrowBMP);
 
-        dc.FillSolidRect(butRect, bgClr);
-        dc.FrameRect(butRect, &butBorderBrush);
-        dc.SetBkColor(CDarkTheme::TextFGColor);
-        dc.SetTextColor(bgClr);
+        for (int topOrBottom = 0; topOrBottom < 2; topOrBottom++) {
+            CRect butRect = rectItem;
+            butRect.DeflateRect(1, 1, 2, 1);
+            if (0 == topOrBottom) {
+                butRect.bottom -= butRect.Height() / 2;
+            } else {
+                butRect.top += butRect.Height() / 2;
+            }
+            butRect.DeflateRect(0, 1);
 
-        if (0 == topOrBottom) { //top
-            dc.BitBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, 0, SRCCOPY);
-        } else {
-            dc.StretchBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, arrowHeight - 1, arrowWidth, -arrowHeight, SRCCOPY);
+            if (butRect.PtInRect(downPos)) {
+                bgClr = CDarkTheme::ButtonFillSelectedColor;
+            } else {
+                bgClr = CDarkTheme::ButtonFillColor;
+            }
+
+            arrowTop = butRect.top + (butRect.Height() - arrowHeight) / 2;
+
+            dc.FillSolidRect(butRect, bgClr);
+            dc.FrameRect(butRect, &butBorderBrush);
+            dc.SetBkColor(CDarkTheme::TextFGColor);
+            dc.SetTextColor(bgClr);
+
+            if (0 == topOrBottom) { //top
+                dc.BitBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, 0, SRCCOPY);
+            } else {
+                dc.StretchBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, arrowHeight - 1, arrowWidth, -arrowHeight, SRCCOPY);
+            }
         }
-    }
-       
 
-    dc.SetBkColor(oldBkColor);
-    dc.SetTextColor(oldTextColor);
+
+        dc.SetBkColor(oldBkColor);
+        dc.SetTextColor(oldTextColor);
+    } else {
+        __super::OnPaint();
+    }
 
 }
 
@@ -113,5 +117,9 @@ void CDarkSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point) {
 
 
 BOOL CDarkSpinButtonCtrl::OnEraseBkgnd(CDC* pDC) {
-    return TRUE;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        return TRUE;
+    } else {
+        return __super::OnEraseBkgnd(pDC);
+    }
 }

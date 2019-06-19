@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CDarkTheme.h"
+#include "mplayerc.h"
 
 const COLORREF CDarkTheme::MenuBGColor = COLORREF(RGB(43, 43, 43));
 const COLORREF CDarkTheme::WindowBGColor = COLORREF(RGB(25, 25, 25));
@@ -78,6 +79,8 @@ const COLORREF CDarkTheme::TreeCtrlLineColor = COLORREF(RGB(106, 106, 106));
 const COLORREF CDarkTheme::TreeCtrlHoverColor = COLORREF(RGB(77, 77, 77));;
 const COLORREF CDarkTheme::TreeCtrlFocusColor = COLORREF(RGB(98, 98, 98));;
 
+const COLORREF CDarkTheme::CheckColor = COLORREF(RGB(222, 222, 222));;
+
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
 wchar_t* const CDarkTheme::uiSymbolFont = L"MS UI Gothic";
@@ -148,6 +151,20 @@ const BYTE CDarkTheme::SpinnerArrowBits[6] = {
 
 const int CDarkTheme::SpinnerArrowWidth = 5;
 const int CDarkTheme::SpinnerArrowHeight = 3;
+
+const BYTE CDarkTheme::CheckBits[14] = {
+    0x02, 0x00,
+    0x06, 0x00,
+    0x8E, 0x00,
+    0xDC, 0x00,
+    0xF8, 0x00,
+    0x70, 0x00,
+    0x20, 0x00,
+};
+
+const int CDarkTheme::CheckWidth = 7;
+const int CDarkTheme::CheckHeight = 7;
+
 
 void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight) {
     LOGFONT lf;
@@ -224,6 +241,26 @@ NONCLIENTMETRICS& CDarkTheme::GetMetrics() {
     return CDarkTheme::_metrics;
 }
 
+void CDarkTheme::DrawBufferedText(CDC * pDC, CString text, CRect rect, UINT format) {
+    CDC dcMem;
+    dcMem.CreateCompatibleDC(pDC);
+    dcMem.SetBkColor(pDC->GetBkColor());
+    dcMem.SetTextColor(pDC->GetTextColor());
+    dcMem.SetBkMode(pDC->GetBkMode());
+    dcMem.SelectObject(pDC->GetCurrentFont());
+
+    CBitmap bmMem;
+    bmMem.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+    CBitmap *pOldBm = dcMem.SelectObject(&bmMem);
+    dcMem.BitBlt(0, 0, rect.Width(), rect.Height(), pDC, rect.left, rect.top, SRCCOPY);
+
+    CRect tr = rect;
+    tr.OffsetRect(-tr.left, -tr.top);
+    dcMem.DrawText(text, tr, format);
+
+    pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), &dcMem, 0, 0, SRCCOPY);
+}
+
 void CDarkTheme::Draw2BitTransparent(CDC & dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor) {
     COLORREF crOldTextColor = dc.GetTextColor();
     COLORREF crOldBkColor = dc.GetBkColor();
@@ -249,6 +286,58 @@ void CDarkTheme::dbg(CString text, ...) {
     OutputDebugString(output);
     OutputDebugString(_T("\n"));
     va_end(args);
+}
+
+void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect rectCheck, CDC *pDC) {
+    COLORREF borderClr, bgClr;
+    COLORREF oldBkClr = pDC->GetBkColor(), oldTextClr = pDC->GetTextColor();
+    if (isHover) {
+        borderClr = CDarkTheme::CheckboxBorderHoverColor;
+        bgClr = CDarkTheme::CheckboxBGHoverColor;
+    } else {
+        borderClr = CDarkTheme::CheckboxBorderColor;
+        bgClr = CDarkTheme::CheckboxBGColor;
+    }
+
+    if (isChecked && useImage) {
+        CPngImage image;
+        image.Load(isHover ? IDB_PNG_DARKCBHOVER : IDB_PNG_DARKCB, AfxGetInstanceHandle());
+        CDC mDC;
+        mDC.CreateCompatibleDC(pDC);
+        mDC.SelectObject(image);
+        pDC->BitBlt(rectCheck.left, rectCheck.top, rectCheck.Width(), rectCheck.Height(), &mDC, 0, 0, SRCCOPY);
+    } else {
+        CBrush brush(borderClr);
+        pDC->FrameRect(rectCheck, &brush);
+        rectCheck.DeflateRect(1, 1);
+        pDC->FillSolidRect(rectCheck, bgClr);
+        if (isChecked) {
+            CBitmap checkBMP;
+            CDC dcCheckBMP;
+            dcCheckBMP.CreateCompatibleDC(pDC);
+
+            int left, top, width, height;
+            width = CheckWidth;
+            height = CheckHeight;
+            left = rectCheck.left + (rectCheck.Width() - width) / 2;
+            top = rectCheck.top + (rectCheck.Height() - height) / 2;
+            checkBMP.CreateBitmap(width, height, 1, 1, CheckBits);
+            dcCheckBMP.SelectObject(&checkBMP);
+
+            pDC->SetBkColor(CheckColor);
+            pDC->SetTextColor(bgClr);
+            pDC->BitBlt(left, top, width, height, &dcCheckBMP, 0, 0, SRCCOPY);
+        }
+    }
+    pDC->SetBkColor(oldBkClr);
+    pDC->SetTextColor(oldTextClr);
+}
+
+bool CDarkTheme::canUseWin10DarkTheme() {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        return !IsWindows10OrGreater();
+    }
+    return false;
 }
 
 
