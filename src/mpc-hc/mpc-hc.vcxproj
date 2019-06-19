@@ -156,7 +156,6 @@
     <ClCompile Include="CDarkListBox.cpp" />
     <ClCompile Include="CDarkMenu.cpp" />
     <ClCompile Include="CDarkPlayerListCtrl.cpp" />
-    <ClCompile Include="CDarkPlayerListCtrlLite.cpp" />
     <ClCompile Include="CDarkPPageBase.cpp" />
     <ClCompile Include="CDarkPropPageFrame.cpp" />
     <ClCompile Include="CDarkRadioOrCheck.cpp" />
@@ -320,7 +319,6 @@
     <ClInclude Include="CDarkListBox.h" />
     <ClInclude Include="CDarkMenu.h" />
     <ClInclude Include="CDarkPlayerListCtrl.h" />
-    <ClInclude Include="CDarkPlayerListCtrlLite.h" />
     <ClInclude Include="CDarkPPageBase.h" />
     <ClInclude Include="CDarkPropPageFrame.h" />
     <ClInclude Include="CDarkRadioOrCheck.h" />

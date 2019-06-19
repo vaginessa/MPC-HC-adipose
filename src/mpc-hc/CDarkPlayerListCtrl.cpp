@@ -25,7 +25,6 @@ void CDarkPlayerListCtrl::PreSubclassWindow() {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
-            //ModifyStyle(0, LVS_EX_DOUBLEBUFFER, 0);
         }
     }
     CPlayerListCtrl::PreSubclassWindow();
@@ -60,24 +59,29 @@ void CDarkPlayerListCtrl::OnNcPaint() {
         }
 
         CWindowDC dc(this);
+        int oldDC = dc.SaveDC();
 
-        CRect wr, cr;
+        CRect wr, cr, clip;
         GetWindowRect(wr);
         ScreenToClient(wr);
 
         GetClientRect(&cr);
-        cr.OffsetRect(-wr.left, -wr.top);
-        dc.ExcludeClipRect(cr);
-
+        int borderWidth = cr.left - wr.left;
         wr.OffsetRect(-wr.left, -wr.top);
+        clip = wr; //client rect is insufficient to clip scrollbars
+        clip.DeflateRect(borderWidth, borderWidth);
+        dc.ExcludeClipRect(clip);
         CBrush brush(CDarkTheme::WindowBorderColorLight); //color used for column sep in explorer
         dc.FillSolidRect(wr, CDarkTheme::ContentBGColor);
         dc.FrameRect(wr, &brush);
 
-        dc.SelectClipRgn(NULL);
+        dc.RestoreDC(oldDC);
 
         if (nullptr != darkSBHelper) {
             darkSBHelper->AfterNcPaint();
+        } else { //onncpaint normally triggers a scrollbar redraw
+            SetScrollPos(SB_VERT, GetScrollPos(SB_VERT), TRUE);
+            SetScrollPos(SB_HORZ, GetScrollPos(SB_HORZ), TRUE);
         }
     } else {
         __super::OnNcPaint();

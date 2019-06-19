@@ -251,7 +251,7 @@ void CDarkTheme::DrawBufferedText(CDC * pDC, CString text, CRect rect, UINT form
 
     CBitmap bmMem;
     bmMem.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
-    CBitmap *pOldBm = dcMem.SelectObject(&bmMem);
+    dcMem.SelectObject(&bmMem);
     dcMem.BitBlt(0, 0, rect.Width(), rect.Height(), pDC, rect.left, rect.top, SRCCOPY);
 
     CRect tr = rect;
@@ -335,7 +335,7 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect
 
 bool CDarkTheme::canUseWin10DarkTheme() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        return !IsWindows10OrGreater();
+        return IsWindows10OrGreater();
     }
     return false;
 }
