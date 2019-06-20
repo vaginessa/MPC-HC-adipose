@@ -23,10 +23,11 @@
 
 #include <afxcoll.h>
 #include "PlayerBar.h"
-#include "PlayerListCtrl.h"
+#include "CDarkPlayerListCtrl.h"
 #include "Playlist.h"
 #include "DropTarget.h"
 #include "../Subtitles/TextFile.h"
+#include "CDarkInlineEdit.h"
 
 
 class OpenMediaData;
@@ -41,12 +42,13 @@ private:
     enum { COL_NAME, COL_TIME };
 
     CMainFrame* m_pMainFrame;
+    CDarkInlineEdit m_edit;
 
     CFont m_font;
     void ScaleFont();
 
     CImageList m_fakeImageList;
-    CPlayerListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
 
     int m_itemHeight = 0;
     EventClient m_eventc;
@@ -156,8 +158,15 @@ public:
     afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint point);
+    afx_msg void OnLvnBeginlabeleditList(NMHDR * pNMHDR, LRESULT * pResult);
     afx_msg void OnLvnEndlabeleditList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnXButtonDown(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
+    afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    void NcPaintGripper(CDC* pDC, CRect rcClient);
+    void mpc_fillNcBG(CDC *mdc, CRect rcDraw);
+    void OnLvnItemchangedList(NMHDR * pNMHDR, LRESULT * pResult);
+    LRESULT OnDelayed_updateListCtrl(WPARAM, LPARAM);
 };

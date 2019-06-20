@@ -23,6 +23,7 @@
 #include "mplayerc.h"
 #include "PlayerInfoBar.h"
 #include "MainFrm.h"
+#include "CDarkTheme.h"
 
 
 // CPlayerInfoBar
@@ -42,6 +43,7 @@ CPlayerInfoBar::~CPlayerInfoBar()
 
 bool CPlayerInfoBar::SetLine(CString label, CString info)
 {
+    const CAppSettings& s = AfxGetAppSettings();
     info.Trim();
     if (info.IsEmpty()) {
         return RemoveLine(label);
@@ -54,7 +56,11 @@ bool CPlayerInfoBar::SetLine(CString label, CString info)
             m_info[idx]->GetWindowText(tmp);
             if (info != tmp) {
                 m_info[idx]->SetWindowText(info);
-                m_tooltip.UpdateTipText(info, m_info[idx]);
+                if (s.bDarkThemeLoaded) {
+                    darkTT.UpdateTipText(info, m_info[idx]);
+                } else {
+                    m_tooltip.UpdateTipText(info, m_info[idx]);
+                }
             }
             return false;
         }
@@ -66,7 +72,11 @@ bool CPlayerInfoBar::SetLine(CString label, CString info)
 
     CAutoPtr<CStatusLabel> i(DEBUG_NEW CStatusLabel(m_pMainFrame->m_dpi, false, true));
     i->Create(info, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SS_OWNERDRAW | SS_NOTIFY, CRect(0, 0, 0, 0), this);
-    m_tooltip.AddTool(i, info);
+    if (s.bDarkThemeLoaded) {
+        darkTT.AddTool(i, info);
+    } else {
+        m_tooltip.AddTool(i, info);
+    }
     m_info.Add(i);
 
     Relayout();
@@ -91,11 +101,16 @@ void CPlayerInfoBar::GetLine(CString label, CString& info)
 
 bool CPlayerInfoBar::RemoveLine(CString label)
 {
+    const CAppSettings& s = AfxGetAppSettings();
     for (size_t i = 0; i < m_label.GetCount(); i++) {
         CString tmp;
         m_label[i]->GetWindowText(tmp);
         if (label == tmp) {
-            m_tooltip.DelTool(m_info[i]);
+            if (s.bDarkThemeLoaded) {
+                darkTT.DelTool(m_info[i]);
+            } else {
+                m_tooltip.DelTool(m_info[i]);
+            }
             m_label.RemoveAt(i);
             m_info.RemoveAt(i);
             Relayout();
@@ -119,10 +134,17 @@ BOOL CPlayerInfoBar::Create(CWnd* pParentWnd)
 {
     BOOL res = CDialogBar::Create(pParentWnd, IDD_PLAYERINFOBAR, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_BOTTOM, IDD_PLAYERINFOBAR);
 
-    m_tooltip.Create(this, TTS_NOPREFIX);
-    m_tooltip.Activate(TRUE);
-    m_tooltip.SetMaxTipWidth(m_pMainFrame->m_dpi.ScaleX(500));
-    m_tooltip.SetDelayTime(TTDT_AUTOPOP, 10000);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        darkTT.Create(this, TTS_NOPREFIX);
+        darkTT.Activate(TRUE);
+        darkTT.SetMaxTipWidth(m_pMainFrame->m_dpi.ScaleX(500));
+        darkTT.SetDelayTime(TTDT_AUTOPOP, 10000);
+    } else {
+        m_tooltip.Create(this, TTS_NOPREFIX);
+        m_tooltip.Activate(TRUE);
+        m_tooltip.SetMaxTipWidth(m_pMainFrame->m_dpi.ScaleX(500));
+        m_tooltip.SetDelayTime(TTDT_AUTOPOP, 10000);
+    }
 
     return res;
 }
@@ -199,10 +221,15 @@ END_MESSAGE_MAP()
 
 BOOL CPlayerInfoBar::PreTranslateMessage(MSG* pMsg)
 {
-    if (IsWindow(m_tooltip)) {
-        m_tooltip.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (IsWindow(darkTT)) {
+            darkTT.RelayEvent(pMsg);
+        }
+    } else {
+        if (IsWindow(m_tooltip)) {
+            m_tooltip.RelayEvent(pMsg);
+        }
     }
-
     return __super::PreTranslateMessage(pMsg);
 }
 
@@ -228,7 +255,14 @@ BOOL CPlayerInfoBar::OnEraseBkgnd(CDC* pDC)
         r.InflateRect(1, 0, 1, 0);
     }
 
-    pDC->Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        pDC->FillSolidRect(&r, CDarkTheme::NoBorderColor);
+        //pDC->Draw3dRect(&r, CDarkTheme::DarkShadowColor, CDarkTheme::DarkLightColor);
+    }
+    else {
+        pDC->Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    }
 
     r.DeflateRect(1, 1);
 

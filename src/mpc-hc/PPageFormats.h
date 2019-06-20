@@ -22,28 +22,32 @@
 #pragma once
 
 #include <afxwin.h>
-#include "PPageBase.h"
-#include "PlayerListCtrl.h"
+#include "CDarkPPageBase.h"
+#include "CDarkPlayerListCtrl.h"
+#include "CDarkButton.h"
+#include "CDarkGroupBox.h"
+#include "CDarkRadioOrCheck.h"
+
 
 
 // CPPageFormats dialog
 
-class CPPageFormats : public CPPageBase
+class CPPageFormats : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageFormats)
 
 private:
 
-    CPlayerListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
     CImageList m_onoff;
-    CButton m_fContextDir;
-    CButton m_fContextFiles;
-    CButton m_fAssociatedWithIcons;
-    CStatic m_autoplay;
-    CButton m_apvideo;
-    CButton m_apmusic;
-    CButton m_apaudiocd;
-    CButton m_apdvd;
+    CDarkRadioOrCheck m_fContextDir;
+    CDarkRadioOrCheck m_fContextFiles;
+    CDarkButton m_fAssociatedWithIcons;
+    CDarkGroupBox m_autoplay;
+    CDarkRadioOrCheck m_apvideo;
+    CDarkRadioOrCheck m_apmusic;
+    CDarkRadioOrCheck m_apaudiocd;
+    CDarkRadioOrCheck m_apdvd;
 
     CString m_exts;
     bool m_bInsufficientPrivileges;

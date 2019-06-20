@@ -20,6 +20,7 @@
 
 #include "stdafx.h"
 #include "ImageGrayer.h"
+#include "CDarkTheme.h"
 
 struct HLS {
     double H, L, S;
@@ -130,6 +131,59 @@ bool ImageGrayer::Gray(const CImage& imgSource, CImage& imgDest)
             p[x].rgbRed = BYTE(adjustBrightness(rgb.rgbRed, 1.5) * p[x].rgbReserved / 255);
             p[x].rgbGreen = BYTE(adjustBrightness(rgb.rgbGreen, 1.5) * p[x].rgbReserved / 255);
             p[x].rgbBlue = BYTE(adjustBrightness(rgb.rgbBlue, 1.5) * p[x].rgbReserved / 255);
+        }
+    }
+
+    return true;
+}
+
+bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool disabled, bool darkTheme)
+{
+    // Only support 32-bit image for now
+    if (imgSource.GetBPP() != 32) {
+        return false;
+    }
+
+    if (!darkTheme) {
+        return Gray(imgSource, imgDest);
+    }
+
+    imgDest.Destroy();
+
+    if (!imgDest.Create(imgSource.GetWidth(), imgSource.GetHeight(), imgSource.GetBPP())) {
+        return false;
+    }
+    BOOL bCopied = imgSource.BitBlt(imgDest.GetDC(), 0, 0);
+    imgDest.ReleaseDC();
+    if (!bCopied) {
+        return false;
+    }
+
+    RGBQUAD newColor;
+    COLORREF themeColor;
+    if (disabled) {
+        themeColor = CDarkTheme::ImageDisabledColor;
+    } else {
+        themeColor = CDarkTheme::TextFGColor;
+    }
+    newColor.rgbRed = GetRValue(themeColor);
+    newColor.rgbGreen = GetGValue(themeColor);
+    newColor.rgbBlue = GetBValue(themeColor);
+    newColor.rgbReserved = 0;
+
+    BYTE* bits = static_cast<BYTE*>(imgDest.GetBits());
+    for (int y = 0; y < imgDest.GetHeight(); y++, bits += imgDest.GetPitch()) {
+        RGBQUAD* p = reinterpret_cast<RGBQUAD*>(bits);
+        for (int x = 0; x < imgDest.GetWidth(); x++) {
+            HLS hls(p[x]);
+
+            RGBQUAD rgb = hls.toRGBQUAD();
+
+            if (p[x].rgbReserved != 0) { //ignore the transparent bits
+                p[x].rgbRed = newColor.rgbRed;
+                p[x].rgbBlue = newColor.rgbBlue;
+                p[x].rgbGreen = newColor.rgbGreen;
+            }
         }
     }
 

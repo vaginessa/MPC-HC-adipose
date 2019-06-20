@@ -22,8 +22,9 @@
 
 #include <afxwin.h>
 #include "resource.h"
+#include "CDarkDialog.h"
 
-class CAboutDlg : public CDialog
+class CAboutDlg : public CDarkDialog
 {
     CStatic m_icon;
 
@@ -45,6 +46,7 @@ class CAboutDlg : public CDialog
 
 public:
     CAboutDlg();
+    virtual ~CAboutDlg();
 
     virtual BOOL OnInitDialog();
 

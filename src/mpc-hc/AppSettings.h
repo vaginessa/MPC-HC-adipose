@@ -626,6 +626,8 @@ public:
     CString         strAutoDownloadSubtitlesExclude;
     bool            bAutoUploadSubtitles;
     bool            bPreferHearingImpairedSubtitles;
+    bool            bDarkThemeLoaded;
+    bool            bDarkTheme;
     CString         strSubtitlesProviders;
     CString         strSubtitlePaths;
 

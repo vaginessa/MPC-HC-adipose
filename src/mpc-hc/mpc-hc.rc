@@ -8,7 +8,6 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
-
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -32,8 +31,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
-    "\0"
+    "#include ""afxres.h""\0"
 END
 
 3 TEXTINCLUDE 
@@ -1470,6 +1468,7 @@ BEGIN
         MENUITEM "Captu&re",                    ID_VIEW_CAPTURE
         MENUITEM "Na&vigation",                 ID_VIEW_NAVIGATION
         MENUITEM "&Debug Shaders",              ID_VIEW_DEBUGSHADERS
+        MENUITEM "Dark Theme (restart)",        ID_VIEW_DARKTHEME
         POPUP "&Presets..."
         BEGIN
             MENUITEM "&Minimal",                    ID_VIEW_PRESETS_MINIMAL
@@ -2238,6 +2237,24 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// PNG
+//
+
+IDB_PNG_DARKCBHOVER     PNG                     "res\\darktheme\\checkbox.png"
+
+IDB_PNG_DARKCB          PNG                     "res\\darktheme\\checkboxhover.png"
+
+IDB_PNG_DARKRADIO       PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radio.png"
+
+IDB_PNG_DARKRADIOHOVER  PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiohover.png"
+
+IDB_PNG_DARKRADIOSET    PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radioset.png"
+
+IDB_PNG_DARKRADIOSETHOVER PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiosethover.png"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -2291,7 +2308,6 @@ BEGIN
                             "Not supported by some devices. Two video decoders always present in the filter graph."
     IDS_PPAGE_CAPTURE_FGDESC1 
                             "Fast except when switching between different video streams. Only one video decoder present in the filter graph."
-    IDS_PPAGE_CAPTURE_FGDESC2 ""
     IDS_PPAGE_CAPTURE_SFG0  "Never if possible (fastest, but not supported by most filters)"
     IDS_PPAGE_CAPTURE_SFG1  "Only when switching different video types"
     IDS_PPAGE_CAPTURE_SFG2  "Always (may be required by some devices)"

@@ -121,10 +121,14 @@
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>MPCHC_LITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug Lite|Win32'">false</ShowIncludes>
     </ClCompile>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug Lite|Win32'">taskkill /IM mpc-hc.exe /FI "STATUS eq RUNNING"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="!$(Configuration.Contains('Lite'))">
     <Link>
@@ -135,10 +139,33 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="AuthDlg.cpp" />
     <ClCompile Include="BaseGraph.cpp" />
+    <ClCompile Include="CDarkButton.cpp" />
+    <ClCompile Include="CDarkChildHelper.cpp" />
+    <ClCompile Include="CDarkComboBox.cpp" />
+    <ClCompile Include="CDarkDialog.cpp" />
+    <ClCompile Include="CDarkDockBar.cpp" />
+    <ClCompile Include="CDarkEdit.cpp" />
+    <ClCompile Include="CDarkInlineEdit.cpp" />
+    <ClCompile Include="CDarkGroupBox.cpp" />
+    <ClCompile Include="CDarkLinkCtrl.cpp" />
+    <ClCompile Include="CDarkListBox.cpp" />
+    <ClCompile Include="CDarkMenu.cpp" />
+    <ClCompile Include="CDarkPlayerListCtrl.cpp" />
+    <ClCompile Include="CDarkPPageBase.cpp" />
+    <ClCompile Include="CDarkPropPageFrame.cpp" />
+    <ClCompile Include="CDarkRadioOrCheck.cpp" />
+    <ClCompile Include="CDarkScrollBar.cpp" />
+    <ClCompile Include="CDarkScrollBarHelper.cpp" />
+    <ClCompile Include="CDarkSliderCtrl.cpp" />
+    <ClCompile Include="CDarkSpinButtonCtrl.cpp" />
+    <ClCompile Include="CDarkTheme.cpp" />
+    <ClCompile Include="CDarkToolTipCtrl.cpp" />
+    <ClCompile Include="CDarkTreeCtrl.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
     <ClCompile Include="ColorButton.cpp" />
@@ -275,10 +302,33 @@
     <ClCompile Include="YoutubeDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="AuthDlg.h" />
     <ClInclude Include="BaseGraph.h" />
+    <ClInclude Include="CDarkButton.h" />
+    <ClInclude Include="CDarkChildHelper.h" />
+    <ClInclude Include="CDarkComboBox.h" />
+    <ClInclude Include="CDarkDialog.h" />
+    <ClInclude Include="CDarkDockBar.h" />
+    <ClInclude Include="CDarkEdit.h" />
+    <ClInclude Include="CDarkInlineEdit.h" />
+    <ClInclude Include="CDarkGroupBox.h" />
+    <ClInclude Include="CDarkLinkCtrl.h" />
+    <ClInclude Include="CDarkListBox.h" />
+    <ClInclude Include="CDarkMenu.h" />
+    <ClInclude Include="CDarkPlayerListCtrl.h" />
+    <ClInclude Include="CDarkPPageBase.h" />
+    <ClInclude Include="CDarkPropPageFrame.h" />
+    <ClInclude Include="CDarkRadioOrCheck.h" />
+    <ClInclude Include="CDarkScrollBar.h" />
+    <ClInclude Include="CDarkScrollBarHelper.h" />
+    <ClInclude Include="CDarkSliderCtrl.h" />
+    <ClInclude Include="CDarkSpinButtonCtrl.h" />
+    <ClInclude Include="CDarkTheme.h" />
+    <ClInclude Include="CDarkToolTipCtrl.h" />
+    <ClInclude Include="CDarkTreeCtrl.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
     <ClInclude Include="ColorButton.h" />
@@ -690,6 +740,12 @@
     <Image Include="res\check_all.bmp" />
     <Image Include="res\check_audio.bmp" />
     <Image Include="res\check_video.bmp" />
+    <Image Include="res\darktheme\checkbox.png" />
+    <Image Include="res\darktheme\checkboxhover.png" />
+    <Image Include="res\darktheme\radio.png" />
+    <Image Include="res\darktheme\radiohover.png" />
+    <Image Include="res\darktheme\radioset.png" />
+    <Image Include="res\darktheme\radiosethover.png" />
     <Image Include="res\uncheck_all.bmp" />
   </ItemGroup>
   <ItemGroup>

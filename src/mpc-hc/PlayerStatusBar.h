@@ -22,6 +22,7 @@
 #pragma once
 
 #include "StatusLabel.h"
+#include "CDarkToolTipCtrl.h"
 
 class CMainFrame;
 
@@ -45,6 +46,7 @@ private:
     CMenu m_timerMenu;
 
     CToolTipCtrl m_tooltip;
+    CDarkToolTipCtrl darkTT;
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

@@ -24,6 +24,7 @@
 #include "PlayerStatusBar.h"
 #include "MainFrm.h"
 #include "DSUtil.h"
+#include "CDarkTheme.h"
 
 // CPlayerStatusBar
 
@@ -57,13 +58,21 @@ BOOL CPlayerStatusBar::Create(CWnd* pParentWnd)
 
     // Should never be RTLed
     ModifyStyleEx(WS_EX_LAYOUTRTL, WS_EX_NOINHERITLAYOUT);
-
-    m_tooltip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
-    m_tooltip.SetDelayTime(TTDT_INITIAL, 0);
-    m_tooltip.SetDelayTime(TTDT_AUTOPOP, 2500);
-    m_tooltip.SetDelayTime(TTDT_RESHOW, 0);
-    m_tooltip.AddTool(&m_time, IDS_TOOLTIP_REMAINING_TIME);
-    m_tooltip.AddTool(&m_status);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        darkTT.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
+        darkTT.SetDelayTime(TTDT_INITIAL, 0);
+        darkTT.SetDelayTime(TTDT_AUTOPOP, 2500);
+        darkTT.SetDelayTime(TTDT_RESHOW, 0);
+        darkTT.AddTool(&m_time, IDS_TOOLTIP_REMAINING_TIME);
+        darkTT.AddTool(&m_status);
+    } else {
+        m_tooltip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
+        m_tooltip.SetDelayTime(TTDT_INITIAL, 0);
+        m_tooltip.SetDelayTime(TTDT_AUTOPOP, 2500);
+        m_tooltip.SetDelayTime(TTDT_RESHOW, 0);
+        m_tooltip.AddTool(&m_time, IDS_TOOLTIP_REMAINING_TIME);
+        m_tooltip.AddTool(&m_status);
+    }
 
     return ret;
 }
@@ -393,7 +402,16 @@ void CPlayerStatusBar::OnPaint()
         r.InflateRect(1, 0, 1, 0);
     }
 
-    dc.Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        //dc.Draw3dRect(&r, CDarkTheme::DarkShadowColor, CDarkTheme::DarkLightColor);
+        dc.FillSolidRect(&r, CDarkTheme::NoBorderColor);
+        CRect top(r.left, r.top, r.right, r.top+1);
+        dc.FillSolidRect(&top, CDarkTheme::WindowBGColor);
+    } else {
+        dc.Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
+    }
+
 
     r.DeflateRect(1, 1);
 
@@ -491,7 +509,11 @@ HBRUSH CPlayerStatusBar::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 BOOL CPlayerStatusBar::PreTranslateMessage(MSG* pMsg)
 {
-    m_tooltip.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        darkTT.RelayEvent(pMsg);
+    } else {
+        m_tooltip.RelayEvent(pMsg);
+    }
 
     return __super::PreTranslateMessage(pMsg);
 }

@@ -106,7 +106,9 @@
 #include <qnetwork.h>
 
 #include "YoutubeDL.h"
-
+#include "CDarkMenu.h"
+#include "CDarkDockBar.h"
+#undef SubclassWindow
 
 // IID_IAMLine21Decoder
 DECLARE_INTERFACE_IID_(IAMLine21Decoder_2, IAMLine21Decoder, "6E8D4A21-310C-11d0-B79A-00AA003767A7") {};
@@ -160,6 +162,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_WM_CREATE()
     ON_WM_DESTROY()
     ON_WM_CLOSE()
+    ON_WM_MEASUREITEM()
 
     ON_REGISTERED_MESSAGE(s_uTaskbarRestart, OnTaskBarRestart)
     ON_REGISTERED_MESSAGE(WM_NOTIFYICON, OnNotifyIcon)
@@ -286,6 +289,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_UPDATE_COMMAND_UI(ID_VIEW_CAPTURE, OnUpdateViewCapture)
     ON_COMMAND(ID_VIEW_DEBUGSHADERS, OnViewDebugShaders)
     ON_UPDATE_COMMAND_UI(ID_VIEW_DEBUGSHADERS, OnUpdateViewDebugShaders)
+    ON_COMMAND(ID_VIEW_DARKTHEME, OnViewDarkTheme)
+    ON_UPDATE_COMMAND_UI(ID_VIEW_DARKTHEME, OnUpdateViewDarkTheme)
     ON_COMMAND(ID_VIEW_PRESETS_MINIMAL, OnViewMinimal)
     ON_UPDATE_COMMAND_UI(ID_VIEW_PRESETS_MINIMAL, OnUpdateViewMinimal)
     ON_COMMAND(ID_VIEW_PRESETS_COMPACT, OnViewCompact)
@@ -516,6 +521,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 
     ON_MESSAGE(WM_LOADSUBTITLES, OnLoadSubtitles)
     ON_MESSAGE(WM_GETSUBTITLES, OnGetSubtitles)
+    ON_WM_DRAWITEM()
 END_MESSAGE_MAP()
 
 #ifdef _DEBUG
@@ -811,6 +817,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+    if (m_DefaultDarkMenu != nullptr) delete m_DefaultDarkMenu;
 }
 
 int CMainFrame::OnNcCreate(LPCREATESTRUCT lpCreateStruct)
@@ -851,6 +858,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     VERIFY(m_popupMenu.LoadMenu(IDR_POPUP));
     VERIFY(m_mainPopupMenu.LoadMenu(IDR_POPUPMAIN));
+
     CreateDynamicMenus();
 
     // create a view to occupy the client area of the frame
@@ -966,7 +974,23 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     UpdateSkypeHandler();
 
+    if (s.bDarkThemeLoaded) {
+        m_popupMenu.ActivateDarkTheme();
+        m_mainPopupMenu.ActivateDarkTheme();
+    }
     return 0;
+}
+
+void CMainFrame::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
+    if (lpMeasureItemStruct->CtlType == ODT_MENU)  {
+        if (CDarkMenu* cm = CDarkMenu::getParentMenu(lpMeasureItemStruct->itemID)) {
+            cm->MeasureItem(lpMeasureItemStruct);
+            return;
+        }
+
+    }
+    
+    CFrameWnd::OnMeasureItem(nIDCtl, lpMeasureItemStruct);
 }
 
 void CMainFrame::OnDestroy()
@@ -1217,6 +1241,26 @@ void CMainFrame::RecalcLayout(BOOL bNotify)
         r |= CRect(r.TopLeft(), CSize(min));
         MoveWindow(r);
     }
+}
+
+void CMainFrame::EnableDocking(DWORD dwDockStyle) {
+    ASSERT((dwDockStyle & ~(CBRS_ALIGN_ANY | CBRS_FLOAT_MULTI)) == 0);
+
+    m_pFloatingFrameClass = RUNTIME_CLASS(CMiniDockFrameWnd);
+    for (int i = 0; i < 4; i++) {
+        if (dwDockBarMap[i][1] & dwDockStyle & CBRS_ALIGN_ANY) {
+            CDarkDockBar* pDock = (CDarkDockBar*)GetControlBar(dwDockBarMap[i][0]);
+            if (pDock == NULL) {
+                pDock = new CDarkDockBar;
+                if (!pDock->Create(this,
+                    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE |
+                    dwDockBarMap[i][1], dwDockBarMap[i][0])) {
+                    AfxThrowResourceException();
+                }
+            }
+        }
+    }
+    //CFrameWnd::EnableDocking( dwDockStyle);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2791,6 +2835,8 @@ void CMainFrame::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
     __super::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
+
+
 void CMainFrame::OnInitMenu(CMenu* pMenu)
 {
     __super::OnInitMenu(pMenu);
@@ -2816,7 +2862,7 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
             itemID = mii.wID;
         }
 
-        CMenu* pSubMenu = nullptr;
+        CDarkMenu* pSubMenu = nullptr;
 
         if (itemID == ID_FAVORITES) {
             SetupFavoritesSubMenu();
@@ -2827,12 +2873,17 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
         }*/
 
         if (pSubMenu) {
+
             mii.fMask = MIIM_STATE | MIIM_SUBMENU | MIIM_ID;
             mii.fType = MF_POPUP;
             mii.wID = itemID; // save ID after set popup type
             mii.fState = (pSubMenu->GetMenuItemCount()) > 0 ? MF_ENABLED : (MF_DISABLED | MF_GRAYED);
             mii.hSubMenu = *pSubMenu;
             VERIFY(pMenu->SetMenuItemInfo(i, &mii, TRUE));
+            const CAppSettings& s = AfxGetAppSettings();
+            if (s.bDarkThemeLoaded) {
+                pSubMenu->ActivateDarkTheme();
+            }
         }
     }
 }
@@ -2892,7 +2943,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             VERIFY(pPopupMenu->GetMenuItemInfo(i, &mii, TRUE));
             itemID = mii.wID;
         }
-        CMenu* pSubMenu = nullptr;
+        CDarkMenu* pSubMenu = nullptr;
 
         if (itemID == ID_FILE_OPENDISC) {
             SetupOpenCDSubMenu();
@@ -2937,6 +2988,10 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             mii.fState = (pSubMenu->GetMenuItemCount() > 0) ? MF_ENABLED : (MF_DISABLED | MF_GRAYED);
             mii.hSubMenu = *pSubMenu;
             VERIFY(pPopupMenu->SetMenuItemInfo(i, &mii, TRUE));
+            const CAppSettings& s = AfxGetAppSettings();
+            if (s.bDarkThemeLoaded) {
+                pSubMenu->ActivateDarkTheme();
+            }
         }
     }
 
@@ -3009,17 +3064,27 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             int k = 0;
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
+            if (s.bDarkThemeLoaded) {
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+            }
         }
         //if (j > 0)
         {
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, ResStr(IDS_PANSCAN_EDIT)));
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND | MF_SEPARATOR));
+            if (s.bDarkThemeLoaded) {
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                UINT pos = CDarkMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
+                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, pos-1);
+            }
         }
     }
+
 
     if (m_pActiveContextMenu == pPopupMenu) {
         m_eventc.FireEvent(MpcEvent::CONTEXT_MENU_POPUP_INITIALIZED);
     }
+
 }
 
 void CMainFrame::OnUnInitMenuPopup(CMenu* pPopupMenu, UINT nFlags)
@@ -5379,6 +5444,7 @@ void CMainFrame::OnUpdateViewVSyncOffset(CCmdUI* pCmdUI)
     CString Temp;
     Temp.Format(L"%d", r.m_AdvRendSets.iVMR9VSyncOffset);
     pCmdUI->SetText(Temp);
+    CDarkMenu::updateItem(pCmdUI);
 }
 
 void CMainFrame::OnUpdateViewVSyncAccurate(CCmdUI* pCmdUI)
@@ -6229,6 +6295,7 @@ void CMainFrame::OnUpdateViewCaptionmenu(CCmdUI* pCmdUI)
     const auto& s = AfxGetAppSettings();
     const UINT next[] = { IDS_VIEW_HIDEMENU, IDS_VIEW_FRAMEONLY, IDS_VIEW_BORDERLESS, IDS_VIEW_CAPTIONMENU };
     pCmdUI->SetText(ResStr(next[s.eCaptionMenuMode % MpcCaptionState::MODE_COUNT]));
+    CDarkMenu::updateItem(pCmdUI);
 }
 
 void CMainFrame::OnViewControlBar(UINT nID)
@@ -6390,10 +6457,21 @@ void CMainFrame::OnViewDebugShaders()
     }
 }
 
+
 void CMainFrame::OnUpdateViewDebugShaders(CCmdUI* pCmdUI)
 {
     const auto& dlg = m_pDebugShaders;
     pCmdUI->SetCheck(dlg && dlg->m_hWnd && dlg->IsWindowVisible());
+}
+
+void CMainFrame::OnUpdateViewDarkTheme(CCmdUI* pCmdUI) {
+    const CAppSettings& s = AfxGetAppSettings();
+    pCmdUI->SetCheck(s.bDarkTheme);
+}
+
+void CMainFrame::OnViewDarkTheme() {
+    CAppSettings& s = AfxGetAppSettings();
+    s.bDarkTheme = !s.bDarkTheme;
 }
 
 void CMainFrame::OnViewMinimal()
@@ -8265,11 +8343,17 @@ void CMainFrame::OnUpdateAfterplayback(CCmdUI* pCmdUI)
     }
 
     if (IsMenu(*pCmdUI->m_pMenu)) {
-        MENUITEMINFO mii;
+        MENUITEMINFO mii, cii;
+        ZeroMemory(&cii, sizeof(MENUITEMINFO));
+        cii.cbSize = sizeof(cii);
+        cii.fMask = MIIM_FTYPE;
+        pCmdUI->m_pMenu->GetMenuItemInfo(pCmdUI->m_nID, &cii);
+
         mii.cbSize = sizeof(mii);
         mii.fMask = MIIM_FTYPE | MIIM_STATE;
-        mii.fType = (bRadio ? MFT_RADIOCHECK : 0);
+        mii.fType = (bRadio ? MFT_RADIOCHECK : 0) | (cii.fType & MFT_OWNERDRAW); //preserve owner draw flag
         mii.fState = (bRadio ? MFS_DISABLED : 0) | (bChecked || bRadio ? MFS_CHECKED : 0);
+
         VERIFY(pCmdUI->m_pMenu->SetMenuItemInfo(pCmdUI->m_nID, &mii));
     }
 }
@@ -13055,6 +13139,7 @@ void CMainFrame::SetupVideoStreamsSubMenu()
 
 void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInsertPos /*= -1*/)
 {
+    const CAppSettings& s = AfxGetAppSettings();
     auto emptyMenu = [&](CMenu & menu) {
         while (menu.RemoveMenu(0, MF_BYPOSITION));
     };
@@ -13092,6 +13177,9 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
         if (parentMenu && iInsertPos >= 0) {
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
+                if (s.bDarkThemeLoaded) {
+                    CDarkMenu::ActivateItemDarkTheme(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
+                }
                 m_nJumpToSubMenusCount++;
             } else {
                 ASSERT(FALSE);
@@ -13212,8 +13300,6 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
             addSubMenuIfPossible(StrRes(IDS_NAVIGATE_CHAPTERS), m_chaptersMenu);
         }
     } else if (GetPlaybackMode() == PM_DIGITAL_CAPTURE) {
-        const CAppSettings& s = AfxGetAppSettings();
-
         menuStartRadioSection();
         for (const auto& channel : s.m_DVBChannels) {
             UINT flags = MF_BYCOMMAND | MF_STRING | MF_ENABLED;
@@ -16321,6 +16407,26 @@ HRESULT CMainFrame::UpdateThumbnailClip()
     return m_pTaskbarList->SetThumbnailClip(m_hWnd, &r);
 }
 
+BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT & rect, CWnd * pParentWnd, LPCTSTR lpszMenuName, DWORD dwExStyle, CCreateContext * pContext)
+{
+    if (m_DefaultDarkMenu == nullptr) m_DefaultDarkMenu = new CDarkMenu();
+    if (lpszMenuName != NULL) {
+        m_DefaultDarkMenu->LoadMenu(lpszMenuName);
+
+        if (!CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle,
+            rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, pParentWnd->GetSafeHwnd(), m_DefaultDarkMenu->m_hMenu, (LPVOID)pContext)) {
+            return FALSE;
+        }
+        const CAppSettings& s = AfxGetAppSettings();
+        if (s.bDarkThemeLoaded) {
+            m_DefaultDarkMenu->ActivateDarkTheme(true);
+        }
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
 LRESULT CMainFrame::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
     if ((message == WM_COMMAND) && (THBN_CLICKED == HIWORD(wParam))) {
@@ -16575,7 +16681,7 @@ void CMainFrame::UpdateControlState(UpdateControlTarget target)
 
 void CMainFrame::UpdateUILanguage()
 {
-    CMenu  defaultMenu;
+//    CMenu  defaultMenu;
     CMenu* oldMenu;
 
     // Destroy the dynamic menus before reloading the main menus
@@ -16584,18 +16690,30 @@ void CMainFrame::UpdateUILanguage()
     // Reload the main menus
     m_popupMenu.DestroyMenu();
     m_popupMenu.LoadMenu(IDR_POPUP);
+
     m_mainPopupMenu.DestroyMenu();
     m_mainPopupMenu.LoadMenu(IDR_POPUPMAIN);
 
     oldMenu = GetMenu();
-    defaultMenu.LoadMenu(IDR_MAINFRAME);
+    m_DefaultDarkMenu = new CDarkMenu(); //will have been destroyed
+    m_DefaultDarkMenu->LoadMenu(IDR_MAINFRAME);
     if (oldMenu) {
         // Attach the new menu to the window only if there was a menu before
-        SetMenu(&defaultMenu);
+        SetMenu(m_DefaultDarkMenu);
         // and then destroy the old one
         oldMenu->DestroyMenu();
     }
-    m_hMenuDefault = defaultMenu.Detach();
+    //we don't detach because we retain the cmenu
+    //m_hMenuDefault = defaultMenu.Detach();
+    m_hMenuDefault = m_DefaultDarkMenu->GetSafeHmenu();
+
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        m_popupMenu.ActivateDarkTheme();
+        m_mainPopupMenu.ActivateDarkTheme();
+        m_DefaultDarkMenu->ActivateDarkTheme(true);
+    }
+
 
     // Reload the dynamic menus
     CreateDynamicMenus();
@@ -17264,3 +17382,5 @@ bool CMainFrame::DownloadWithYoutubeDL(CString url, CString filename)
 
     return true;
 }
+
+

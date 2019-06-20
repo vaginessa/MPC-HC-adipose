@@ -249,6 +249,11 @@ CTreeCtrl* CTreePropSheet::CreatePageTreeObject()
     return new CTreeCtrl;
 }
 
+//added for mpc-hc dark theme
+void CTreePropSheet::SetTreeCtrlTheme(CTreeCtrl *ctrl) {
+    SetWindowTheme(GetSafeHwnd(), L"Explorer", NULL);
+}
+
 
 CPropPageFrame* CTreePropSheet::CreatePageFrame()
 {
@@ -842,7 +847,8 @@ BOOL CTreePropSheet::OnInitDialog()
         m_pwndPageTree->SetImageList(&m_Images, TVSIL_STATE);
     }
 
-    SetWindowTheme(m_pwndPageTree->GetSafeHwnd(), L"Explorer", NULL);
+    //SetWindowTheme(m_pwndPageTree->GetSafeHwnd(), L"Explorer", NULL);
+    SetTreeCtrlTheme(m_pwndPageTree);
 
     // Fill the tree ctrl
     RefillPageTree();

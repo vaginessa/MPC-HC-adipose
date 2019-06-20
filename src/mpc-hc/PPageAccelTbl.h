@@ -26,10 +26,11 @@
 #include "StaticLink.h"
 #include "WinHotkeyCtrl.h"
 #include "vkCodes.h"
+#include "CDarkPPageBase.h"
 
 // CPPageAccelTbl dialog
 
-class CPPageAccelTbl : public CPPageBase
+class CPPageAccelTbl : public CDarkPPageBase
 {
 private:
     enum {
@@ -51,11 +52,11 @@ private:
     CPlayerListCtrl m_list;
     BOOL m_fWinLirc;
     CString m_WinLircAddr;
-    CEdit m_WinLircEdit;
+    CDarkEdit m_WinLircEdit;
     CStaticLink m_WinLircLink;
     BOOL m_fUIce;
     CString m_UIceAddr;
-    CEdit m_UIceEdit;
+    CDarkEdit m_UIceEdit;
     CStaticLink m_UIceLink;
     UINT_PTR m_nStatusTimerID;
     BOOL m_fGlobalMedia;

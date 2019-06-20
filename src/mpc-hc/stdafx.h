@@ -50,6 +50,7 @@ namespace Gdiplus
     using std::max;
 };
 
+#include <afxbutton.h>
 #include <afxole.h>
 #include <afxinet.h>
 #include <atlcoll.h>
@@ -58,6 +59,7 @@ namespace Gdiplus
 #include <atlpath.h>
 #include <atlsync.h>
 #include <atlutil.h>
+#include <atlwin.h>
 #include <comdef.h>
 #include <commdlg.h>
 
@@ -77,6 +79,8 @@ class CAtlStringMap : public CAtlMap<S, T, CStringElementTraits<S>> {};
 #define CheckAndLog(x, msg)  hr = ##x; if (FAILED(hr)) { TRACE(msg _T(": 0x%08x\n"), hr); return hr; }
 #define CheckNoLog(x)        hr = ##x; if (FAILED(hr)) { return hr; }
 #define CheckNoLogBool(x)    if (FAILED(x)) { return false; }
+
+
 
 #include "DSUtil.h"
 #include "mpc-hc_config.h"

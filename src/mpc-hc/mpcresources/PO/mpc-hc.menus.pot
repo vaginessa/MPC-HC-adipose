@@ -137,6 +137,10 @@ msgctxt "ID_VIEW_DEBUGSHADERS"
 msgid "&Debug Shaders"
 msgstr ""
 
+msgctxt "ID_VIEW_DARKTHEME"
+msgid "Dark Theme (restart)"
+msgstr ""
+
 msgctxt "POPUP"
 msgid "&Presets..."
 msgstr ""

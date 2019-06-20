@@ -585,6 +585,12 @@
 #define IDD_SAVEIMAGEDIALOGTEMPL        20015
 #define IDD_CMD_LINE_HELP               20016
 #define IDD_CRASH_REPORTER              20017
+#define IDB_PNG_DARKCBHOVER             20029
+#define IDB_PNG_DARKCB                  20030
+#define IDB_PNG_DARKRADIO               20035
+#define IDB_PNG_DARKRADIOHOVER          20036
+#define IDB_PNG_DARKRADIOSET            20037
+#define IDB_PNG_DARKRADIOSETHOVER       20038
 #define IDI_OPENSUBTITLES               21001
 #define IDI_PODNAPISI                   21002
 #define IDI_SUBDB                       21003
@@ -683,6 +689,10 @@
 #define ID_VIEW_CM_INTENT_ABSOLUTECOLORIMETRIC 24042
 #define ID_VIEW_HALFFLOATINGPOINTPROCESSING 24043
 #define ID_FILE_RECYCLE                 24044
+#define ID_VIEW_DARKTHEME               24045
+#define IDS_AG_TOGGLE_DARKTHEME         24046
+#define IDC_DARKVSCROLLBAR              24047
+#define PLAYER_PLAYLIST_LVN_ITEMCHANGED 24048
 #define ID_VIEW_TEARING_TEST            32769
 #define ID_FILE_OPENDISC                32774
 #define ID_SHADERS                      32775
@@ -1579,9 +1589,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        20018
+#define _APS_NEXT_RESOURCE_VALUE        20048
 #define _APS_NEXT_COMMAND_VALUE         33452
 #define _APS_NEXT_CONTROL_VALUE         22086
-#define _APS_NEXT_SYMED_VALUE           24044
+#define _APS_NEXT_SYMED_VALUE           24050
 #endif
 #endif
