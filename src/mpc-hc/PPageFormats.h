@@ -42,7 +42,7 @@ private:
     CImageList m_onoff;
     CDarkRadioOrCheck m_fContextDir;
     CDarkRadioOrCheck m_fContextFiles;
-    CDarkButton m_fAssociatedWithIcons;
+    CDarkRadioOrCheck m_fAssociatedWithIcons;
     CDarkGroupBox m_autoplay;
     CDarkRadioOrCheck m_apvideo;
     CDarkRadioOrCheck m_apmusic;
