@@ -4088,7 +4088,7 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCDS)
             }
             OpenMedia(p);
         } else {
-            if (m_dwLastRun && ((GetTickCount64() - m_dwLastRun) < 500ULL)) {
+            if (m_dwLastRun && ((GetTickCount64() - m_dwLastRun) < 1000ULL)) {
                 s.nCLSwitches |= CLSW_ADD;
             }
             m_dwLastRun = GetTickCount64();
@@ -7481,8 +7481,11 @@ void CMainFrame::OnPlaySeekKey(UINT nID)
             rtTarget = rtMin;
         }
         else {
-            rtMin = 0; 
-            rtMax = rtPos - 10000LL;
+            rtMin = 0;
+            if (GetMediaState() == State_Paused)
+                rtMax = rtPos - 10000LL;
+            else
+                rtMax = rtPos - 5000000LL;
             rtTarget = rtMax;
         }
 
