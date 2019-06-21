@@ -344,7 +344,7 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect
 
 bool CDarkTheme::canUseWin10DarkTheme() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-//        return false; //temporary fixme
+//        return false; //FIXME.  return false to test behavior for OS < Win10
         return IsWindows10OrGreater();
     }
     return false;

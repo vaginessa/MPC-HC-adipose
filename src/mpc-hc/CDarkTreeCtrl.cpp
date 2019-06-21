@@ -41,6 +41,9 @@ BEGIN_MESSAGE_MAP(CDarkTreeCtrl, CTreeCtrl)
     ON_WM_ERASEBKGND()
     ON_WM_DRAWITEM()
     ON_WM_NCPAINT()
+    ON_WM_MOUSEWHEEL()
+    ON_WM_VSCROLL()
+    ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 IMPLEMENT_DYNAMIC(CDarkTreeCtrl, CTreeCtrl)
 
@@ -111,3 +114,28 @@ void CDarkTreeCtrl::OnNcPaint() {
     }
 }
 
+//no end scroll notification for treectrl, so handle mousewheel, v an h scrolls :-/
+BOOL CDarkTreeCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
+    BOOL ret = __super::OnMouseWheel(nFlags, zDelta, pt);
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
+    return ret;
+}
+
+
+
+void CDarkTreeCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+    __super::OnVScroll(nSBCode, nPos, pScrollBar);
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
+}
+
+
+void CDarkTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+    __super::OnHScroll(nSBCode, nPos, pScrollBar);
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
+}

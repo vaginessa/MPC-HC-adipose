@@ -770,12 +770,14 @@ void CXeScrollBarBase::OnLButtonUp( UINT nFlags, CPoint point )
 }
 
 /* updated to newer api and reversing return value to avoid mousewheel propagating*/
+/* remove restriction on vert scrollbar, as both are valid in win32*/
 BOOL CXeScrollBarBase::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     ASSERT(::IsWindow(m_hWnd));
     short xPos = pt.x;
     short yPos = pt.y;
 
-    if (!m_bHorizontal)	// Mouse wheel messages only apply to vertical scrollbar.
+    //if (!m_bHorizontal)	// Mouse wheel messages only apply to vertical scrollbar.
+
     {
         WORD wSBcode = 0xFFFF;
         if (zDelta >= WHEEL_DELTA) {

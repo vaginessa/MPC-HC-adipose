@@ -26,6 +26,7 @@ public:
     void hideSB();
     void updateDarkScrollInfo();
     bool WindowProc(CListCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
+    bool WindowProc(CTreeCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
     void darkNcPaintWithSB();
     static void darkNcPaint(CWnd *window, CDarkScrollable *swindow);
 };

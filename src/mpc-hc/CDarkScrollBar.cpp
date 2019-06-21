@@ -6,7 +6,7 @@
 IMPLEMENT_DYNAMIC(CDarkScrollBar, CXeScrollBarBase)
 
 BEGIN_MESSAGE_MAP(CDarkScrollBar, CXeScrollBarBase)
-    ON_WM_MOUSEWHEEL()
+//    ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 CDarkScrollBar::CDarkScrollBar() {
