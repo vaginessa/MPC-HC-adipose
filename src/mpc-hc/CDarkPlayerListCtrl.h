@@ -4,7 +4,7 @@
 #include "CDarkToolTipCtrl.h"
 #include "CDarkChildHelper.h"
 
-class CDarkPlayerListCtrl :	public CPlayerListCtrl, CDarkChildHelper {
+class CDarkPlayerListCtrl :	public CPlayerListCtrl, CDarkChildHelper, CDarkScrollable {
 public:
 	CDarkPlayerListCtrl(int tStartEditingDelay = 500);
 	virtual ~CDarkPlayerListCtrl();
@@ -32,5 +32,6 @@ protected:
     UINT_PTR darkTTcid;
     virtual void PreSubclassWindow();
 public:
+    void doDefault() { Default(); };
 };
 

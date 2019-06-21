@@ -88,6 +88,17 @@ void CDarkScrollBar::DrawScrollBar(CDC* pDC) {
 
             int arrowLeft, arrowTop, arrowWidth, arrowHeight;
             if (m_bHorizontal) {
+                arrowWidth = CDarkTheme::scrollArrowShort;
+                arrowHeight = CDarkTheme::scrollArrowLong; 
+                arrowBMP.CreateBitmap(arrowWidth, arrowHeight, 1, 1, CDarkTheme::ScrollArrowBitsH);
+                arrowLeft = butRect.left + (butRect.Width() - arrowWidth + 1) / 2; //add 1 to force rounding up when odd
+                arrowTop = butRect.top + (butRect.Height() - arrowHeight + 1) / 2; //add 1 to force rounding up when odd -- explorer has 6px on top and 5px on bottom
+                dcArrowBMP.SelectObject(&arrowBMP);
+                if (nElem == eTLbutton) { //top or left
+                    dcMem.BitBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, 0, 0, SRCCOPY);
+                } else {
+                    dcMem.StretchBlt(arrowLeft, arrowTop, arrowWidth, arrowHeight, &dcArrowBMP, arrowWidth - 1, 0, -arrowWidth, arrowHeight, SRCCOPY);
+                }
             } else {
                 arrowWidth = CDarkTheme::scrollArrowLong;
                 arrowHeight = CDarkTheme::scrollArrowShort;

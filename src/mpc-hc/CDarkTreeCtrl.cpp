@@ -5,10 +5,17 @@
 
 CDarkTreeCtrl::CDarkTreeCtrl() {
     m_brBkgnd.CreateSolidBrush(CDarkTheme::InlineEditBorderColor);
+    darkSBHelper = nullptr;
+    if (!CDarkTheme::canUseWin10DarkTheme()) {
+        darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
+    }
 }
 
 
 CDarkTreeCtrl::~CDarkTreeCtrl() {
+    if (nullptr != darkSBHelper) {
+        delete darkSBHelper;
+    }
 }
 
 void CDarkTreeCtrl::PreSubclassWindow() {
@@ -23,6 +30,8 @@ BOOL CDarkTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
 void CDarkTreeCtrl::setDarkTheme() {
     if (CDarkTheme::canUseWin10DarkTheme()) {
         SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
+    } else {
+        SetWindowTheme(GetSafeHwnd(), L"", NULL);
     }
 }
 
@@ -92,17 +101,13 @@ BOOL CDarkTreeCtrl::OnEraseBkgnd(CDC* pDC) {
 
 void CDarkTreeCtrl::OnNcPaint() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDC* pDC = GetWindowDC();
-        CRect r;
-        GetWindowRect(r);
-        r.OffsetRect(-r.left, -r.top);
-        CBrush brushBorder(CDarkTheme::EditBorderColor);
-        pDC->FrameRect(r, &brushBorder);
-        r.DeflateRect(1, 1);
-        CBrush brushBG(CDarkTheme::ContentBGColor);
-        pDC->FrameRect(r, &brushBG);
-        ReleaseDC(pDC);
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->darkNcPaintWithSB();
+        } else {
+            CDarkScrollBarHelper::darkNcPaint(this, this);
+        }
     } else {
         __super::OnNcPaint();
     }
 }
+

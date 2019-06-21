@@ -1,7 +1,9 @@
 #pragma once
 #include <afxcmn.h>
+#include "CDarkScrollBarHelper.h"
+
 class CDarkTreeCtrl :
-	public CTreeCtrl
+	public CTreeCtrl, public CDarkScrollable
 {
 public:
 	CDarkTreeCtrl();
@@ -14,9 +16,11 @@ public:
 protected:
     CBrush m_brBkgnd;
     CFont font;
+    CDarkScrollBarHelper *darkSBHelper;
 public:
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg void OnNcPaint();
+    void doDefault() { Default(); }
 };
 

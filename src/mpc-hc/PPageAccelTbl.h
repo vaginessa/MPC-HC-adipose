@@ -27,6 +27,7 @@
 #include "WinHotkeyCtrl.h"
 #include "vkCodes.h"
 #include "CDarkPPageBase.h"
+#include "CDarkPlayerListCtrl.h"
 
 // CPPageAccelTbl dialog
 
@@ -49,7 +50,7 @@ private:
     CList<wmcmd> m_wmcmds;
     int m_counter;
 
-    CPlayerListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
     BOOL m_fWinLirc;
     CString m_WinLircAddr;
     CDarkEdit m_WinLircEdit;

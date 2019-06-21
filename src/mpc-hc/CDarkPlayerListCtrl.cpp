@@ -55,33 +55,9 @@ BOOL CDarkPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
 void CDarkPlayerListCtrl::OnNcPaint() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         if (nullptr != darkSBHelper) {
-            darkSBHelper->BeforeNcPaint();
-        }
-
-        CWindowDC dc(this);
-        int oldDC = dc.SaveDC();
-
-        CRect wr, cr, clip;
-        GetWindowRect(wr);
-        ScreenToClient(wr);
-
-        GetClientRect(&cr);
-        int borderWidth = cr.left - wr.left;
-        wr.OffsetRect(-wr.left, -wr.top);
-        clip = wr; //client rect is insufficient to clip scrollbars
-        clip.DeflateRect(borderWidth, borderWidth);
-        dc.ExcludeClipRect(clip);
-        CBrush brush(CDarkTheme::WindowBorderColorLight); //color used for column sep in explorer
-        dc.FillSolidRect(wr, CDarkTheme::ContentBGColor);
-        dc.FrameRect(wr, &brush);
-
-        dc.RestoreDC(oldDC);
-
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->AfterNcPaint();
-        } else { //onncpaint normally triggers a scrollbar redraw
-            SetScrollPos(SB_VERT, GetScrollPos(SB_VERT), TRUE);
-            SetScrollPos(SB_HORZ, GetScrollPos(SB_HORZ), TRUE);
+            darkSBHelper->darkNcPaintWithSB();
+        } else {
+            CDarkScrollBarHelper::darkNcPaint(this, this);
         }
     } else {
         __super::OnNcPaint();

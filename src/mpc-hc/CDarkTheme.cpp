@@ -114,6 +114,15 @@ const BYTE CDarkTheme::ScrollArrowBitsV[12] = {
     0xC6, 0x00,
     0x82, 0x00,
 };
+const BYTE CDarkTheme::ScrollArrowBitsH[14] = {
+    0x1C, 0x00,
+    0x38, 0x00,
+    0x70, 0x00,
+    0xE0, 0x00,
+    0x70, 0x00,
+    0x38, 0x00,
+    0x1C, 0x00,
+};
 
 const BYTE CDarkTheme::ComboArrowBits[10] = {
     0x80, 0x40,
@@ -335,6 +344,7 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect
 
 bool CDarkTheme::canUseWin10DarkTheme() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+//        return false; //temporary fixme
         return IsWindows10OrGreater();
     }
     return false;

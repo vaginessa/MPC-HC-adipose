@@ -91,6 +91,7 @@ public:
     static wchar_t* const uiSymbolFont;
 
     static const BYTE ScrollArrowBitsV[12];
+    static const BYTE ScrollArrowBitsH[14];
     static const int scrollArrowShort;
     static const int scrollArrowLong;
 
