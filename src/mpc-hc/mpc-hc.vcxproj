@@ -150,6 +150,7 @@
     <ClCompile Include="CDarkDialog.cpp" />
     <ClCompile Include="CDarkDockBar.cpp" />
     <ClCompile Include="CDarkEdit.cpp" />
+    <ClCompile Include="CDarkHeaderCtrl.cpp" />
     <ClCompile Include="CDarkInlineEdit.cpp" />
     <ClCompile Include="CDarkGroupBox.cpp" />
     <ClCompile Include="CDarkLinkCtrl.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="CDarkDialog.h" />
     <ClInclude Include="CDarkDockBar.h" />
     <ClInclude Include="CDarkEdit.h" />
+    <ClInclude Include="CDarkHeaderCtrl.h" />
     <ClInclude Include="CDarkInlineEdit.h" />
     <ClInclude Include="CDarkGroupBox.h" />
     <ClInclude Include="CDarkLinkCtrl.h" />

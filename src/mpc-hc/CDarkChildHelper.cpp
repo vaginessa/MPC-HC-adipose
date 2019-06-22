@@ -8,6 +8,7 @@
 CBrush CDarkChildHelper::darkContentBrush = CBrush();
 CBrush CDarkChildHelper::darkWindowBrush = CBrush();
 CBrush CDarkChildHelper::darkControlAreaBrush = CBrush();
+
 CFont CDarkChildHelper::dialogFont = CFont();
 
 CDarkChildHelper::CDarkChildHelper() {

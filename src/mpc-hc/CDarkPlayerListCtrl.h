@@ -3,6 +3,7 @@
 #include "CDarkScrollBarHelper.h"
 #include "CDarkToolTipCtrl.h"
 #include "CDarkChildHelper.h"
+#include "CDarkHeaderCtrl.h"
 
 class CDarkPlayerListCtrl :	public CPlayerListCtrl, CDarkChildHelper, CDarkScrollable {
 public:
@@ -14,6 +15,7 @@ public:
     void updateDarkScrollInfo();
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     void updateToolTip(CPoint point);
+    void setGridLines(bool on);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
 
     DECLARE_MESSAGE_MAP()
@@ -30,6 +32,8 @@ protected:
     CDarkScrollBarHelper *darkSBHelper;
     CDarkToolTipCtrl darkTT;
     UINT_PTR darkTTcid;
+    bool darkGridLines;
+    CDarkHeaderCtrl darkHdrCtrl;
     virtual void PreSubclassWindow();
 public:
     void doDefault() { Default(); };

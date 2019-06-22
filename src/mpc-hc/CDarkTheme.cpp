@@ -81,6 +81,8 @@ const COLORREF CDarkTheme::TreeCtrlFocusColor = COLORREF(RGB(98, 98, 98));;
 
 const COLORREF CDarkTheme::CheckColor = COLORREF(RGB(222, 222, 222));;
 
+const COLORREF CDarkTheme::ColumnHeaderHotColor = COLORREF(RGB(67, 67, 67));;
+
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
 wchar_t* const CDarkTheme::uiSymbolFont = L"MS UI Gothic";

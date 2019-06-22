@@ -4,6 +4,7 @@
 #include "mplayerc.h"
 
 CDarkPlayerListCtrl::CDarkPlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
+    darkGridLines = false;
     darkSBHelper = nullptr;
     if (!CDarkTheme::canUseWin10DarkTheme()) {
         darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
@@ -16,6 +17,7 @@ CDarkPlayerListCtrl::~CDarkPlayerListCtrl() {
         delete darkSBHelper;
     }
 }
+
 
 void CDarkPlayerListCtrl::PreSubclassWindow() {
     if (!AfxGetAppSettings().bDarkThemeLoaded) {
@@ -45,6 +47,19 @@ BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
 END_MESSAGE_MAP()
 
 
+void CDarkPlayerListCtrl::setGridLines(bool on) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        darkGridLines = on;
+    } else {
+        if (on) {
+            SetExtendedStyle(GetExtendedStyle() | LVS_EX_GRIDLINES);
+        } else {
+            SetExtendedStyle(GetExtendedStyle() & ~LVS_EX_GRIDLINES);
+        }
+    }
+}
+
+
 BOOL CDarkPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
     if (IsWindow(darkTT.m_hWnd)) {
         darkTT.RelayEvent(pMsg);
@@ -69,6 +84,10 @@ int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
         return -1;
 
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CHeaderCtrl *t = GetHeaderCtrl();
+        if (nullptr != t && IsWindow(t->m_hWnd)) {
+            darkHdrCtrl.SubclassWindow(t->GetSafeHwnd());
+        }
         SetBkColor(CDarkTheme::ContentBGColor);
 
         darkTT.Create(this, TTS_ALWAYSTIP);
@@ -175,6 +194,23 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                 CString text = GetItemText(nItem, nSubItem);
                 pDC->SetTextColor(textColor);
                 pDC->SetBkColor(bgColor);
+
+                if (darkGridLines) {
+                    CRect rGrid = rect;
+                    rGrid.bottom -= 1;
+                    CPen gridPen, *oldPen;
+                    gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
+                    oldPen=pDC->SelectObject(&gridPen);
+                    if (nSubItem != 0) {
+                        pDC->MoveTo(rGrid.TopLeft());
+                        pDC->LineTo(rGrid.left, rGrid.bottom);
+                    } else {
+                        pDC->MoveTo(rGrid.left, rGrid.bottom);
+                    }
+                    pDC->LineTo(rGrid.BottomRight());
+                    pDC->LineTo(rGrid.right, rGrid.top);
+                    pDC->SelectObject(oldPen);
+                }
                 //            pDC->FillSolidRect(rText, bgColor);
 
                 HDITEM hditem = { 0 };
@@ -186,7 +222,11 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                     textFormat |= DT_CENTER;
                 else if (align == HDF_LEFT) {
                     textFormat |= DT_LEFT;
-                    rText.left += 6;
+                    if (nSubItem == 0) {//less indent for first column
+                        rText.left += 2;
+                    } else {
+                        rText.left += 6;
+                    }
                 } else {
                     textFormat |= DT_RIGHT;
                     rText.right -= 6;
@@ -208,7 +248,7 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                     CDarkTheme::drawCheckBox(lvi.iImage == BST_CHECKED, false, false, rIcon, pDC);
 
                     if (align == HDF_LEFT)
-                        rText.left -= 2; //needs less indent when checkboxing
+                        rText.left += 2; //more ident after checkbox
                 } else {
                 }
                 CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);

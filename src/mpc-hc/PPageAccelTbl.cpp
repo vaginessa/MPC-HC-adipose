@@ -934,7 +934,8 @@ BOOL CPPageAccelTbl::OnInitDialog()
         WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | LVS_REPORT | LVS_AUTOARRANGE | LVS_SHOWSELALWAYS,
         r, this, IDC_LIST1);
 
-    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES);
+    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER /*| LVS_EX_GRIDLINES */);
+    m_list.setGridLines(true);
 
     for (int i = 0, j = m_list.GetHeaderCtrl()->GetItemCount(); i < j; i++) {
         m_list.DeleteColumn(0);
@@ -1255,6 +1256,9 @@ HBRUSH CPPageAccelTbl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
     HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
 
     const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        return hbr; //should have already been handled inside darkctlcolor
+    }
     int status = -1;
 
     if (*pWnd == m_WinLircEdit) {

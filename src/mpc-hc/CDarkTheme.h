@@ -81,6 +81,8 @@ public:
 
     static const COLORREF CheckColor;
 
+    static const COLORREF CDarkTheme::ColumnHeaderHotColor;
+
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
     static const int gripPatternShort;
