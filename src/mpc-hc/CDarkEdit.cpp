@@ -30,6 +30,7 @@ void CDarkEdit::OnNcPaint() {
     CBrush brush(CDarkTheme::EditBorderColor);
 
     pDC->FrameRect(&rect, &brush);
+    if (nullptr!=buddy) buddy->Invalidate();
     ReleaseDC(pDC);
 }
 

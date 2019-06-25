@@ -81,7 +81,9 @@ public:
 
     static const COLORREF CheckColor;
 
-    static const COLORREF CDarkTheme::ColumnHeaderHotColor;
+    static const COLORREF ColumnHeaderHotColor;
+
+    static const COLORREF StaticEtchedColor;
 
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
@@ -105,7 +107,8 @@ public:
     static const COLORREF ComboboxArrowColorHover[3];
     static const COLORREF ComboboxArrowColorClick[3];
 
-    static const BYTE SpinnerArrowBits[6];
+    static const BYTE SpinnerArrowBitsV[6];
+    static const BYTE SpinnerArrowBitsH[10];
     static const int SpinnerArrowWidth;
     static const int SpinnerArrowHeight;
 
@@ -114,7 +117,7 @@ public:
     static const int CheckHeight;
 
     static void getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
-    static void getUIFont(CFont &font, HDC hDC, int type);
+    static void getUIFont(CFont &font, HDC hDC, int type, bool underline = false);
     enum fontType {
         CDCaptionFont,
         CDSmallCaptionFont,

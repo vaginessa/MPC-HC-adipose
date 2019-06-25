@@ -493,6 +493,9 @@
     <ClCompile Include="CDarkPlayerListCtrl.cpp" />
     <ClCompile Include="CDarkScrollBarHelper.cpp" />
     <ClCompile Include="CDarkHeaderCtrl.cpp" />
+    <ClCompile Include="CDarkIntEdit.cpp" />
+    <ClCompile Include="CDarkStatic.cpp" />
+    <ClCompile Include="CDarkStaticLink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -925,6 +928,9 @@
     <ClInclude Include="CDarkPlayerListCtrl.h" />
     <ClInclude Include="CDarkScrollBarHelper.h" />
     <ClInclude Include="CDarkHeaderCtrl.h" />
+    <ClInclude Include="CDarkIntEdit.h" />
+    <ClInclude Include="CDarkStatic.h" />
+    <ClInclude Include="CDarkStaticLink.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

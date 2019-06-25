@@ -83,6 +83,9 @@ const COLORREF CDarkTheme::CheckColor = COLORREF(RGB(222, 222, 222));;
 
 const COLORREF CDarkTheme::ColumnHeaderHotColor = COLORREF(RGB(67, 67, 67));;
 
+const COLORREF CDarkTheme::StaticEtchedColor = COLORREF(RGB(65, 65, 65));
+
+
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
 wchar_t* const CDarkTheme::uiSymbolFont = L"MS UI Gothic";
@@ -154,10 +157,17 @@ const COLORREF CDarkTheme::ComboboxArrowColorClick[3] = {
     COLORREF(RGB(109, 109, 109)),
 };
 
-const BYTE CDarkTheme::SpinnerArrowBits[6] = {
+const BYTE CDarkTheme::SpinnerArrowBitsV[6] = {
     0x20, 0x00,
     0x70, 0x00,
     0xF8, 0x00,
+};
+const BYTE CDarkTheme::SpinnerArrowBitsH[10] = {
+    0x20, 0x00,
+    0x60, 0x00,
+    0xE0, 0x00,
+    0x60, 0x00,
+    0x20, 0x00,
 };
 
 const int CDarkTheme::SpinnerArrowWidth = 5;
@@ -191,7 +201,7 @@ void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LO
     font.CreateFontIndirect(&lf);
 }
 
-void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type) {
+void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type, bool underline) {
     NONCLIENTMETRICS m = GetMetrics();
     LOGFONT *lf;
     if (type == CDCaptionFont) {
@@ -215,7 +225,18 @@ void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type) {
     } else {
         lf = &m.lfMessageFont;
     }
-    font.CreateFontIndirect(lf);
+    if (underline) {
+        LOGFONT tlf;
+        memset(&tlf, 0, sizeof(LOGFONT));
+        tlf.lfHeight = lf->lfHeight;
+        tlf.lfQuality = lf->lfQuality;
+        tlf.lfWeight = lf->lfWeight;
+        wcsncpy_s(tlf.lfFaceName, lf->lfFaceName, LF_FACESIZE);
+        tlf.lfUnderline = TRUE;
+        font.CreateFontIndirect(&tlf);
+    } else {
+        font.CreateFontIndirect(lf);
+    }
 }
 
 CSize CDarkTheme::GetTextSize(CString str, HDC hDC, int type) {

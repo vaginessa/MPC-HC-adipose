@@ -94,7 +94,6 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
     if (CImageList *images = CImageList::FromHandlePermanent(imgList.himl)) { //assume centered
         IMAGEINFO ii;
-        int a = images->GetImageCount();
         if (images->GetImageCount() <= imageIndex) imageIndex = 0;
         images->GetImageInfo(imageIndex, &ii);
         int width = ii.rcImage.right - ii.rcImage.left;

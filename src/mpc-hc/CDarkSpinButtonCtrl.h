@@ -6,11 +6,12 @@ public:
 	virtual ~CDarkSpinButtonCtrl();
     DECLARE_DYNAMIC(CDarkSpinButtonCtrl)
     DECLARE_MESSAGE_MAP()
-    afx_msg void OnPaint();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-    CPoint downPos;
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+protected:
+    CPoint downPos;
+    void OnPaint();
 };
 

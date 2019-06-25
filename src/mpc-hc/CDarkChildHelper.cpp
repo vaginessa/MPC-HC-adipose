@@ -33,7 +33,14 @@ CDarkChildHelper::~CDarkChildHelper() {
     for (u_int i = 0; i < allocatedEdits.size(); i++) {
         delete allocatedEdits[i];
     }
+    for (u_int i = 0; i < allocatedSpinButtons.size(); i++) {
+        delete allocatedSpinButtons[i];
+    }
+    for (u_int i = 0; i < allocatedStatics.size(); i++) {
+        delete allocatedStatics[i];
+    }
 }
+
 
 void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
@@ -54,16 +61,20 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             DWORD style = tChild->GetStyle();
             DWORD type = (style & BS_TYPEMASK);
             if (runtimeClass.Find(_T("CDark")) != 0) { //do not subclass any members already of type CDarkxxx
-                if (lRes & (DLGC_DEFPUSHBUTTON | DLGC_UNDEFPUSHBUTTON)) {
+                if (DLGC_DEFPUSHBUTTON == (lRes & DLGC_DEFPUSHBUTTON) || DLGC_UNDEFPUSHBUTTON == (lRes & DLGC_UNDEFPUSHBUTTON)) {
                     CDarkButton * pObject = new CDarkButton();
                     allocatedButtons.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (0 != (lRes & DLGC_STATIC) && type == BS_GROUPBOX) {
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && type == BS_GROUPBOX) {
                     CDarkGroupBox * pObject = new CDarkGroupBox();
                     allocatedGroupBoxes.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
                     SetWindowTheme(tChild->GetSafeHwnd(), L"", L"");
-                } else if (0 != (lRes & DLGC_STATIC) && type == BS_TEXT) {
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_ETCHEDFRAME == (style & SS_ETCHEDFRAME)) {
+                    CDarkStatic * pObject = new CDarkStatic();
+                    allocatedStatics.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && type == BS_TEXT) {
                     tChild->SetFont(&dialogFont);
                     LITEM li = { 0 };
                     li.mask = LIF_ITEMINDEX | LIF_ITEMID;
@@ -72,17 +83,21 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         allocatedLinkCtrls.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
                     }
-                } else if (0 != (lRes & DLGC_BUTTON) && (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX)) {
+                } else if (DLGC_BUTTON == (lRes & DLGC_BUTTON) && (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX)) {
                     CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
                     allocatedCheckBoxes.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (0 != (lRes & DLGC_RADIOBUTTON) && (type == BS_RADIOBUTTON || type == BS_AUTORADIOBUTTON)) {
+                } else if (DLGC_RADIOBUTTON == (lRes & DLGC_RADIOBUTTON) && (type == BS_RADIOBUTTON || type == BS_AUTORADIOBUTTON)) {
                     CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
                     allocatedRadioButtons.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (0 == _tcsicmp(windowClass, _T("EDIT")) ) {
+                } else if (0 == _tcsicmp(windowClass, WC_EDIT) ) {
                     CDarkEdit * pObject = new CDarkEdit();
                     allocatedEdits.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (0 == _tcsicmp(windowClass, UPDOWN_CLASS)) {
+                    CDarkSpinButtonCtrl * pObject = new CDarkSpinButtonCtrl();
+                    allocatedSpinButtons.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
                 } else {
 //                    int a = 1;

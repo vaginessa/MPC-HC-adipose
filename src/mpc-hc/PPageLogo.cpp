@@ -26,9 +26,9 @@
 
 // CPPageLogo dialog
 
-IMPLEMENT_DYNAMIC(CPPageLogo, CPPageBase)
+IMPLEMENT_DYNAMIC(CPPageLogo, CDarkPPageBase)
 CPPageLogo::CPPageLogo()
-    : CPPageBase(CPPageLogo::IDD, CPPageLogo::IDD)
+    : CDarkPPageBase(CPPageLogo::IDD, CPPageLogo::IDD)
     , m_intext(0)
 {
     m_logoids.AddTail(IDF_LOGO0);
@@ -52,7 +52,7 @@ void CPPageLogo::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPPageLogo, CPPageBase)
+BEGIN_MESSAGE_MAP(CPPageLogo, CDarkPPageBase)
     ON_BN_CLICKED(IDC_RADIO1, OnBnClickedInternalRadio)
     ON_BN_CLICKED(IDC_RADIO2, OnBnClickedExternalRadio)
     ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN1, OnDeltaposSpin1)
@@ -193,3 +193,4 @@ void CPPageLogo::GetDataFromRes()
     }
     m_logopreview.SetBitmap(m_logo);
 }
+
