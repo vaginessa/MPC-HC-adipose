@@ -1,0 +1,1 @@
+@copy ..\bin\mpc-hc_x86\mpc-hc.exe .

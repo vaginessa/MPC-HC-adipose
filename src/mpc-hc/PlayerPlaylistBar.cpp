@@ -1162,7 +1162,7 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
     if (s.bDarkThemeLoaded) {
         textcolor = CDarkTheme::TextFGColor;
         if (pli.m_fInvalid) {
-            textcolor = CDarkTheme::ContentTextDisabledFGColor;
+            textcolor = CDarkTheme::ContentTextDisabledFGColorWarn;
         }
     } else {
         textcolor = fSelected ? 0xff : 0;

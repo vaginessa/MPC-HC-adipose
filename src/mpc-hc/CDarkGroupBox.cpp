@@ -13,15 +13,8 @@ CDarkGroupBox::~CDarkGroupBox() {
 }
 
 BEGIN_MESSAGE_MAP(CDarkGroupBox, CStatic)
-    ON_WM_NCPAINT()
     ON_WM_PAINT()
 END_MESSAGE_MAP()
-
-
-void CDarkGroupBox::OnNcPaint() {
-    // TODO: Add your message handler code here
-    // Do not call CStatic::OnNcPaint() for painting messages
-}
 
 
 void CDarkGroupBox::OnPaint() {
@@ -34,29 +27,34 @@ void CDarkGroupBox::OnPaint() {
         HDC hDC = ::GetDC(NULL);
         CString text;
         GetWindowText(text);
-        CSize cs = CDarkTheme::GetTextSize(text, hDC, CDarkTheme::CDCaptionFont);
 
         CBrush fb;
         fb.CreateSolidBrush(CDarkTheme::GroupBoxBorderColor);
         rborder = r;
+
+        CSize cs = CDarkTheme::GetTextSize(_T("W"), hDC, CDarkTheme::CDCaptionFont);
         rborder.top += cs.cy / 2;
         dc.FrameRect(rborder, &fb);
+        if (!text.IsEmpty()) {
 
-        COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
-        COLORREF oldBkClr = dc.SetBkColor(CDarkTheme::ContentBGColor);
-        //CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 8);
-        CFont font;
-        CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDCaptionFont);
-        CFont* pOldFont = dc.SelectObject(&font);
+            COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
+            COLORREF oldBkClr = dc.SetBkColor(CDarkTheme::ContentBGColor);
+            //CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 8);
+            CFont font;
+            CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDCaptionFont);
+            CFont* pOldFont = dc.SelectObject(&font);
 
-        rtext = r;
-        rtext.left += CDarkTheme::GroupBoxTextIndent;
+            rtext = r;
+            rtext.left += CDarkTheme::GroupBoxTextIndent;
 
-        dc.DrawText(text, rtext, DT_TOP | DT_LEFT | DT_SINGLELINE | DT_EDITCONTROL);
+            text += _T(" "); //seems to be the default behavior
+            dc.DrawText(text, rtext, DT_TOP | DT_LEFT | DT_SINGLELINE | DT_EDITCONTROL);
 
-        dc.SelectObject(pOldFont);
-        dc.SetTextColor(oldClr);
-        dc.SetBkColor(oldBkClr);
+            dc.SelectObject(pOldFont);
+            dc.SetTextColor(oldClr);
+            dc.SetBkColor(oldBkClr);
+        }
+
     } else {
         __super::OnPaint();
     }

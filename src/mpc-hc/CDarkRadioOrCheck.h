@@ -18,6 +18,7 @@ private:
     };
     RadioOrCheck buttonType;
 protected:
+    CFont font;
     DECLARE_DYNAMIC(CDarkRadioOrCheck)
     DECLARE_MESSAGE_MAP()
     afx_msg void OnSetFocus(CWnd* pOldWnd);
@@ -28,5 +29,7 @@ protected:
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 public:
     afx_msg void OnPaint();
+    afx_msg void OnEnable(BOOL bEnable);
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 

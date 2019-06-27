@@ -9,22 +9,29 @@ CDarkButton::CDarkButton() {
     }
 }
 
-
 CDarkButton::~CDarkButton() {
 }
 
-void CDarkButton::PreSubclassWindow() {
+void CDarkButton::PreSubclassWindow() { //bypass CMFCButton impl since it will enable ownerdraw
+    InitStyle(GetStyle());
     CButton::PreSubclassWindow();
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        ModifyStyle(0, BS_OWNERDRAW);
-    }
 }
 
+BOOL CDarkButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton impl since it will enable ownerdraw
+    InitStyle(cs.style);
+    return CButton::PreCreateWindow(cs);
+}
+
+
+IMPLEMENT_DYNAMIC(CDarkButton, CMFCButton)
+BEGIN_MESSAGE_MAP(CDarkButton, CMFCButton)
+    ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CDarkButton::OnNMCustomdraw)
+END_MESSAGE_MAP()
+
+
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
-void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
-    CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
-    CRect rect = CRect(lpDrawItemStruct->rcItem);
-    UINT state = lpDrawItemStruct->itemState;
+void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
+    CDC* pDC = CDC::FromHandle(hdc);
 
     CString strText;
     GetWindowText(strText);
@@ -34,7 +41,7 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     pDC->FrameRect(rect, &fb);
 
     rect.DeflateRect(1, 1);
-    COLORREF bg = CDarkTheme::ButtonFillColor, dottedClr;
+    COLORREF bg = CDarkTheme::ButtonFillColor, dottedClr = CDarkTheme::ButtonBorderKBFocusColor;
 
     int imageIndex = 0; //Normal
     if (state & ODS_SELECTED) {//mouse down
@@ -47,7 +54,6 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
         dottedClr = CDarkTheme::ButtonBorderHoverKBFocusColor;
     } else if (state & ODS_FOCUS) {
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerFocusedColor);
-        dottedClr = CDarkTheme::ButtonBorderKBFocusColor;
     } else {
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerColor);
     }
@@ -101,6 +107,15 @@ void CDarkButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
         rect.DeflateRect((rect.Width() - width) / 2, max(0, (rect.Height() - height) / 2));
         images->Draw(pDC, imageIndex, rect.TopLeft(), ILD_NORMAL);
     }
-
 }
 
+void CDarkButton::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
+    LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+    *pResult = CDRF_DODEFAULT;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (pNMCD->dwDrawStage == CDDS_PREERASE) {
+            drawButton(pNMCD->hdc, pNMCD->rc, pNMCD->uItemState);
+            *pResult = CDRF_SKIPDEFAULT;
+        }
+    }
+}

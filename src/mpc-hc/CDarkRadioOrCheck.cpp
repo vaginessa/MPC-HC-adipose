@@ -24,7 +24,8 @@ void CDarkRadioOrCheck::PreSubclassWindow() {
     ASSERT(buttonType != unknownType);
 
     buttonStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
-
+    CDarkTheme::getUIFont(font, ::GetWindowDC(NULL), CDarkTheme::CDDialogFont);
+    SetFont(&font); //DSUtil checks metrics and resizes.  if our font is a bit different, things can look funny
     CButton::PreSubclassWindow();
 }
 
@@ -33,6 +34,8 @@ BEGIN_MESSAGE_MAP(CDarkRadioOrCheck, CButton)
     ON_WM_MOUSEMOVE()
     ON_WM_MOUSELEAVE()
     ON_WM_PAINT()
+    ON_WM_ENABLE()
+    ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -67,8 +70,8 @@ void CDarkRadioOrCheck::OnPaint() {
         rectCheck.top = (rectItem.Height() - cbHeight) / 2;
         rectCheck.bottom = rectCheck.top + cbHeight;
 
-        rectCheck.DeflateRect(1, 1);
         if (buttonType == checkType) {
+            rectCheck.DeflateRect(1, 1); //1 pixel border
             CDarkTheme::drawCheckBox(isChecked, isHover, true, rectCheck, &dc);
         } else if (buttonType == radioType) {
             UINT res;
@@ -82,6 +85,8 @@ void CDarkRadioOrCheck::OnPaint() {
             CDC mDC;
             mDC.CreateCompatibleDC(&dc);
             mDC.SelectObject(image);
+
+            rectCheck.DeflateRect(1, 1); //1 pixel border
             dc.BitBlt(rectCheck.left, rectCheck.top, rectCheck.Width(), rectCheck.Height(), &mDC, 0, 0, SRCCOPY);
         }
 
@@ -90,24 +95,31 @@ void CDarkRadioOrCheck::OnPaint() {
 
         if (!sTitle.IsEmpty()) {
             CRect centerRect = rectItem;
-            CFont font;
-            CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDDialogFont);
             CFont* pOldFont = dc.SelectObject(&font);
 
-            UINT uFormat;
+            UINT uFormat = 0;
+            if (buttonStyle & BS_MULTILINE) {
+                uFormat |= DT_WORDBREAK;
+            } else {
+                uFormat |= DT_SINGLELINE;
+            }
+
+            if (buttonStyle & BS_VCENTER) {
+                uFormat |= DT_VCENTER;
+            }
 
             if ((buttonStyle & BS_CENTER) == BS_CENTER) {
-                uFormat = DT_WORDBREAK | DT_CENTER | DT_VCENTER;
+                uFormat |= DT_CENTER;
                 dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
                 rectItem.OffsetRect((centerRect.Width() - rectItem.Width()) / 2,
                     (centerRect.Height() - rectItem.Height()) / 2);
             } else if ((buttonStyle & BS_RIGHT) == BS_RIGHT) {
-                uFormat = DT_WORDBREAK | DT_RIGHT | DT_VCENTER;
+                uFormat |= DT_RIGHT;
                 dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
                 rectItem.OffsetRect(centerRect.Width() - rectItem.Width(),
                     (centerRect.Height() - rectItem.Height()) / 2);
             } else { // if ((m_nStyle & BS_LEFT) == BS_LEFT) {
-                uFormat = DT_WORDBREAK | DT_LEFT | DT_VCENTER;
+                uFormat |= DT_LEFT;
                 dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
                 rectItem.OffsetRect(0, (centerRect.Height() - rectItem.Height()) / 2);
             }
@@ -185,3 +197,23 @@ void CDarkRadioOrCheck::OnLButtonDown(UINT nFlags, CPoint point) {
     CButton::OnLButtonDown(nFlags, point);
 }
 
+
+
+void CDarkRadioOrCheck::OnEnable(BOOL bEnable) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        SetRedraw(FALSE);
+        __super::OnEnable(bEnable);
+        SetRedraw(TRUE);
+        Invalidate(); //WM_PAINT not handled when enabling/disabling
+    } else {
+        __super::OnEnable(bEnable);
+    }
+}
+
+
+BOOL CDarkRadioOrCheck::OnEraseBkgnd(CDC* pDC) {
+    CRect r;
+    GetClientRect(r);
+    pDC->FillSolidRect(r, CDarkTheme::CDarkTheme::WindowBGColor);
+    return TRUE;
+}

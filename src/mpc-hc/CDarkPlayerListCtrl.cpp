@@ -5,7 +5,9 @@
 
 CDarkPlayerListCtrl::CDarkPlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
     darkGridLines = false;
+    fullRowSelect = false;
     darkSBHelper = nullptr;
+    hasCheckedColors = false;
     if (!CDarkTheme::canUseWin10DarkTheme()) {
         darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
     }
@@ -29,6 +31,7 @@ void CDarkPlayerListCtrl::PreSubclassWindow() {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
     }
+    subclassHeader();
     CPlayerListCtrl::PreSubclassWindow();
 }
 
@@ -46,17 +49,32 @@ BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
+void CDarkPlayerListCtrl::subclassHeader() {
+    CHeaderCtrl *t = GetHeaderCtrl();
+    if (nullptr != t && IsWindow(t->m_hWnd) && darkHdrCtrl.m_hWnd == NULL) {
+        darkHdrCtrl.SubclassWindow(t->GetSafeHwnd());
+    }
+}
 
-void CDarkPlayerListCtrl::setGridLines(bool on) {
+void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
+    DWORD stylesToAdd = styles, stylesToRemove = 0;
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkGridLines = on;
-    } else {
-        if (on) {
-            SetExtendedStyle(GetExtendedStyle() | LVS_EX_GRIDLINES);
-        } else {
-            SetExtendedStyle(GetExtendedStyle() & ~LVS_EX_GRIDLINES);
+        if (styles & LVS_EX_GRIDLINES) {
+            stylesToAdd &= ~LVS_EX_GRIDLINES;
+            stylesToRemove |= LVS_EX_GRIDLINES;
+            darkGridLines = true;
+        }
+        if (styles & LVS_EX_FULLROWSELECT) {
+            stylesToAdd &= ~LVS_EX_FULLROWSELECT;
+            stylesToRemove |= LVS_EX_FULLROWSELECT;
+            fullRowSelect = true;
+        }
+        if (styles & LVS_EX_DOUBLEBUFFER) { //we will buffer ourselves
+            stylesToAdd &= ~LVS_EX_DOUBLEBUFFER;
+            stylesToRemove |= LVS_EX_DOUBLEBUFFER;
         }
     }
+    ModifyStyleEx(stylesToRemove, stylesToAdd, 0);
 }
 
 
@@ -65,6 +83,13 @@ BOOL CDarkPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
         darkTT.RelayEvent(pMsg);
     }
     return __super::PreTranslateMessage(pMsg);
+}
+
+void CDarkPlayerListCtrl::setCheckedColors(COLORREF checkedBG, COLORREF checkedText, COLORREF uncheckedText) {
+    checkedBGClr = checkedBG;
+    checkedTextClr = checkedText;
+    uncheckedTextClr = uncheckedText;
+    hasCheckedColors = true;
 }
 
 void CDarkPlayerListCtrl::OnNcPaint() {
@@ -84,14 +109,11 @@ int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
         return -1;
 
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CHeaderCtrl *t = GetHeaderCtrl();
-        if (nullptr != t && IsWindow(t->m_hWnd)) {
-            darkHdrCtrl.SubclassWindow(t->GetSafeHwnd());
-        }
         SetBkColor(CDarkTheme::ContentBGColor);
 
         darkTT.Create(this, TTS_ALWAYSTIP);
         darkTT.enableFlickerHelper();
+        subclassHeader();
     }
 
     return 0;
@@ -186,32 +208,26 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                 COLORREF oldTextColor = pDC->GetTextColor();
                 COLORREF oldBkColor = pDC->GetBkColor();
 
-                CRect rect, rIcon, rText;
-                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
-                GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
-                GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
-
                 CString text = GetItemText(nItem, nSubItem);
                 pDC->SetTextColor(textColor);
                 pDC->SetBkColor(bgColor);
 
-                if (darkGridLines) {
-                    CRect rGrid = rect;
-                    rGrid.bottom -= 1;
-                    CPen gridPen, *oldPen;
-                    gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
-                    oldPen=pDC->SelectObject(&gridPen);
-                    if (nSubItem != 0) {
-                        pDC->MoveTo(rGrid.TopLeft());
-                        pDC->LineTo(rGrid.left, rGrid.bottom);
-                    } else {
-                        pDC->MoveTo(rGrid.left, rGrid.bottom);
-                    }
-                    pDC->LineTo(rGrid.BottomRight());
-                    pDC->LineTo(rGrid.right, rGrid.top);
-                    pDC->SelectObject(oldPen);
-                }
-                //            pDC->FillSolidRect(rText, bgColor);
+
+                CRect rect, rIcon, rText, rTextBG, rectDC;
+                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+                GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
+                GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
+
+                rectDC = rect;
+                CDC dcMem;
+                CBitmap bmMem;
+                CDarkTheme::initMemDC(pDC, dcMem, bmMem, rectDC);
+                rect.OffsetRect(-rectDC.TopLeft());
+                rText.OffsetRect(-rectDC.TopLeft());
+                rIcon.OffsetRect(-rectDC.TopLeft());
+
+                rTextBG = rText;
+
 
                 HDITEM hditem = { 0 };
                 hditem.mask = HDI_FORMAT;
@@ -232,27 +248,75 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                     rText.right -= 6;
                 }
 
+                if (!IsWindowEnabled()) { //no gridlines, bg for full row
+                    dcMem.FillSolidRect(rect, CDarkTheme::ListCtrlDisabledBGColor);
+                }
 
-                if (nSubItem == 0 && 0 != (GetStyle() & LVS_EX_CHECKBOXES)) {
+                bool isChecked = false;
+                if (0 != (GetStyle() & LVS_EX_CHECKBOXES)) {
                     LVITEM lvi = { 0 };
                     lvi.iItem = nItem;
                     lvi.iSubItem = 0;
                     lvi.mask = LVIF_IMAGE;
                     GetItem(&lvi);
-
-                    rIcon.DeflateRect(0, 0, 1, 0);
-                    rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
-
                     //following is a bit of a hack.  mpc-hc often sets the "check" state by changing the image index only (not setcheck), so we will use that to control whether "checked" or not
                     //better solution might be to load different check images based on theme
-                    CDarkTheme::drawCheckBox(lvi.iImage == BST_CHECKED, false, false, rIcon, pDC);
+                    isChecked = (BST_CHECKED == lvi.iImage || TRUE == GetCheck(nItem));
 
-                    if (align == HDF_LEFT)
-                        rText.left += 2; //more ident after checkbox
-                } else {
+                    if (nSubItem == 0) {
+                        if (rIcon.Width() > 0) { //we have checkbox images, but we will draw manually
+                            rIcon.DeflateRect(0, 0, 1, 0);
+                            rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
+
+                            CDarkTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
+                            if (align == HDF_LEFT)
+                                rText.left += 2; //more ident after image
+                        } else { //no images, so we will set the rect manually
+                            int cbSize = GetSystemMetrics(SM_CXMENUCHECK);
+                            int cbYMargin = (rect.Height() - cbSize) / 2;
+                            int cbXMargin = (rText.left - rect.left - cbSize) / 2;
+                            CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
+                            CDarkTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
+                        }
+                    }
                 }
-                CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
-                //pDC->DrawText(text, rText, textFormat);
+
+                COLORREF bgClr = CDarkTheme::ContentBGColor;
+                if (IsWindowEnabled()) {
+                    if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
+                        bgClr = CDarkTheme::ContentSelectedColor;
+                    } else if (hasCheckedColors) {
+                        if (isChecked && checkedBGClr != -1) {
+                            bgClr = checkedBGClr;
+                        }
+                        if (isChecked && checkedTextClr != -1) dcMem.SetTextColor(checkedTextClr);
+                        if (!isChecked && uncheckedTextClr != -1)
+                            dcMem.SetTextColor(uncheckedTextClr);
+                    }
+                    dcMem.FillSolidRect(rTextBG, bgClr);
+
+                    if (darkGridLines) {
+                        CRect rGrid = rect;
+                        rGrid.bottom -= 1;
+                        CPen gridPen, *oldPen;
+                        gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
+                        oldPen = dcMem.SelectObject(&gridPen);
+                        if (nSubItem != 0) {
+                            dcMem.MoveTo(rGrid.TopLeft());
+                            dcMem.LineTo(rGrid.left, rGrid.bottom);
+                        } else {
+                            dcMem.MoveTo(rGrid.left, rGrid.bottom);
+                        }
+                        dcMem.LineTo(rGrid.BottomRight());
+                        dcMem.LineTo(rGrid.right, rGrid.top);
+                        dcMem.SelectObject(oldPen);
+                    }
+                }
+
+
+                //CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
+                dcMem.DrawText(text, rText, textFormat);
+                CDarkTheme::flushMemDC(pDC, dcMem, rectDC);
                 pDC->SetTextColor(oldTextColor);
                 pDC->SetBkColor(oldBkColor);
             }
@@ -266,7 +330,7 @@ BOOL CDarkPlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         CRect r;
         GetClientRect(r);
-        pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
+        //pDC->FillSolidRect(r, CDarkTheme::DebugColorRed);
     } else {
         return __super::OnEraseBkgnd(pDC);
     }

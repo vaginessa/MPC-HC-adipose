@@ -18,7 +18,8 @@ const COLORREF CDarkTheme::MenuItemDisabledColor = COLORREF(RGB(109, 109, 109));
 
 const COLORREF CDarkTheme::ShadowColor = COLORREF(RGB(25, 25, 25));
 const COLORREF CDarkTheme::TextFGColor = COLORREF(RGB(255, 255, 255));
-const COLORREF CDarkTheme::ContentTextDisabledFGColor = COLORREF(RGB(128, 0, 0));
+const COLORREF CDarkTheme::ContentTextDisabledFGColorWarn = COLORREF(RGB(128, 0, 0));
+const COLORREF CDarkTheme::ContentTextDisabledFGColorFade = COLORREF(RGB(109, 109, 109));
 
 const COLORREF CDarkTheme::SubmenuColor = COLORREF(RGB(191, 191, 191));
 const COLORREF CDarkTheme::LightColor = COLORREF(RGB(100, 100, 100));
@@ -85,6 +86,7 @@ const COLORREF CDarkTheme::ColumnHeaderHotColor = COLORREF(RGB(67, 67, 67));;
 
 const COLORREF CDarkTheme::StaticEtchedColor = COLORREF(RGB(65, 65, 65));
 
+const COLORREF CDarkTheme::ListCtrlDisabledBGColor = COLORREF(RGB(40, 40, 40));
 
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
@@ -272,6 +274,23 @@ NONCLIENTMETRICS& CDarkTheme::GetMetrics() {
     }
     return CDarkTheme::_metrics;
 }
+
+void CDarkTheme::initMemDC(CDC * pDC, CDC &dcMem, CBitmap &bmMem, CRect rect) {
+    dcMem.CreateCompatibleDC(pDC);
+    dcMem.SetBkColor(pDC->GetBkColor());
+    dcMem.SetTextColor(pDC->GetTextColor());
+    dcMem.SetBkMode(pDC->GetBkMode());
+    dcMem.SelectObject(pDC->GetCurrentFont());
+
+    bmMem.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+    dcMem.SelectObject(&bmMem);
+    dcMem.BitBlt(0, 0, rect.Width(), rect.Height(), pDC, rect.left, rect.top, SRCCOPY);
+}
+
+void CDarkTheme::flushMemDC(CDC * pDC, CDC &dcMem, CRect rect) {
+    pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), &dcMem, 0, 0, SRCCOPY);
+}
+
 
 void CDarkTheme::DrawBufferedText(CDC * pDC, CString text, CRect rect, UINT format) {
     CDC dcMem;

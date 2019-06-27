@@ -21,12 +21,15 @@
 
 #pragma once
 
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
 #include "PlayerListCtrl.h"
+#include "CDarkComboBox.h"
+#include "CDarkSpinButtonCtrl.h"
+#include "CDarkPlayerListCtrl.h"
 
 // CPPageFullscreen dialog
 
-class CPPageFullscreen : public CPPageBase
+class CPPageFullscreen : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageFullscreen)
 
@@ -34,13 +37,13 @@ private:
     std::vector<CString> m_monitorDisplayNames;
     CStringW m_fullScreenMonitor;
     int m_iFullScreenMonitor;
-    CComboBox m_fullScreenMonitorCtrl;
+    CDarkComboBox m_fullScreenMonitorCtrl;
 
     BOOL m_bLaunchFullscreen;
     BOOL m_fExitFullScreenAtTheEnd;
 
     BOOL m_bHideFullscreenControls;
-    CComboBox m_hidePolicy;
+    CDarkComboBox m_hidePolicy;
     unsigned m_uHideFullscreenControlsDelay;
     BOOL m_bHideFullscreenDockedPanels;
 
@@ -55,7 +58,7 @@ private:
     BOOL m_bAutoChangeFSModeRestoreResAfterProgExit;
     unsigned m_uAutoChangeFullscrResDelay;
 
-    CPlayerListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
     enum {
         COL_N,
         COL_FRAMERATE_START,
@@ -64,7 +67,7 @@ private:
         COL_AUDIO_DELAY
     };
 
-    CSpinButtonCtrl m_delaySpinner;
+    CDarkSpinButtonCtrl m_delaySpinner;
 
     void ModesUpdate();
 

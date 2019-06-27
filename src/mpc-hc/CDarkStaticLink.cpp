@@ -3,7 +3,6 @@
 #include "CDarkTheme.h"
 
 CDarkStaticLink::CDarkStaticLink(LPCTSTR lpText, bool bDeleteOnDestroy) : CStaticLink(lpText, bDeleteOnDestroy) {
-    enabled = true;
 }
 
 CDarkStaticLink::~CDarkStaticLink() {
@@ -46,8 +45,8 @@ void CDarkStaticLink::OnPaint() {
             format |= DT_VCENTER;
         }
 
-        if (!enabled) {
-            dc.SetTextColor(CDarkTheme::ContentTextDisabledFGColor);
+        if (!IsWindowEnabled()) {
+            dc.SetTextColor(CDarkTheme::ContentTextDisabledFGColorWarn);
         } else {
             dc.SetTextColor(CDarkTheme::TextFGColor);
         }
@@ -67,26 +66,21 @@ void CDarkStaticLink::OnPaint() {
 }
 
 
-BOOL CDarkStaticLink::OnEraseBkgnd(CDC* pDC) {
-    return TRUE;
-}
-
-
-HBRUSH CDarkStaticLink::CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/) { //avoid overridden cstaticlink ctlcolor
-    return NULL;
-}
-
-
-void CDarkStaticLink::OnNcPaint() {
-    // TODO: Add your message handler code here
-    // Do not call __super::OnNcPaint() for painting messages
+HBRUSH CDarkStaticLink::CtlColor(CDC* pDC, UINT nCtlColor) { //avoid overridden cstaticlink ctlcolor
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        return NULL;
+    } else {
+        return __super::CtlColor(pDC, nCtlColor);
+    }
 }
 
 
 void CDarkStaticLink::OnEnable(BOOL bEnable) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) { //WM_PAINT never received for disabled static, but we can just make it look disabled
-        enabled = bEnable;
-        Invalidate();
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        SetRedraw(FALSE);
+        __super::OnEnable(bEnable);
+        SetRedraw(TRUE);
+        Invalidate(); //WM_PAINT not handled when enabling/disabling
     } else {
         __super::OnEnable(bEnable);
     }

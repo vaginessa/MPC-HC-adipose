@@ -934,8 +934,8 @@ BOOL CPPageAccelTbl::OnInitDialog()
         WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP | LVS_REPORT | LVS_AUTOARRANGE | LVS_SHOWSELALWAYS,
         r, this, IDC_LIST1);
 
-    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER /*| LVS_EX_GRIDLINES */);
-    m_list.setGridLines(true);
+    //m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER /*| LVS_EX_GRIDLINES */);
+    m_list.setAdditionalStyles(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES);
 
     for (int i = 0, j = m_list.GetHeaderCtrl()->GetItemCount(); i < j; i++) {
         m_list.DeleteColumn(0);

@@ -60,7 +60,7 @@ void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             }
                        
             rGrid.top -= 1;
-            rGrid.bottom -= 3;
+            rGrid.bottom -= 1;
 
             CPoint ptCursor;
             ::GetCursorPos(&ptCursor);
@@ -69,8 +69,8 @@ void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
 
             if (nItem == hotItem) {
                 bgColor = CDarkTheme::ColumnHeaderHotColor;
-                pDC->FillSolidRect(rGrid, bgColor);
             }
+            pDC->FillSolidRect(rGrid, bgColor);
 
             CString text = hditem.pszText;
             pDC->SetTextColor(textColor);
@@ -96,8 +96,7 @@ void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
 
 
 void CDarkHeaderCtrl::OnHdnTrack(NMHDR *pNMHDR, LRESULT *pResult) {
-    LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
-    // TODO: Add your control notification handler code here
+//    LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
     *pResult = 0;
 }
 

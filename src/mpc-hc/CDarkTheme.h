@@ -20,7 +20,8 @@ public:
 
     static const COLORREF ShadowColor;
     static const COLORREF TextFGColor;
-    static const COLORREF ContentTextDisabledFGColor;
+    static const COLORREF ContentTextDisabledFGColorWarn;
+    static const COLORREF ContentTextDisabledFGColorFade;
     static const COLORREF SubmenuColor;
     static const COLORREF LightColor;
     static const COLORREF CloseHoverColor;
@@ -85,6 +86,8 @@ public:
 
     static const COLORREF StaticEtchedColor;
 
+    static const COLORREF ListCtrlDisabledBGColor;
+
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
     static const int gripPatternShort;
@@ -133,6 +136,8 @@ public:
     static NONCLIENTMETRICS _metrics;
     static bool haveMetrics;
     static NONCLIENTMETRICS& GetMetrics();
+    static void initMemDC(CDC * pDC, CDC & dcMem, CBitmap & bmMem, CRect rect);
+    static void flushMemDC(CDC * pDC, CDC & dcMem, CRect rect);
     static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
     static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
     static void dbg(CString text, ...);

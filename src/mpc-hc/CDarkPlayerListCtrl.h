@@ -15,8 +15,10 @@ public:
     void updateDarkScrollInfo();
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     void updateToolTip(CPoint point);
-    void setGridLines(bool on);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
+    void setCheckedColors(COLORREF checkedBG, COLORREF checkedText, COLORREF uncheckedText);
+    void subclassHeader();
+    void setAdditionalStyles(DWORD styles);
 
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
@@ -32,7 +34,10 @@ protected:
     CDarkScrollBarHelper *darkSBHelper;
     CDarkToolTipCtrl darkTT;
     UINT_PTR darkTTcid;
+    COLORREF checkedBGClr, checkedTextClr, uncheckedTextClr;
+    bool hasCheckedColors;
     bool darkGridLines;
+    bool fullRowSelect;
     CDarkHeaderCtrl darkHdrCtrl;
     virtual void PreSubclassWindow();
 public:
