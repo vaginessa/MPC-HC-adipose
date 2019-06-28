@@ -21,13 +21,22 @@
 
 #pragma once
 
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
 #include "FloatEdit.h"
 #include "../filters/switcher/AudioSwitcher/AudioSwitcher.h"
+#include "CDarkButton.h"
+#include "CDarkSliderCtrl.h"
+#include "CDarkEdit.h"
+#include "CDarkSpinButtonCtrl.h"
+#include "CDarkIntEdit.h"
+#include "CDarkPlayerListCtrl.h"
+
+
+
 
 // CPPageAudioSwitcher dialog
 
-class CPPageAudioSwitcher : public CPPageBase
+class CPPageAudioSwitcher : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageAudioSwitcher)
 
@@ -38,26 +47,29 @@ private:
     BOOL m_fEnableAudioSwitcher;
     BOOL m_fAudioNormalize;
     UINT m_nAudioMaxNormFactor;
-    CSpinButtonCtrl m_AudioMaxNormFactorSpin;
+    CDarkSpinButtonCtrl m_AudioMaxNormFactorSpin;
     BOOL m_fAudioNormalizeRecover;
     int m_AudioBoostPos;
-    CSliderCtrl m_AudioBoostCtrl;
+    CDarkSliderCtrl m_AudioBoostCtrl;
     BOOL m_fDownSampleTo441;
-    CButton m_fDownSampleTo441Ctrl;
+    CDarkRadioOrCheck m_fDownSampleTo441Ctrl;
     BOOL m_fCustomChannelMapping;
-    CButton m_fCustomChannelMappingCtrl;
-    CEdit m_nChannelsCtrl;
+    CDarkRadioOrCheck m_fCustomChannelMappingCtrl;
+    CDarkEdit m_nChannelsCtrl;
     int m_nChannels;
-    CSpinButtonCtrl m_nChannelsSpinCtrl;
-    CListCtrl m_list;
+    CDarkSpinButtonCtrl m_nChannelsSpinCtrl;
+    CDarkPlayerListCtrl m_list;
     int m_tAudioTimeShift;
-    CButton m_fAudioTimeShiftCtrl;
-    CIntEdit m_tAudioTimeShiftCtrl;
-    CSpinButtonCtrl m_tAudioTimeShiftSpin;
+    CDarkRadioOrCheck m_fAudioTimeShiftCtrl;
+    CDarkIntEdit m_tAudioTimeShiftCtrl;
+    CDarkSpinButtonCtrl m_tAudioTimeShiftSpin;
     BOOL m_fAudioTimeShift;
 
     // tooltip for slidercontrol
     CToolTipCtrl m_tooltip;
+
+    //replaces tooltip from EnableTooltips()
+    CDarkToolTipCtrl darkTT;
 
 public:
     CPPageAudioSwitcher(IFilterGraph* pFG);
@@ -84,4 +96,5 @@ protected:
     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
     virtual void OnCancel();
+    BOOL PreTranslateMessage(MSG * pMsg);
 };

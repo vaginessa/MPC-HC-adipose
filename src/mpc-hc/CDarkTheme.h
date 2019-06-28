@@ -22,6 +22,7 @@ public:
     static const COLORREF TextFGColor;
     static const COLORREF ContentTextDisabledFGColorWarn;
     static const COLORREF ContentTextDisabledFGColorFade;
+    static const COLORREF ContentTextDisabledFGColorFade2;
     static const COLORREF SubmenuColor;
     static const COLORREF LightColor;
     static const COLORREF CloseHoverColor;
@@ -87,6 +88,7 @@ public:
     static const COLORREF StaticEtchedColor;
 
     static const COLORREF ListCtrlDisabledBGColor;
+    static const COLORREF ListCtrlGridColor;
 
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];

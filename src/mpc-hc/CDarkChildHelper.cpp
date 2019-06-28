@@ -59,13 +59,27 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             TCHAR windowClass[MAX_PATH];
             ::GetClassName(tChild->GetSafeHwnd(), windowClass, _countof(windowClass));
             DWORD style = tChild->GetStyle();
-            DWORD type = (style & BS_TYPEMASK);
+            DWORD buttonType = (style & BS_TYPEMASK);
+            CString t;
+            if (tChild->m_hWnd)
+                tChild->GetWindowText(t);
             if (runtimeClass.Find(_T("CDark")) != 0) { //do not subclass any members already of type CDarkxxx
-                if (DLGC_DEFPUSHBUTTON == (lRes & DLGC_DEFPUSHBUTTON) || DLGC_UNDEFPUSHBUTTON == (lRes & DLGC_UNDEFPUSHBUTTON)) {
-                    CDarkButton * pObject = new CDarkButton();
-                    allocatedButtons.push_back(pObject);
-                    pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && type == BS_GROUPBOX) {
+                if (DLGC_BUTTON == (lRes & DLGC_BUTTON)) {
+                    if (DLGC_DEFPUSHBUTTON == (lRes & DLGC_DEFPUSHBUTTON) || DLGC_UNDEFPUSHBUTTON == (lRes & DLGC_UNDEFPUSHBUTTON)) {
+                        CDarkButton * pObject = new CDarkButton();
+                        allocatedButtons.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    } else if (DLGC_BUTTON == (lRes & DLGC_BUTTON) && (buttonType == BS_CHECKBOX || buttonType == BS_AUTOCHECKBOX)) {
+                        CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
+                        allocatedCheckBoxes.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    } else if (DLGC_RADIOBUTTON == (lRes & DLGC_RADIOBUTTON) && (buttonType == BS_RADIOBUTTON || buttonType == BS_AUTORADIOBUTTON)) {
+                        CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
+                        allocatedRadioButtons.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    } else { //what other buttons?
+                    }
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && buttonType == BS_GROUPBOX) {
                     CDarkGroupBox * pObject = new CDarkGroupBox();
                     allocatedGroupBoxes.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
@@ -74,7 +88,9 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                     CDarkStatic * pObject = new CDarkStatic();
                     allocatedStatics.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && type == BS_TEXT) {
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_ICON == (style & SS_ICON)) { //don't touch icons for now
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_BITMAP == (style & SS_BITMAP)) { //don't touch BITMAPS for now
+                } else if (DLGC_STATIC == (lRes & DLGC_STATIC)) {
                     tChild->SetFont(&dialogFont);
                     LITEM li = { 0 };
                     li.mask = LIF_ITEMINDEX | LIF_ITEMID;
@@ -82,15 +98,11 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         CDarkLinkCtrl * pObject = new CDarkLinkCtrl();
                         allocatedLinkCtrls.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    } else {
+                        CDarkStatic * pObject = new CDarkStatic();
+                        allocatedStatics.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
                     }
-                } else if (DLGC_BUTTON == (lRes & DLGC_BUTTON) && (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX)) {
-                    CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
-                    allocatedCheckBoxes.push_back(pObject);
-                    pObject->SubclassWindow(tChild->GetSafeHwnd());
-                } else if (DLGC_RADIOBUTTON == (lRes & DLGC_RADIOBUTTON) && (type == BS_RADIOBUTTON || type == BS_AUTORADIOBUTTON)) {
-                    CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
-                    allocatedRadioButtons.push_back(pObject);
-                    pObject->SubclassWindow(tChild->GetSafeHwnd());
                 } else if (0 == _tcsicmp(windowClass, WC_EDIT) ) {
                     CDarkEdit * pObject = new CDarkEdit();
                     allocatedEdits.push_back(pObject);

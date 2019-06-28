@@ -57,8 +57,8 @@ void CDarkPlayerListCtrl::subclassHeader() {
 }
 
 void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
-    DWORD stylesToAdd = styles, stylesToRemove = 0;
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        DWORD stylesToAdd = styles, stylesToRemove = 0;
         if (styles & LVS_EX_GRIDLINES) {
             stylesToAdd &= ~LVS_EX_GRIDLINES;
             stylesToRemove |= LVS_EX_GRIDLINES;
@@ -73,8 +73,10 @@ void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
             stylesToAdd &= ~LVS_EX_DOUBLEBUFFER;
             stylesToRemove |= LVS_EX_DOUBLEBUFFER;
         }
+        SetExtendedStyle((GetExtendedStyle() | stylesToAdd) & ~stylesToRemove);
+    } else {
+        SetExtendedStyle(GetExtendedStyle() | styles);
     }
-    ModifyStyleEx(stylesToRemove, stylesToAdd, 0);
 }
 
 
@@ -330,7 +332,7 @@ BOOL CDarkPlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         CRect r;
         GetClientRect(r);
-        //pDC->FillSolidRect(r, CDarkTheme::DebugColorRed);
+//        pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
     } else {
         return __super::OnEraseBkgnd(pDC);
     }

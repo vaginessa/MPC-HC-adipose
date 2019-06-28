@@ -77,7 +77,7 @@ void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             pDC->SetBkColor(bgColor);
 
             CPen gridPen, *oldPen;
-            gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorLight);
+            gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::ListCtrlGridColor);
             oldPen = pDC->SelectObject(&gridPen);
             pDC->MoveTo(rGrid.left, rGrid.bottom);
             pDC->LineTo(rGrid.BottomRight());

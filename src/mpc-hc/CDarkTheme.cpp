@@ -20,6 +20,7 @@ const COLORREF CDarkTheme::ShadowColor = COLORREF(RGB(25, 25, 25));
 const COLORREF CDarkTheme::TextFGColor = COLORREF(RGB(255, 255, 255));
 const COLORREF CDarkTheme::ContentTextDisabledFGColorWarn = COLORREF(RGB(128, 0, 0));
 const COLORREF CDarkTheme::ContentTextDisabledFGColorFade = COLORREF(RGB(109, 109, 109));
+const COLORREF CDarkTheme::ContentTextDisabledFGColorFade2 = COLORREF(RGB(60, 60, 60)); //even more faded, used for NA text on CListCtrl/audio switcher
 
 const COLORREF CDarkTheme::SubmenuColor = COLORREF(RGB(191, 191, 191));
 const COLORREF CDarkTheme::LightColor = COLORREF(RGB(100, 100, 100));
@@ -87,6 +88,8 @@ const COLORREF CDarkTheme::ColumnHeaderHotColor = COLORREF(RGB(67, 67, 67));;
 const COLORREF CDarkTheme::StaticEtchedColor = COLORREF(RGB(65, 65, 65));
 
 const COLORREF CDarkTheme::ListCtrlDisabledBGColor = COLORREF(RGB(40, 40, 40));
+const COLORREF CDarkTheme::ListCtrlGridColor = COLORREF(RGB(99, 99, 99));
+
 
 wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";

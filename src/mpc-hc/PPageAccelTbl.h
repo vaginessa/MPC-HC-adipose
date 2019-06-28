@@ -28,6 +28,7 @@
 #include "vkCodes.h"
 #include "CDarkPPageBase.h"
 #include "CDarkPlayerListCtrl.h"
+#include "CDarkStaticLink.h"
 
 // CPPageAccelTbl dialog
 
@@ -54,11 +55,11 @@ private:
     BOOL m_fWinLirc;
     CString m_WinLircAddr;
     CDarkEdit m_WinLircEdit;
-    CStaticLink m_WinLircLink;
+    CDarkStaticLink m_WinLircLink;
     BOOL m_fUIce;
     CString m_UIceAddr;
     CDarkEdit m_UIceEdit;
-    CStaticLink m_UIceLink;
+    CDarkStaticLink m_UIceLink;
     UINT_PTR m_nStatusTimerID;
     BOOL m_fGlobalMedia;
 

@@ -118,7 +118,7 @@ void CDarkRadioOrCheck::OnPaint() {
                 dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
                 rectItem.OffsetRect(centerRect.Width() - rectItem.Width(),
                     (centerRect.Height() - rectItem.Height()) / 2);
-            } else { // if ((m_nStyle & BS_LEFT) == BS_LEFT) {
+            } else { // if ((buttonStyle & BS_LEFT) == BS_LEFT) {
                 uFormat |= DT_LEFT;
                 dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
                 rectItem.OffsetRect(0, (centerRect.Height() - rectItem.Height()) / 2);

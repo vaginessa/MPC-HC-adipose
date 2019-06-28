@@ -29,46 +29,36 @@ BEGIN_MESSAGE_MAP(CDarkButton, CMFCButton)
 END_MESSAGE_MAP()
 
 
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
-    CDC* pDC = CDC::FromHandle(hdc);
-
-    CString strText;
-    GetWindowText(strText);
-
+void CDarkButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool selected, bool highLighted, bool focused, bool disabled, bool thin) {
     CBrush fb, fb2;
     fb.CreateSolidBrush(CDarkTheme::ButtonBorderOuterColor);
-    pDC->FrameRect(rect, &fb);
 
-    rect.DeflateRect(1, 1);
+    if (!thin) { //some small buttons look very ugly with the full border.  make up our own solution
+        pDC->FrameRect(rect, &fb);
+        rect.DeflateRect(1, 1);
+    }
     COLORREF bg = CDarkTheme::ButtonFillColor, dottedClr = CDarkTheme::ButtonBorderKBFocusColor;
 
-    int imageIndex = 0; //Normal
-    if (state & ODS_SELECTED) {//mouse down
+    if (selected) {//mouse down
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerColor);
         bg = CDarkTheme::ButtonFillSelectedColor;
         dottedClr = CDarkTheme::ButtonBorderSelectedKBFocusColor;
-    } else if (IsHighlighted()) {
+    } else if (highLighted) {
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerColor);
         bg = CDarkTheme::ButtonFillHoverColor;
         dottedClr = CDarkTheme::ButtonBorderHoverKBFocusColor;
-    } else if (state & ODS_FOCUS) {
+    } else if (focused) {
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerFocusedColor);
     } else {
         fb2.CreateSolidBrush(CDarkTheme::ButtonBorderInnerColor);
     }
-
-    if (state & ODS_DISABLED) {
-        imageIndex = 1;
-    }
-
 
     pDC->FrameRect(rect, &fb2);
     rect.DeflateRect(1, 1);
     pDC->FillSolidRect(rect, bg);
 
 
-    if (state & ODS_FOCUS) {
+    if (focused) {
         rect.DeflateRect(1, 1);
         COLORREF oldTextFGColor = pDC->SetTextColor(dottedClr);
         COLORREF oldBGColor = pDC->SetBkColor(bg);
@@ -83,7 +73,7 @@ void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
         int nMode = pDC->SetBkMode(TRANSPARENT);
 
         COLORREF oldTextFGColor;
-        if (state & ODS_DISABLED)
+        if (disabled)
             oldTextFGColor = pDC->SetTextColor(CDarkTheme::ButtonDisabledFGColor);
         else
             oldTextFGColor = pDC->SetTextColor(CDarkTheme::TextFGColor);
@@ -93,12 +83,31 @@ void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
         pDC->SetTextColor(oldTextFGColor);
         pDC->SetBkMode(nMode);
     }
+}
+
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
+    CDC* pDC = CDC::FromHandle(hdc);
+
+    CString strText;
+    GetWindowText(strText);
+    bool selected = ODS_SELECTED == (state & ODS_SELECTED);
+    bool focused = ODS_FOCUS == (state & ODS_FOCUS);
+    bool disabled = ODS_DISABLED == (state & ODS_DISABLED);
 
     BUTTON_IMAGELIST imgList;
     GetImageList(&imgList);
+    CImageList *images = CImageList::FromHandlePermanent(imgList.himl);
+    bool thin = (images != nullptr); //thin borders for image buttons
 
+    drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin);
+    
+    int imageIndex = 0; //Normal
+    if (state & ODS_DISABLED) {
+        imageIndex = 1;
+    }
 
-    if (CImageList *images = CImageList::FromHandlePermanent(imgList.himl)) { //assume centered
+    if (images != nullptr) { //assume centered
         IMAGEINFO ii;
         if (images->GetImageCount() <= imageIndex) imageIndex = 0;
         images->GetImageInfo(imageIndex, &ii);
