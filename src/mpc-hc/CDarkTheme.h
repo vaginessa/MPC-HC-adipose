@@ -121,8 +121,8 @@ public:
     static const int CheckWidth;
     static const int CheckHeight;
 
-    static void getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
-    static void getUIFont(CFont &font, HDC hDC, int type, bool underline = false);
+    static void getUIFont(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
+    static void getUIFont(CFont &font, CDC *pDC, int type, bool underline = false);
     enum fontType {
         CDCaptionFont,
         CDSmallCaptionFont,
@@ -135,14 +135,40 @@ public:
     static CSize GetTextSize(CString str, HDC hDC, int type);
     static CSize GetTextSizeDiff(CString str, HDC hDC, int type, CFont *curFont);
 
-    static NONCLIENTMETRICS _metrics;
+
+    struct themeMetrics {
+        NONCLIENTMETRICS ncMetrics;
+        CSize avgCharSize;
+        int checkboxWidth;
+        int checkboxHeight;
+    };
+
+    static themeMetrics _metrics;
     static bool haveMetrics;
-    static NONCLIENTMETRICS& GetMetrics();
+    static themeMetrics & GetMetrics(CDC * pDC);
     static void initMemDC(CDC * pDC, CDC & dcMem, CBitmap & bmMem, CRect rect);
     static void flushMemDC(CDC * pDC, CDC & dcMem, CRect rect);
     static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
     static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
+    static void drawScaledImage(HDC hdc, CRect rect, UINT resID);
     static void dbg(CString text, ...);
-    static void drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect rectCheck, CDC *pDC);
+    static UINT getResourceByDPI(CDC *pDC, const UINT * resources);
+    static void drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
     static bool canUseWin10DarkTheme();
+    static CSize GetAveCharSize(HDC dc);
+
+    enum CheckBoxStyle {
+        CheckBoxRegular = 0,
+        CheckBoxHover = 1,
+    };
+
+    enum RadoStyle {
+        RadioRegular = 0,
+        RadioRegularSet = 1,
+        RadioHover = 2,
+        RadioHoverSet = 3
+    };
+
+    const static UINT ThemeCheckBoxes[5];
+    const static UINT ThemeRadios[5];
 };

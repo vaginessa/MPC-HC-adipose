@@ -12,5 +12,6 @@ public:
     afx_msg void OnPaint();
     afx_msg void OnNcPaint();
     afx_msg void OnEnable(BOOL bEnable);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 

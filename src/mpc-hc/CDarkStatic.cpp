@@ -13,6 +13,7 @@ BEGIN_MESSAGE_MAP(CDarkStatic, CStatic)
     ON_WM_PAINT()
     ON_WM_NCPAINT()
     ON_WM_ENABLE()
+    ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -24,6 +25,7 @@ void CDarkStatic::OnPaint() {
         GetWindowText(sTitle);
         CRect rectItem;
         GetClientRect(rectItem);
+        dc.SetBkMode(TRANSPARENT);
 
         COLORREF oldBkColor = dc.GetBkColor();
         COLORREF oldTextColor = dc.GetTextColor();
@@ -34,7 +36,7 @@ void CDarkStatic::OnPaint() {
         if (!sTitle.IsEmpty()) {
             CRect centerRect = rectItem;
             CFont font;
-            CDarkTheme::getUIFont(font, dc, CDarkTheme::CDDialogFont);
+            CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
             CFont* pOldFont = dc.SelectObject(&font);
 
             UINT uFormat = 0;
@@ -84,15 +86,15 @@ void CDarkStatic::OnPaint() {
 
 void CDarkStatic::OnNcPaint() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (GetStyle() & SS_ETCHEDFRAME) {
-            CDC* pDC = GetWindowDC();
+        CDC* pDC = GetWindowDC();
 
-            CRect rect;
-            GetWindowRect(&rect);
+        CRect rect;
+        GetWindowRect(&rect);
+        if (GetStyle() & SS_ETCHEDFRAME) {
             rect.OffsetRect(-rect.left, -rect.top);
             rect.DeflateRect(0, 0, 1, 1); //make it thinner
-            //CBrush brush(CDarkTheme::StaticEtchedColor);
-            //pDC->FillSolidRect(rect, CDarkTheme::StaticEtchedColor);
+            CBrush brush(CDarkTheme::StaticEtchedColor);
+            pDC->FillSolidRect(rect, CDarkTheme::StaticEtchedColor);
         } else { //not supported yet
         }
     } else {
@@ -105,8 +107,25 @@ void CDarkStatic::OnEnable(BOOL bEnable) {
         SetRedraw(FALSE);
         __super::OnEnable(bEnable);
         SetRedraw(TRUE);
-        Invalidate(); //WM_PAINT not handled when enabling/disabling
+        CWnd *parent = GetParent();
+        if (nullptr != parent) {
+            CRect wr;
+            GetWindowRect(wr);
+            parent->ScreenToClient(wr);
+            parent->InvalidateRect(wr, TRUE);
+        } else {
+            Invalidate();
+        }
     } else {
         __super::OnEnable(bEnable);
+    }
+}
+
+
+BOOL CDarkStatic::OnEraseBkgnd(CDC* pDC) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        return TRUE;
+    } else {
+        return CStatic::OnEraseBkgnd(pDC);
     }
 }

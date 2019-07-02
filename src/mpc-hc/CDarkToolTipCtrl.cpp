@@ -43,7 +43,7 @@ void CDarkToolTipCtrl::paintTT(CPaintDC& dc, CDarkToolTipCtrl* tt) {
     dc.FrameRect(r, &fb);
 
     CFont font;
-    CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::uiTextFont, 9);
+    CDarkTheme::getUIFont(font, &dc, CDarkTheme::uiTextFont, 9);
     CFont* pOldFont = dc.SelectObject(&font);
 
     COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);

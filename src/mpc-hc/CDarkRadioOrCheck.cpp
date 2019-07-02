@@ -24,7 +24,7 @@ void CDarkRadioOrCheck::PreSubclassWindow() {
     ASSERT(buttonType != unknownType);
 
     buttonStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
-    CDarkTheme::getUIFont(font, ::GetWindowDC(NULL), CDarkTheme::CDDialogFont);
+    CDarkTheme::getUIFont(font, GetWindowDC(), CDarkTheme::CDDialogFont);
     SetFont(&font); //DSUtil checks metrics and resizes.  if our font is a bit different, things can look funny
     CButton::PreSubclassWindow();
 }
@@ -54,40 +54,27 @@ void CDarkRadioOrCheck::OnPaint() {
         bool isChecked = (SendMessage(BM_GETCHECK) == BST_CHECKED);
 
         CRect rectCheck;
+        CDarkTheme::themeMetrics &tm = CDarkTheme::GetMetrics(&dc);
         int cbWidth = GetSystemMetrics(SM_CXMENUCHECK);
         int cbHeight = GetSystemMetrics(SM_CYMENUCHECK);
 
         if (buttonStyle & BS_LEFTTEXT) {
             rectCheck.left = rectItem.right - cbWidth;
             rectCheck.right = rectCheck.left + cbWidth;
-            rectItem.right = rectCheck.left - 1;
+            rectItem.right = rectCheck.left - 2;
         } else {
             rectCheck.left = rectItem.left;
             rectCheck.right = rectCheck.left + cbWidth;
-            rectItem.left = rectCheck.right + 1;
+            rectItem.left = rectCheck.right + 2;
         }
 
         rectCheck.top = (rectItem.Height() - cbHeight) / 2;
         rectCheck.bottom = rectCheck.top + cbHeight;
 
         if (buttonType == checkType) {
-            rectCheck.DeflateRect(1, 1); //1 pixel border
             CDarkTheme::drawCheckBox(isChecked, isHover, true, rectCheck, &dc);
         } else if (buttonType == radioType) {
-            UINT res;
-            if (isChecked) {
-                res = isHover ? IDB_PNG_DARKRADIOSETHOVER : IDB_PNG_DARKRADIOSET;
-            } else {
-                res = isHover ? IDB_PNG_DARKRADIOHOVER : IDB_PNG_DARKRADIO;
-            }
-            CPngImage image;
-            image.Load(res, AfxGetInstanceHandle());
-            CDC mDC;
-            mDC.CreateCompatibleDC(&dc);
-            mDC.SelectObject(image);
-
-            rectCheck.DeflateRect(1, 1); //1 pixel border
-            dc.BitBlt(rectCheck.left, rectCheck.top, rectCheck.Width(), rectCheck.Height(), &mDC, 0, 0, SRCCOPY);
+            CDarkTheme::drawCheckBox(isChecked, isHover, true, rectCheck, &dc, true);
         }
 
         CString sTitle;

@@ -51,7 +51,7 @@ void CDarkStaticLink::OnPaint() {
             dc.SetTextColor(CDarkTheme::TextFGColor);
         }
         CFont f;
-        CDarkTheme::getUIFont(f, dc, CDarkTheme::CDMessageFont, true);
+        CDarkTheme::getUIFont(f, &dc, CDarkTheme::CDMessageFont, true);
         CFont *oldFont = dc.SelectObject(&f);
         dc.DrawText(text, r, format | DT_CALCRECT);
         dc.DrawText(text, r, format);

@@ -38,7 +38,7 @@ void CDarkPropPageFrame::DrawCaption(CDC *pDC, CRect rect, LPCTSTR lpszCaption, 
     int nBkStyle = pDC->SetBkMode(TRANSPARENT);
 
     CFont f;
-    CDarkTheme::getUIFont(f, pDC->m_hDC, CDarkTheme::uiTextFont, 10, FW_BOLD);
+    CDarkTheme::getUIFont(f, pDC, CDarkTheme::uiTextFont, 10, FW_BOLD);
     CFont *pFont = pDC->SelectObject(&f);
 
     pDC->DrawText(lpszCaption, rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);

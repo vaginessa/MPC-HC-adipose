@@ -585,12 +585,15 @@
 #define IDD_SAVEIMAGEDIALOGTEMPL        20015
 #define IDD_CMD_LINE_HELP               20016
 #define IDD_CRASH_REPORTER              20017
-#define IDB_PNG_DARKCBHOVER             20029
-#define IDB_PNG_DARKCB                  20030
-#define IDB_PNG_DARKRADIO               20035
-#define IDB_PNG_DARKRADIOHOVER          20036
-#define IDB_PNG_DARKRADIOSET            20037
-#define IDB_PNG_DARKRADIOSETHOVER       20038
+#define IDB_DT_CB_96                    20050
+#define IDB_DT_CB_120                   20051
+#define IDB_DT_CB_144                   20052
+#define IDB_DT_CB_192                   20053
+#define IDB_DT_RADIO_96                 20054
+#define IDB_DT_RADIO_120                20055
+#define IDB_DT_RADIO_144                20056
+#define IDB_DT_RADIO_129                20057
+#define IDB_DT_RADIO_192                20057
 #define IDI_OPENSUBTITLES               21001
 #define IDI_PODNAPISI                   21002
 #define IDI_SUBDB                       21003
@@ -1589,7 +1592,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        20048
+#define _APS_NEXT_RESOURCE_VALUE        20058
 #define _APS_NEXT_COMMAND_VALUE         33452
 #define _APS_NEXT_CONTROL_VALUE         22086
 #define _APS_NEXT_SYMED_VALUE           24050

@@ -16,7 +16,6 @@ protected:
 public:
 	CDarkListBox();
 	virtual ~CDarkListBox();
-    virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
     void setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping);
     void hideSB();
@@ -30,5 +29,7 @@ public:
     afx_msg void OnLbnSelchange();
     void updateToolTip(CPoint point);
     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+    void setIntegralHeight();
+    afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 

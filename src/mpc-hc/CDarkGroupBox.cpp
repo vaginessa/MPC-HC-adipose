@@ -41,7 +41,7 @@ void CDarkGroupBox::OnPaint() {
             COLORREF oldBkClr = dc.SetBkColor(CDarkTheme::ContentBGColor);
             //CFont *font = CDarkTheme::getUIFont(dc.GetSafeHdc(), CDarkTheme::uiTextFont, 8);
             CFont font;
-            CDarkTheme::getUIFont(font, dc.GetSafeHdc(), CDarkTheme::CDCaptionFont);
+            CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDCaptionFont);
             CFont* pOldFont = dc.SelectObject(&font);
 
             rtext = r;

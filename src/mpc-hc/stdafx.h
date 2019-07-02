@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include <SharedInclude.h>
+#define GDIPVER 0x0110
 
+#include <SharedInclude.h>
 #include <afxwin.h>                         // MFC core and standard components
 #include <afxext.h>                         // MFC extensions
 #include <afxdisp.h>                        // MFC Automation classes

@@ -20,22 +20,9 @@ BEGIN_MESSAGE_MAP(CDarkListBox, CListBox)
     ON_WM_VSCROLL()
     ON_CONTROL_REFLECT(LBN_SELCHANGE, &CDarkListBox::OnLbnSelchange)
     ON_WM_MOUSEMOVE()
+    ON_WM_SIZE()
 END_MESSAGE_MAP()
 
-
-//not currently called, despite MFC docs...we could use variable height but seems to be working fine as long as we use a reasonable font
-void CDarkListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
-    CString strText(_T(""));
-    GetText(lpMeasureItemStruct->itemID, strText);
-    ASSERT(TRUE != strText.IsEmpty());
-
-    CRect rect;
-    GetItemRect(lpMeasureItemStruct->itemID, &rect);
-
-    CDC* pDC = GetDC();
-    lpMeasureItemStruct->itemHeight = pDC->DrawTextW(strText, -1, rect, DT_SINGLELINE | DT_CALCRECT);
-    ReleaseDC(pDC);
-}
 
 void CDarkListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     CDC dc;
@@ -61,7 +48,7 @@ void CDarkListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     GetText(lpDrawItemStruct->itemID, strText);
 
     CFont font;
-    CDarkTheme::getUIFont(font, lpDrawItemStruct->hDC, CDarkTheme::CDMessageFont);
+    CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     dc.DrawText(strText, strText.GetLength(), &lpDrawItemStruct->rcItem, DT_VCENTER | DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
 
@@ -160,6 +147,7 @@ void CDarkListBox::PreSubclassWindow() {
         }
         darkTT.Create(this, TTS_ALWAYSTIP);
         darkTT.enableFlickerHelper();
+        setIntegralHeight();
     }
 }
 
@@ -207,4 +195,21 @@ void CDarkListBox::updateToolTip(CPoint point) {
 
 void CDarkListBox::OnMouseMove(UINT nFlags, CPoint point) {
     updateToolTip(point);
+}
+
+void CDarkListBox::setIntegralHeight() {
+    CWindowDC dc(this);
+    CFont font;
+    CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
+    CFont* pOldFont = dc.SelectObject(&font);
+    CRect r(0, 0, 99, 99);
+    CString test = _T("W");
+    dc.DrawText(test, test.GetLength(), &r, DT_LEFT | DT_SINGLELINE | DT_NOPREFIX | DT_CALCRECT);
+    SetItemHeight(0, r.Height());
+
+    dc.SelectObject(pOldFont);
+}
+
+void CDarkListBox::OnSize(UINT nType, int cx, int cy) {
+    CListBox::OnSize(nType, cx, cy);
 }

@@ -95,6 +95,7 @@ wchar_t* const CDarkTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CDarkTheme::uiStaticTextFont = L"Segoe UI Semilight";
 wchar_t* const CDarkTheme::uiSymbolFont = L"MS UI Gothic";
 
+
 const int CDarkTheme::gripPatternLong = 5;
 const int CDarkTheme::gripPatternShort = 4;
 
@@ -192,11 +193,27 @@ const int CDarkTheme::CheckWidth = 7;
 const int CDarkTheme::CheckHeight = 7;
 
 
-void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LONG weight) {
+const UINT CDarkTheme::ThemeCheckBoxes[5] = {
+    IDB_DT_CB_96,
+    IDB_DT_CB_120,
+    IDB_DT_CB_144,
+    IDB_DT_CB_144,
+    IDB_DT_CB_192,
+};
+
+const UINT CDarkTheme::ThemeRadios[5] = {
+    IDB_DT_RADIO_96,
+    IDB_DT_RADIO_120,
+    IDB_DT_RADIO_144,
+    IDB_DT_RADIO_144,
+    IDB_DT_RADIO_192,
+};
+
+void CDarkTheme::getUIFont(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight) {
     LOGFONT lf;
     memset(&lf, 0, sizeof(LOGFONT));
 
-    lf.lfHeight = -MulDiv(size, GetDeviceCaps(hDC, LOGPIXELSY), 72);
+    lf.lfHeight = -MulDiv(size, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
     lf.lfQuality = CLEARTYPE_QUALITY;
 
     //lf.lfQuality = ANTIALIASED_QUALITY;
@@ -206,8 +223,10 @@ void CDarkTheme::getUIFont(CFont &font, HDC hDC, wchar_t *fontName, int size, LO
     font.CreateFontIndirect(&lf);
 }
 
-void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type, bool underline) {
-    NONCLIENTMETRICS m = GetMetrics();
+void CDarkTheme::getUIFont(CFont &font, CDC *pDC, int type, bool underline) {
+    themeMetrics tm = GetMetrics(pDC);
+    NONCLIENTMETRICS &m = tm.ncMetrics;
+
     LOGFONT *lf;
     if (type == CDCaptionFont) {
         lf = &m.lfCaptionFont;
@@ -222,7 +241,7 @@ void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type, bool underline) {
     } else if (type == CDDialogFont) { //hack for compatibility with MS SHell Dlg (8) used in dialogs
         LOGFONT tlf;
         memset(&tlf, 0, sizeof(LOGFONT));
-        tlf.lfHeight = -MulDiv(8, GetDeviceCaps(hDC, LOGPIXELSY), 72);
+        tlf.lfHeight = -MulDiv(8, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
         tlf.lfQuality = CLEARTYPE_QUALITY;
         tlf.lfWeight = FW_REGULAR;
         wcsncpy_s(tlf.lfFaceName, m.lfMessageFont.lfFaceName, LF_FACESIZE);
@@ -245,14 +264,14 @@ void CDarkTheme::getUIFont(CFont &font, HDC hDC, int type, bool underline) {
 }
 
 CSize CDarkTheme::GetTextSize(CString str, HDC hDC, int type) {
-    CDC* cDC = CDC::FromHandle(hDC);
+    CDC* pDC = CDC::FromHandle(hDC);
     CFont font;
-    getUIFont(font, hDC, type);
-    CFont* pOldFont = cDC->SelectObject(&font);
+    getUIFont(font, pDC, type);
+    CFont* pOldFont = pDC->SelectObject(&font);
 
-    CSize cs = cDC->GetTextExtent(str);
+    CSize cs = pDC->GetTextExtent(str);
 
-    cDC->SelectObject(pOldFont);
+    pDC->SelectObject(pOldFont);
 
     return cs;
 }
@@ -267,12 +286,45 @@ CSize CDarkTheme::GetTextSizeDiff(CString str, HDC hDC, int type, CFont * curFon
     return cs - curCs;
 }
 
+
+void CDarkTheme::drawScaledImage(HDC hdc, CRect rect, UINT resID) {
+    Gdiplus::Graphics graphics(hdc);
+    CPngImage pngimage;
+    pngimage.Load(resID, AfxGetInstanceHandle());
+    Gdiplus::Bitmap image(pngimage, NULL);
+    //Gdiplus::Bitmap image(GetModuleHandle(NULL), MAKEINTRESOURCE(resID));
+    if (image.GetLastStatus() != 0)
+        return;
+    
+    graphics.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+    graphics.SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
+    graphics.DrawImage(
+        &image,
+        Gdiplus::Rect(rect.left, rect.top, rect.Width(), rect.Height()),
+        0, 0,        // upper-left corner of source rectangle
+        image.GetWidth(),       // width of source rectangle
+        image.GetHeight(),      // height of source rectangle
+        Gdiplus::UnitPixel);
+}
+
 bool CDarkTheme::haveMetrics = false;
-NONCLIENTMETRICS CDarkTheme::_metrics = NONCLIENTMETRICS();
-NONCLIENTMETRICS& CDarkTheme::GetMetrics() {
+CDarkTheme::themeMetrics CDarkTheme::_metrics = CDarkTheme::themeMetrics();
+CDarkTheme::themeMetrics & CDarkTheme::GetMetrics(CDC *pDC) {
     if (!haveMetrics) {
-        CDarkTheme::_metrics.cbSize = sizeof(NONCLIENTMETRICS);
-        ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CDarkTheme::_metrics, 0);
+        _metrics.ncMetrics.cbSize = sizeof(NONCLIENTMETRICS);
+        ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CDarkTheme::_metrics.ncMetrics, 0);
+        /*
+        _metrics.checkboxWidth = 12 * pDC->GetDeviceCaps(LOGPIXELSX) / 96 + 1;
+        _metrics.checkboxHeight = 12 * pDC->GetDeviceCaps(LOGPIXELSY) / 96 + 1;
+        */
+        CPngImage image;
+        image.Load(getResourceByDPI(pDC, ThemeCheckBoxes), AfxGetInstanceHandle());
+        BITMAP bm;
+        image.GetBitmap(&bm);
+        _metrics.checkboxWidth = bm.bmHeight;
+        _metrics.checkboxHeight = bm.bmHeight;
+
+
         haveMetrics = true;
     }
     return CDarkTheme::_metrics;
@@ -342,7 +394,20 @@ void CDarkTheme::dbg(CString text, ...) {
     va_end(args);
 }
 
-void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect rectCheck, CDC *pDC) {
+UINT CDarkTheme::getResourceByDPI(CDC *pDC, const UINT *resources) {
+    int index;
+    int dpi = pDC->GetDeviceCaps(LOGPIXELSX);
+    if (dpi <= 96) index = 0;
+    else if (dpi <= 120) index = 1;
+    else if (dpi <= 144) index = 2;
+    else if (dpi <= 168) index = 3;
+    else if (dpi <= 196) index = 4;
+    else index = 4;
+
+    return resources[index];
+}
+
+void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio) {
     COLORREF borderClr, bgClr;
     COLORREF oldBkClr = pDC->GetBkColor(), oldTextClr = pDC->GetTextColor();
     if (isHover) {
@@ -353,13 +418,36 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useImage, CRect
         bgClr = CDarkTheme::CheckboxBGColor;
     }
 
-    if (isChecked && useImage) {
+    if (useSystemSize) {
         CPngImage image;
-        image.Load(isHover ? IDB_PNG_DARKCBHOVER : IDB_PNG_DARKCB, AfxGetInstanceHandle());
+        image.Load(getResourceByDPI(pDC, isRadio ? ThemeRadios : ThemeCheckBoxes), AfxGetInstanceHandle());
+        BITMAP bm;
+        image.GetBitmap(&bm);
+        int size = bm.bmHeight;
+
         CDC mDC;
         mDC.CreateCompatibleDC(pDC);
         mDC.SelectObject(image);
-        pDC->BitBlt(rectCheck.left, rectCheck.top, rectCheck.Width(), rectCheck.Height(), &mDC, 0, 0, SRCCOPY);
+        int index;
+        if (isRadio) {
+            index = RadioRegular;
+            if (isChecked) index += 1;
+            if (isHover) index += 2;
+        } else {
+            index = CheckBoxRegular;
+            if (isHover) index += 1;
+        }
+        CRect drawRect(0, 0, size, size);
+        drawRect.OffsetRect(rectCheck.left + (rectCheck.Width() - size) / 2, rectCheck.top + (rectCheck.Height() - size) / 2);
+        if (!isRadio && !isChecked) { //we can draw this w/o BMPs
+            CBrush brush(borderClr);
+            pDC->FrameRect(drawRect, &brush);
+            drawRect.DeflateRect(1, 1);
+            pDC->FillSolidRect(drawRect, bgClr);
+        } else {
+            int left = index * size;
+            pDC->BitBlt(drawRect.left, drawRect.top, drawRect.Width(), drawRect.Height(), &mDC, left, 0, SRCCOPY);
+        }
     } else {
         CBrush brush(borderClr);
         pDC->FrameRect(rectCheck, &brush);
@@ -396,3 +484,17 @@ bool CDarkTheme::canUseWin10DarkTheme() {
 }
 
 
+CSize CDarkTheme::GetAveCharSize(HDC dc) {
+    TEXTMETRIC tm;
+    GetTextMetrics(dc, &tm);
+
+    CString buffer = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+
+    CSize result;
+    GetTextExtentPoint32W(dc, buffer, 52, &result);
+
+    result.cx = (result.cx / 26 + 1) / 2; //div uses trunc rounding; we want arithmetic rounding
+    result.cy = tm.tmHeight;
+
+    return result;
+}

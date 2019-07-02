@@ -48,7 +48,7 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
         if (darkContentBrush.m_hObject == nullptr) darkContentBrush.CreateSolidBrush(CDarkTheme::ContentBGColor);
         if (darkWindowBrush.m_hObject == nullptr) darkWindowBrush.CreateSolidBrush(CDarkTheme::WindowBGColor);
         if (darkControlAreaBrush.m_hObject == nullptr) darkControlAreaBrush.CreateSolidBrush(CDarkTheme::ControlAreaBGColor);
-        if (dialogFont.m_hObject == nullptr) CDarkTheme::getUIFont(dialogFont, ::GetDC(NULL), CDarkTheme::CDDialogFont);
+        if (dialogFont.m_hObject == nullptr) CDarkTheme::getUIFont(dialogFont, wnd->GetWindowDC(), CDarkTheme::CDDialogFont);
 
         CWnd* pChild = wnd->GetWindow(GW_CHILD);
         while (pChild) {

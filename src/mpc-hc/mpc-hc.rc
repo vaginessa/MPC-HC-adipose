@@ -2240,17 +2240,21 @@ END
 // PNG
 //
 
-IDB_PNG_DARKCBHOVER     PNG                     "res\\darktheme\\checkbox.png"
+IDB_DT_CB_96            PNG                     "res\\darktheme\\checkboxes-96.png"
 
-IDB_PNG_DARKCB          PNG                     "res\\darktheme\\checkboxhover.png"
+IDB_DT_CB_120           PNG                     "res\\darktheme\\checkboxes-120.png"
 
-IDB_PNG_DARKRADIO       PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radio.png"
+IDB_DT_CB_144           PNG                     "res\\darktheme\\checkboxes-144.png"
 
-IDB_PNG_DARKRADIOHOVER  PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiohover.png"
+IDB_DT_CB_192           PNG                     "res\\darktheme\\checkboxes-192.png"
 
-IDB_PNG_DARKRADIOSET    PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radioset.png"
+IDB_DT_RADIO_96         PNG                     "res\\darktheme\\radios-96.png"
 
-IDB_PNG_DARKRADIOSETHOVER PNG                     "C:\\dev\\mpc-hc\\src\\mpc-hc\\res\\darktheme\\radiosethover.png"
+IDB_DT_RADIO_120        PNG                     "res\\darktheme\\radios-120.png"
+
+IDB_DT_RADIO_144        PNG                     "res\\darktheme\\radios-144.png"
+
+IDB_DT_RADIO_192        PNG                     "res\\darktheme\\radios-192.png"
 
 
 /////////////////////////////////////////////////////////////////////////////

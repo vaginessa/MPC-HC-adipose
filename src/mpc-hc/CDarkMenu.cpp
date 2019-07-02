@@ -224,7 +224,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     //TextBGColor = R255; //test
     COLORREF TextSelectColor = CDarkTheme::MenuSelectedColor;
 
-    CDC* mDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+    CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
     /* for fake grayscale smoothing
     CDC* cDC = CDC::FromHandle(lpDrawItemStruct->hDC);
@@ -243,8 +243,8 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
         TextFGColor = CDarkTheme::TextFGColor;
     }
 
-    int oldBKMode = mDC->SetBkMode(TRANSPARENT);
-    mDC->FillSolidRect(&rectM, TextBGColor);
+    int oldBKMode = pDC->SetBkMode(TRANSPARENT);
+    pDC->FillSolidRect(&rectM, TextBGColor);
 
     if (menuObject->isMenubar) {
         if (menuObject->isFirstMenuInMenuBar) { //clean up white borders
@@ -252,7 +252,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
             GetWindowRect(AfxGetMainWnd()->m_hWnd, &wndSize);
 
             CRect rectBorder(rectM.left, rectM.bottom, rectM.left + wndSize.right - wndSize.left, rectM.bottom+1);
-            mDC->FillSolidRect(&rectBorder, CDarkTheme::MenuItemDisabledColor);
+            pDC->FillSolidRect(&rectBorder, CDarkTheme::MenuItemDisabledColor);
             ExcludeClipRect(lpDrawItemStruct->hDC, rectBorder.left, rectBorder.top, rectBorder.right, rectBorder.bottom);
         }
         rectM = rectFull;
@@ -263,19 +263,19 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     if (mInfo.fType & MFT_SEPARATOR) {
         int centerOffset = (separatorHeight - 1) / 2;
         CRect rectSeparator(rectM.left + separatorPadding, rectM.top + centerOffset, rectM.right - separatorPadding, rectM.top + centerOffset + 1);
-        mDC->FillSolidRect(&rectSeparator, CDarkTheme::MenuSeparatorColor);
+        pDC->FillSolidRect(&rectSeparator, CDarkTheme::MenuSeparatorColor);
     } else {
 
 
 
-        COLORREF oldTextFGColor = mDC->SetTextColor(TextFGColor);
+        COLORREF oldTextFGColor = pDC->SetTextColor(TextFGColor);
         CFont font;
-        CDarkTheme::getUIFont(font, lpDrawItemStruct->hDC, CDarkTheme::CDMenuFont);
-        CFont* pOldFont = mDC->SelectObject(&font);
+        CDarkTheme::getUIFont(font, pDC, CDarkTheme::CDMenuFont);
+        CFont* pOldFont = pDC->SelectObject(&font);
 
 
         if ((lpDrawItemStruct->itemState & ODS_SELECTED) && (lpDrawItemStruct->itemAction & (ODA_SELECT | ODA_DRAWENTIRE))) {
-            mDC->FillSolidRect(&rectM, TextSelectColor);
+            pDC->FillSolidRect(&rectM, TextSelectColor);
         }
 
         if (lpDrawItemStruct->itemState & ODS_NOACCEL) { //removing single &s before drawtext
@@ -284,26 +284,26 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
             t.Remove(TEXT('&'));
             t.Replace(TEXT("{{amp}}"), TEXT("&&"));
 
-            mDC->DrawText(t, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+            pDC->DrawText(t, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
         }
         else {
-            mDC->DrawText(menuObject->m_strCaption, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+            pDC->DrawText(menuObject->m_strCaption, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
         }
 
         if (!menuObject->isMenubar) {
 
             if (menuObject->m_strAccel.GetLength() > 0) {
-                mDC->DrawText(menuObject->m_strAccel, rectText, DT_VCENTER | DT_RIGHT | DT_SINGLELINE);
+                pDC->DrawText(menuObject->m_strAccel, rectText, DT_VCENTER | DT_RIGHT | DT_SINGLELINE);
             }
 
 
             if (mInfo.hSubMenu) {
                 CFont sfont;
-                CDarkTheme::getUIFont(sfont, lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CDarkTheme::getUIFont(sfont, pDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
 
-                mDC->SelectObject(&sfont);
-                mDC->SetTextColor(ArrowColor);
-                mDC->DrawText(TEXT(">"), rectArrow, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+                pDC->SelectObject(&sfont);
+                pDC->SetTextColor(ArrowColor);
+                pDC->DrawText(TEXT(">"), rectArrow, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
             }
 
             if (mInfo.fState & MFS_CHECKED) {
@@ -318,16 +318,16 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
                     size = 10;
                 }
                 CFont bFont;
-                CDarkTheme::getUIFont(bFont, lpDrawItemStruct->hDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
-                mDC->SelectObject(&bFont);
-                mDC->SetTextColor(TextFGColor);
-                mDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+                CDarkTheme::getUIFont(bFont, pDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                pDC->SelectObject(&bFont);
+                pDC->SetTextColor(TextFGColor);
+                pDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
             }
         }
 
-        mDC->SetBkMode(oldBKMode);
-        mDC->SetTextColor(oldTextFGColor);
-        mDC->SelectObject(pOldFont);
+        pDC->SetBkMode(oldBKMode);
+        pDC->SetTextColor(oldTextFGColor);
+        pDC->SelectObject(pOldFont);
 
 
         //fake greyscale anti-aliasing to emulate explorer (using directdraw?) SLOW!

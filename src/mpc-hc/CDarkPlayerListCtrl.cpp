@@ -332,7 +332,39 @@ BOOL CDarkPlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         CRect r;
         GetClientRect(r);
-//        pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
+        int dcState = pDC->SaveDC();
+        for (int y = 0; y < GetItemCount(); y++) {
+            CRect clip;
+            GetItemRect(y, clip, LVIR_BOUNDS);
+            pDC->ExcludeClipRect(clip);
+        }
+        pDC->FillSolidRect(r, CDarkTheme::ContentBGColor);
+
+        if (darkGridLines) {
+
+            CPen gridPen, *oldPen;
+            gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
+            oldPen = pDC->SelectObject(&gridPen);
+
+            CRect gr;
+            for (int x = 0; x < darkHdrCtrl.GetItemCount(); x++) {
+                darkHdrCtrl.GetItemRect(x, gr);
+                pDC->MoveTo(gr.right, r.top);
+                pDC->LineTo(gr.right, r.bottom);
+            }
+            gr.bottom = 0;
+            for (int y = 0; y < GetItemCount() || gr.bottom < r.bottom; y++) {
+                if (y >= GetItemCount()) {
+                    gr.OffsetRect(0, gr.Height());
+                } else {
+                    GetItemRect(y, gr, LVIR_BOUNDS);
+                }
+                pDC->MoveTo(r.left, gr.bottom-1);
+                pDC->LineTo(r.right, gr.bottom-1);
+            }
+            pDC->SelectObject(oldPen);
+        }
+        pDC->RestoreDC(dcState);
     } else {
         return __super::OnEraseBkgnd(pDC);
     }

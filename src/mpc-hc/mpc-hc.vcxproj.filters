@@ -1172,6 +1172,20 @@
     <Image Include="res\darktheme\radiosethover.png" />
     <Image Include="res\darktheme\radio.png" />
     <Image Include="res\darktheme\radiohover.png" />
+    <Image Include="res\bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\bitmap2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\darktheme\checkboxes-96.png" />
+    <Image Include="res\darktheme\checkboxes-120.png" />
+    <Image Include="res\darktheme\checkboxes-144.png" />
+    <Image Include="res\darktheme\checkboxes-192.png" />
+    <Image Include="res\darktheme\radios-96.png" />
+    <Image Include="res\darktheme\radios-120.png" />
+    <Image Include="res\darktheme\radios-144.png" />
+    <Image Include="res\darktheme\radios-192.png" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\subtitles\favicon_opensubtitles.ico">

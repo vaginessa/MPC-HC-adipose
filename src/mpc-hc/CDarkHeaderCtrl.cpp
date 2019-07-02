@@ -3,7 +3,7 @@
 #include "CDarkTheme.h"
 
 CDarkHeaderCtrl::CDarkHeaderCtrl() {
-    hotItem = -1;
+    hotItem = -2;
 }
 
 
@@ -15,9 +15,82 @@ BEGIN_MESSAGE_MAP(CDarkHeaderCtrl, CHeaderCtrl)
     ON_NOTIFY(HDN_TRACKW, 0, &CDarkHeaderCtrl::OnHdnTrack)
     ON_WM_MOUSEMOVE()
     ON_WM_MOUSELEAVE()
+    ON_WM_PAINT()
 END_MESSAGE_MAP()
 
+void CDarkHeaderCtrl::drawItem(int nItem, CRect rText, CDC* pDC) {
 
+    COLORREF textColor = CDarkTheme::TextFGColor;
+    COLORREF bgColor = CDarkTheme::ContentBGColor;
+
+    COLORREF oldTextColor = pDC->GetTextColor();
+    COLORREF oldBkColor = pDC->GetBkColor();
+
+    CRect rGrid;
+    rGrid = rText;
+
+
+    rGrid.top -= 1;
+    rGrid.bottom -= 1;
+
+    CPoint ptCursor;
+    ::GetCursorPos(&ptCursor);
+    ScreenToClient(&ptCursor);
+    checkHot(ptCursor);
+
+    if (nItem == hotItem) {
+        bgColor = CDarkTheme::ColumnHeaderHotColor;
+    }
+    pDC->FillSolidRect(rGrid, bgColor);
+
+    CPen gridPen, *oldPen;
+    gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::ListCtrlGridColor);
+    oldPen = pDC->SelectObject(&gridPen);
+    if (nItem != 0) {
+        //we will draw left border, which lines up with grid.  this differs from native widget
+        //which draws the right border which consequently does not line up with the grid (ugly)
+        //we only draw the left border starting from the second column
+        pDC->MoveTo(rGrid.left, rGrid.top);
+        pDC->LineTo(rGrid.left, rGrid.bottom);
+    } else {
+        pDC->MoveTo(rGrid.left, rGrid.bottom);
+    }
+    pDC->LineTo(rGrid.BottomRight());
+    //pDC->LineTo(rGrid.right, rGrid.top);
+    pDC->SelectObject(oldPen);
+
+    if (nItem != -1) {
+        HDITEM hditem = { 0 };
+        hditem.mask = HDI_FORMAT | HDI_TEXT | HDI_STATE;
+        const int c_cchBuffer = 1024;
+        TCHAR  lpBuffer[c_cchBuffer];
+        hditem.pszText = lpBuffer;
+        hditem.cchTextMax = c_cchBuffer;
+
+        GetItem(nItem, &hditem);
+        int align = hditem.fmt & HDF_JUSTIFYMASK;
+        UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
+        if (align == HDF_CENTER)
+            textFormat |= DT_CENTER;
+        else if (align == HDF_LEFT) {
+            textFormat |= DT_LEFT;
+            rText.left += 6;
+        } else {
+            textFormat |= DT_RIGHT;
+            rText.right -= 6;
+        }
+        CString text = hditem.pszText;
+        pDC->SetTextColor(textColor);
+        pDC->SetBkColor(bgColor);
+
+        CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
+    }
+
+    pDC->SetTextColor(oldTextColor);
+    pDC->SetBkColor(oldBkColor);
+}
+
+/* custom draw doesn't handle empty areas! code is no longer used in favor of OnPaint() */
 void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
 
@@ -27,68 +100,11 @@ void CDarkHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
             int nItem = pLVCD->nmcd.dwItemSpec;
-
-            COLORREF textColor = CDarkTheme::TextFGColor;
-            COLORREF bgColor = CDarkTheme::ContentBGColor;
-
             CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
-            COLORREF oldTextColor = pDC->GetTextColor();
-            COLORREF oldBkColor = pDC->GetBkColor();
-
-            CRect rText, rGrid;
+            CRect rText;
             GetItemRect(nItem, rText);
-            rGrid = rText;
 
-            HDITEM hditem = { 0 };
-            hditem.mask = HDI_FORMAT | HDI_TEXT | HDI_STATE;
-            const int c_cchBuffer = 1024;
-            TCHAR  lpBuffer[c_cchBuffer];
-            hditem.pszText = lpBuffer;
-            hditem.cchTextMax = c_cchBuffer;
-
-            GetItem(nItem, &hditem);
-            int align = hditem.fmt & HDF_JUSTIFYMASK;
-            UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
-            if (align == HDF_CENTER)
-                textFormat |= DT_CENTER;
-            else if (align == HDF_LEFT) {
-                textFormat |= DT_LEFT;
-                rText.left += 6;
-            } else {
-                textFormat |= DT_RIGHT;
-                rText.right -= 6;
-            }
-                       
-            rGrid.top -= 1;
-            rGrid.bottom -= 1;
-
-            CPoint ptCursor;
-            ::GetCursorPos(&ptCursor);
-            ScreenToClient(&ptCursor);
-            checkHot(ptCursor);
-
-            if (nItem == hotItem) {
-                bgColor = CDarkTheme::ColumnHeaderHotColor;
-            }
-            pDC->FillSolidRect(rGrid, bgColor);
-
-            CString text = hditem.pszText;
-            pDC->SetTextColor(textColor);
-            pDC->SetBkColor(bgColor);
-
-            CPen gridPen, *oldPen;
-            gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::ListCtrlGridColor);
-            oldPen = pDC->SelectObject(&gridPen);
-            pDC->MoveTo(rGrid.left, rGrid.bottom);
-            pDC->LineTo(rGrid.BottomRight());
-            pDC->LineTo(rGrid.right, rGrid.top);
-            pDC->SelectObject(oldPen);
-
-            CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
-
-            pDC->SetTextColor(oldTextColor);
-            pDC->SetBkColor(oldBkColor);
-
+            drawItem(nItem, rText, pDC);
             *pResult = CDRF_SKIPDEFAULT;
         }
     }
@@ -108,7 +124,7 @@ void CDarkHeaderCtrl::checkHot(CPoint point) {
     hotItem = (int)SendMessage(HDM_HITTEST, 0, (LPARAM)&hdHitTestInfo);
 
     if ((hdHitTestInfo.flags & HHT_ONHEADER) == 0) {
-        hotItem = -1;
+        hotItem = -2;
     }
     if (hotItem != prevHotItem) RedrawWindow();
 }
@@ -128,4 +144,65 @@ void CDarkHeaderCtrl::OnMouseLeave() {
         RedrawWindow();
     }
     __super::OnMouseLeave();
+}
+
+
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+void CDarkHeaderCtrl::OnPaint() {
+    if (GetStyle() & HDS_FILTERBAR) {
+        Default();
+        return;
+    }
+
+    CPaintDC dc(this); // device context for painting
+    CMemDC memDC(dc, this);
+    CDC* pDC = &memDC.GetDC();
+    CFont font;
+    CDarkTheme::getUIFont(font, pDC, CDarkTheme::CDDialogFont);
+    CFont* pOldFont = pDC->SelectObject(&font);
+
+    CRect rectClip;
+    dc.GetClipBox(rectClip);
+
+    CRect rect;
+    GetClientRect(rect);
+
+    CRect rectItem;
+    int nCount = GetItemCount();
+
+    int xMax = 0;
+
+    for (int i = 0; i < nCount; i++) {
+        CPoint ptCursor;
+        ::GetCursorPos(&ptCursor);
+        ScreenToClient(&ptCursor);
+
+        HDHITTESTINFO hdHitTestInfo;
+        hdHitTestInfo.pt = ptCursor;
+
+        GetItemRect(i, rectItem);
+
+        CRgn rgnClip;
+        rgnClip.CreateRectRgnIndirect(&rectItem);
+        pDC->SelectClipRgn(&rgnClip);
+
+        // Draw item:
+        drawItem(i, rectItem, pDC);
+
+        pDC->SelectClipRgn(NULL);
+
+        xMax = max(xMax, rectItem.right);
+    }
+
+    // Draw "tail border":
+    if (nCount == 0) {
+        rectItem = rect;
+        rectItem.right++;
+    } else {
+        rectItem.left = xMax;
+        rectItem.right = rect.right + 1;
+    }
+
+    drawItem(-1, rectItem, pDC);
+    pDC->SelectObject(pOldFont);
 }
