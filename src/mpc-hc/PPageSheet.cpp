@@ -97,7 +97,7 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_DX9RESIZER_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
 */
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageDVD), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-        //CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageFormats), IDC_LIST1, LVS_OWNERDRAWFIXED);
+        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageExternalFilters), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
     }
 
 }

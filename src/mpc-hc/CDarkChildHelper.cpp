@@ -63,7 +63,7 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             CString t;
             if (tChild->m_hWnd)
                 tChild->GetWindowText(t);
-            if (runtimeClass.Find(_T("CDark")) != 0) { //do not subclass any members already of type CDarkxxx
+            if (runtimeClass.Find(_T("CDark")) != 0 && runtimeClass.Find(_T("CMPCTheme")) != 0) {
                 if (DLGC_BUTTON == (lRes & DLGC_BUTTON)) {
                     if (DLGC_DEFPUSHBUTTON == (lRes & DLGC_DEFPUSHBUTTON) || DLGC_UNDEFPUSHBUTTON == (lRes & DLGC_UNDEFPUSHBUTTON)) {
                         CDarkButton * pObject = new CDarkButton();

@@ -361,7 +361,7 @@ private:
     CSpinButtonCtrl m_vidver;
     CEdit m_vidhoredit;
     CEdit m_vidveredit;
-    CFloatEdit m_vidfpsedit;
+    CMPCThemeFloatEdit m_vidfpsedit;
     float m_vidfps;
     CButton m_vidsetres;
     CComboBox m_audinput;

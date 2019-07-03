@@ -22,9 +22,8 @@
 #pragma once
 
 #include "CDarkPPageBase.h"
-#include "CDarkIntEdit.h"
 #include "CDarkStaticLink.h"
-
+#include "FloatEdit.h"
 
 // CPPageWebServer dialog
 
@@ -45,7 +44,7 @@ public:
     enum { IDD = IDD_PPAGEWEBSERVER };
     BOOL m_fEnableWebServer;
     int m_nWebServerPort;
-    CDarkIntEdit m_nWebServerPortCtrl;
+    CMPCThemeIntEdit m_nWebServerPortCtrl;
     CDarkStaticLink m_launch;
     BOOL m_fWebServerUseCompression;
     BOOL m_fWebServerLocalhostOnly;

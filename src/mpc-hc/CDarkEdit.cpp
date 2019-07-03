@@ -17,20 +17,28 @@ END_MESSAGE_MAP()
 
 
 void CDarkEdit::PreSubclassWindow() {
-    ModifyStyleEx(WS_BORDER, WS_EX_STATICEDGE, 0);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        ModifyStyleEx(WS_BORDER, WS_EX_STATICEDGE, 0);
+    } else {
+        __super::PreSubclassWindow();
+    }
 }
 
 void CDarkEdit::OnNcPaint() {
-    CDC* pDC = GetWindowDC();
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CDC* pDC = GetWindowDC();
 
-    CRect rect;
-    GetWindowRect(&rect);
-    rect.OffsetRect(-rect.left, -rect.top);
+        CRect rect;
+        GetWindowRect(&rect);
+        rect.OffsetRect(-rect.left, -rect.top);
 
-    CBrush brush(CDarkTheme::EditBorderColor);
+        CBrush brush(CDarkTheme::EditBorderColor);
 
-    pDC->FrameRect(&rect, &brush);
-    if (nullptr!=buddy) buddy->Invalidate();
-    ReleaseDC(pDC);
+        pDC->FrameRect(&rect, &brush);
+        if (nullptr != buddy) buddy->Invalidate();
+        ReleaseDC(pDC);
+    } else {
+        __super::OnNcPaint();
+    }
 }
 

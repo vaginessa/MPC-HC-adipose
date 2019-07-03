@@ -488,14 +488,13 @@
     <ClCompile Include="CDarkSliderCtrl.cpp" />
     <ClCompile Include="CDarkSpinButtonCtrl.cpp" />
     <ClCompile Include="CDarkInlineEdit.cpp" />
-    <ClCompile Include="CDarkEdit.cpp" />
     <ClCompile Include="CDarkTreeCtrl.cpp" />
     <ClCompile Include="CDarkPlayerListCtrl.cpp" />
     <ClCompile Include="CDarkScrollBarHelper.cpp" />
     <ClCompile Include="CDarkHeaderCtrl.cpp" />
-    <ClCompile Include="CDarkIntEdit.cpp" />
     <ClCompile Include="CDarkStatic.cpp" />
     <ClCompile Include="CDarkStaticLink.cpp" />
+    <ClCompile Include="CDarkEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -928,7 +927,6 @@
     <ClInclude Include="CDarkPlayerListCtrl.h" />
     <ClInclude Include="CDarkScrollBarHelper.h" />
     <ClInclude Include="CDarkHeaderCtrl.h" />
-    <ClInclude Include="CDarkIntEdit.h" />
     <ClInclude Include="CDarkStatic.h" />
     <ClInclude Include="CDarkStaticLink.h" />
   </ItemGroup>

@@ -28,7 +28,6 @@
 #include "CDarkSliderCtrl.h"
 #include "CDarkEdit.h"
 #include "CDarkSpinButtonCtrl.h"
-#include "CDarkIntEdit.h"
 #include "CDarkPlayerListCtrl.h"
 
 
@@ -61,7 +60,7 @@ private:
     CDarkPlayerListCtrl m_list;
     int m_tAudioTimeShift;
     CDarkRadioOrCheck m_fAudioTimeShiftCtrl;
-    CDarkIntEdit m_tAudioTimeShiftCtrl;
+    CMPCThemeIntEdit m_tAudioTimeShiftCtrl;
     CDarkSpinButtonCtrl m_tAudioTimeShiftSpin;
     BOOL m_fAudioTimeShift;
 
