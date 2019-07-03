@@ -81,8 +81,14 @@ void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
 
 
 BOOL CDarkPlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
-    if (IsWindow(darkTT.m_hWnd)) {
-        darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (!IsWindow(darkTT.m_hWnd)) {
+            darkTT.Create(this, TTS_ALWAYSTIP);
+            darkTT.enableFlickerHelper();
+        }
+        if (IsWindow(darkTT.m_hWnd)) {
+            darkTT.RelayEvent(pMsg);
+        }
     }
     return __super::PreTranslateMessage(pMsg);
 }
@@ -106,15 +112,13 @@ void CDarkPlayerListCtrl::OnNcPaint() {
     }
 }
 
+
 int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (__super::OnCreate(lpCreateStruct) == -1)
         return -1;
 
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         SetBkColor(CDarkTheme::ContentBGColor);
-
-        darkTT.Create(this, TTS_ALWAYSTIP);
-        darkTT.enableFlickerHelper();
         subclassHeader();
     }
 

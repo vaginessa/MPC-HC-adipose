@@ -41,9 +41,9 @@ void CDarkStatic::OnPaint() {
 
             UINT uFormat = 0;
             if (style & SS_LEFTNOWORDWRAP) {
-                uFormat |= DT_WORDBREAK;
-            } else {
                 uFormat |= DT_SINGLELINE;
+            } else {
+                uFormat |= DT_WORDBREAK;
             }
 
             if (style & BS_VCENTER) {
@@ -90,11 +90,17 @@ void CDarkStatic::OnNcPaint() {
 
         CRect rect;
         GetWindowRect(&rect);
-        if (GetStyle() & SS_ETCHEDFRAME) {
-            rect.OffsetRect(-rect.left, -rect.top);
+        rect.OffsetRect(-rect.left, -rect.top);
+        DWORD type = GetStyle() & SS_TYPEMASK;
+
+
+        if (SS_ETCHEDHORZ == type || SS_ETCHEDVERT == type) { //etched lines assumed
             rect.DeflateRect(0, 0, 1, 1); //make it thinner
             CBrush brush(CDarkTheme::StaticEtchedColor);
             pDC->FillSolidRect(rect, CDarkTheme::StaticEtchedColor);
+        } else if (SS_ETCHEDFRAME == type) { //etched border
+            CBrush brush(CDarkTheme::StaticEtchedColor);
+            pDC->FrameRect(rect, &brush);
         } else { //not supported yet
         }
     } else {

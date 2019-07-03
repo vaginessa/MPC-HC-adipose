@@ -78,7 +78,7 @@ CAppSettings::CAppSettings()
     , fWinLirc(false)
     , fUIce(false)
     , fGlobalMedia(true)
-    , nLogoId(DEF_LOGO)
+    , nLogoId(-1)
     , fLogoExternal(false)
     , fEnableWebServer(false)
     , nWebServerPort(13579)
@@ -1684,7 +1684,7 @@ void CAppSettings::LoadSettings()
     }
 
     strLogoFileName = pApp->GetProfileString(IDS_R_SETTINGS, IDS_RS_LOGOFILE);
-    nLogoId = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_LOGOID, DEF_LOGO);
+    nLogoId = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_LOGOID, -1);
     fLogoExternal = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_LOGOEXT, FALSE);
 
     fHideCDROMsSubMenu = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_HIDECDROMSSUBMENU, FALSE);

@@ -286,27 +286,6 @@ CSize CDarkTheme::GetTextSizeDiff(CString str, HDC hDC, int type, CFont * curFon
     return cs - curCs;
 }
 
-
-void CDarkTheme::drawScaledImage(HDC hdc, CRect rect, UINT resID) {
-    Gdiplus::Graphics graphics(hdc);
-    CPngImage pngimage;
-    pngimage.Load(resID, AfxGetInstanceHandle());
-    Gdiplus::Bitmap image(pngimage, NULL);
-    //Gdiplus::Bitmap image(GetModuleHandle(NULL), MAKEINTRESOURCE(resID));
-    if (image.GetLastStatus() != 0)
-        return;
-    
-    graphics.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
-    graphics.SetInterpolationMode(Gdiplus::InterpolationModeNearestNeighbor);
-    graphics.DrawImage(
-        &image,
-        Gdiplus::Rect(rect.left, rect.top, rect.Width(), rect.Height()),
-        0, 0,        // upper-left corner of source rectangle
-        image.GetWidth(),       // width of source rectangle
-        image.GetHeight(),      // height of source rectangle
-        Gdiplus::UnitPixel);
-}
-
 bool CDarkTheme::haveMetrics = false;
 CDarkTheme::themeMetrics CDarkTheme::_metrics = CDarkTheme::themeMetrics();
 CDarkTheme::themeMetrics & CDarkTheme::GetMetrics(CDC *pDC) {
@@ -397,11 +376,10 @@ void CDarkTheme::dbg(CString text, ...) {
 UINT CDarkTheme::getResourceByDPI(CDC *pDC, const UINT *resources) {
     int index;
     int dpi = pDC->GetDeviceCaps(LOGPIXELSX);
-    if (dpi <= 96) index = 0;
-    else if (dpi <= 120) index = 1;
-    else if (dpi <= 144) index = 2;
-    else if (dpi <= 168) index = 3;
-    else if (dpi <= 196) index = 4;
+    if (dpi < 120) index = 0;
+    else if (dpi < 144) index = 1;
+    else if (dpi < 168) index = 2;
+    else if (dpi < 196) index = 3;
     else index = 4;
 
     return resources[index];
@@ -438,7 +416,8 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, 
             if (isHover) index += 1;
         }
         CRect drawRect(0, 0, size, size);
-        drawRect.OffsetRect(rectCheck.left + (rectCheck.Width() - size) / 2, rectCheck.top + (rectCheck.Height() - size) / 2);
+        //drawRect.OffsetRect(rectCheck.left + (rectCheck.Width() - size) / 2, rectCheck.top + (rectCheck.Height() - size) / 2);
+        drawRect.OffsetRect(rectCheck.left, rectCheck.top + (rectCheck.Height() - size) / 2);
         if (!isRadio && !isChecked) { //we can draw this w/o BMPs
             CBrush brush(borderClr);
             pDC->FrameRect(drawRect, &brush);
@@ -483,18 +462,6 @@ bool CDarkTheme::canUseWin10DarkTheme() {
     return false;
 }
 
-
-CSize CDarkTheme::GetAveCharSize(HDC dc) {
-    TEXTMETRIC tm;
-    GetTextMetrics(dc, &tm);
-
-    CString buffer = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-
-    CSize result;
-    GetTextExtentPoint32W(dc, buffer, 52, &result);
-
-    result.cx = (result.cx / 26 + 1) / 2; //div uses trunc rounding; we want arithmetic rounding
-    result.cy = tm.tmHeight;
-
-    return result;
+UINT CDarkTheme::defaultLogo() {
+    return IDF_LOGO4;
 }

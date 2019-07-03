@@ -150,12 +150,11 @@ public:
     static void flushMemDC(CDC * pDC, CDC & dcMem, CRect rect);
     static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
     static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
-    static void drawScaledImage(HDC hdc, CRect rect, UINT resID);
     static void dbg(CString text, ...);
     static UINT getResourceByDPI(CDC *pDC, const UINT * resources);
     static void drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
     static bool canUseWin10DarkTheme();
-    static CSize GetAveCharSize(HDC dc);
+    static UINT defaultLogo();
 
     enum CheckBoxStyle {
         CheckBoxRegular = 0,

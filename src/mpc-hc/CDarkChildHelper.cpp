@@ -84,10 +84,6 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                     allocatedGroupBoxes.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
                     SetWindowTheme(tChild->GetSafeHwnd(), L"", L"");
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_ETCHEDFRAME == (style & SS_ETCHEDFRAME)) {
-                    CDarkStatic * pObject = new CDarkStatic();
-                    allocatedStatics.push_back(pObject);
-                    pObject->SubclassWindow(tChild->GetSafeHwnd());
                 } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_ICON == (style & SS_ICON)) { //don't touch icons for now
                 } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_BITMAP == (style & SS_BITMAP)) { //don't touch BITMAPS for now
                 } else if (DLGC_STATIC == (lRes & DLGC_STATIC)) {

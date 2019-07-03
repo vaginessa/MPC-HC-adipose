@@ -23,6 +23,7 @@
 #include "mplayerc.h"
 #include "MainFrm.h"
 #include "PPageLogo.h"
+#include "CDarkTheme.h"
 
 // CPPageLogo dialog
 
@@ -35,6 +36,7 @@ CPPageLogo::CPPageLogo()
     m_logoids.AddTail(IDF_LOGO1);
     m_logoids.AddTail(IDF_LOGO2);
     m_logoids.AddTail(IDF_LOGO3);
+    m_logoids.AddTail(IDF_LOGO4);
     m_logoidpos = m_logoids.GetHeadPosition();
 }
 
@@ -74,8 +76,17 @@ BOOL CPPageLogo::OnInitDialog()
     UpdateData(FALSE);
 
     m_logoidpos = m_logoids.GetHeadPosition();
+    UINT useLogoId = s.nLogoId;
+    if ((UINT)-1 == useLogoId) { //if the user has never chosen a logo, we can try loading a theme default logo
+        if (s.bDarkThemeLoaded) {
+            useLogoId = CDarkTheme::defaultLogo();
+        } else {
+            useLogoId = DEF_LOGO;
+        }
+    }
+
     for (POSITION pos = m_logoids.GetHeadPosition(); pos; m_logoids.GetNext(pos)) {
-        if (m_logoids.GetAt(pos) == s.nLogoId) {
+        if (m_logoids.GetAt(pos) == useLogoId) {
             m_logoidpos = pos;
             break;
         }

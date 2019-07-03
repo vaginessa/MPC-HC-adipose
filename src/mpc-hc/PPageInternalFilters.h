@@ -22,8 +22,8 @@
 #pragma once
 
 #include <afxwin.h>
-#include "PPageBase.h"
-
+#include "CDarkPPageBase.h"
+#include "CDarkPlayerListCtrl.h"
 
 struct filter_t {
     LPCTSTR label;
@@ -46,7 +46,7 @@ struct filter_t {
     };
 };
 
-class CPPageInternalFiltersListBox : public CListCtrl
+class CPPageInternalFiltersListBox : public CDarkPlayerListCtrl
 {
     DECLARE_DYNAMIC(CPPageInternalFiltersListBox)
 
@@ -75,7 +75,7 @@ public:
 
 // CPPageInternalFilters dialog
 
-class CPPageInternalFilters : public CPPageBase
+class CPPageInternalFilters : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageInternalFilters)
 

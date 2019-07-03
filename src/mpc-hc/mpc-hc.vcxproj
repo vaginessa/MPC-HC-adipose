@@ -745,8 +745,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\bitmap1.bmp" />
-    <Image Include="res\bitmap2.bmp" />
     <Image Include="res\check_all.bmp" />
     <Image Include="res\check_audio.bmp" />
     <Image Include="res\check_video.bmp" />
@@ -764,6 +762,8 @@
     <Image Include="res\darktheme\radios-96.png" />
     <Image Include="res\darktheme\radioset.png" />
     <Image Include="res\darktheme\radiosethover.png" />
+    <Image Include="res\logo.4.png" />
+    <Image Include="res\logo.4_x64.png" />
     <Image Include="res\uncheck_all.bmp" />
   </ItemGroup>
   <ItemGroup>
