@@ -30,6 +30,9 @@ CDarkChildHelper::~CDarkChildHelper() {
     for (u_int i = 0; i < allocatedRadioButtons.size(); i++) {
         delete allocatedRadioButtons[i];
     }
+    for (u_int i = 0; i < allocated3States.size(); i++) {
+        delete allocated3States[i];
+    }
     for (u_int i = 0; i < allocatedEdits.size(); i++) {
         delete allocatedEdits[i];
     }
@@ -48,7 +51,7 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
         if (darkContentBrush.m_hObject == nullptr) darkContentBrush.CreateSolidBrush(CDarkTheme::ContentBGColor);
         if (darkWindowBrush.m_hObject == nullptr) darkWindowBrush.CreateSolidBrush(CDarkTheme::WindowBGColor);
         if (darkControlAreaBrush.m_hObject == nullptr) darkControlAreaBrush.CreateSolidBrush(CDarkTheme::ControlAreaBGColor);
-        if (dialogFont.m_hObject == nullptr) CDarkTheme::getUIFont(dialogFont, wnd->GetWindowDC(), CDarkTheme::CDDialogFont);
+        if (dialogFont.m_hObject == nullptr) CDarkTheme::getFontByType(dialogFont, wnd->GetWindowDC(), CDarkTheme::CDDialogFont);
 
         CWnd* pChild = wnd->GetWindow(GW_CHILD);
         while (pChild) {
@@ -73,11 +76,16 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
                         allocatedCheckBoxes.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    } else if (DLGC_BUTTON == (lRes & DLGC_BUTTON) && (buttonType == BS_3STATE || buttonType == BS_AUTO3STATE)) {
+                        CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
+                        allocated3States.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
                     } else if (DLGC_RADIOBUTTON == (lRes & DLGC_RADIOBUTTON) && (buttonType == BS_RADIOBUTTON || buttonType == BS_AUTORADIOBUTTON)) {
                         CDarkRadioOrCheck * pObject = new CDarkRadioOrCheck();
                         allocatedRadioButtons.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
                     } else { //what other buttons?
+                        int a = 1;
                     }
                 } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && buttonType == BS_GROUPBOX) {
                     CDarkGroupBox * pObject = new CDarkGroupBox();

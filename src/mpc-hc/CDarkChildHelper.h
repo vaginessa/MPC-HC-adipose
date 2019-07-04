@@ -25,6 +25,7 @@ protected:
     std::vector<CDarkLinkCtrl *> allocatedLinkCtrls;
     std::vector<CDarkRadioOrCheck *> allocatedCheckBoxes;
     std::vector<CDarkRadioOrCheck *> allocatedRadioButtons;
+    std::vector<CDarkRadioOrCheck *> allocated3States;
     std::vector<CDarkEdit *> allocatedEdits;
     std::vector<CDarkSpinButtonCtrl *> allocatedSpinButtons;
     std::vector<CDarkStatic *> allocatedStatics;

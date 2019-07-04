@@ -12,19 +12,22 @@ CDarkRadioOrCheck::~CDarkRadioOrCheck() {
 }
 
 void CDarkRadioOrCheck::PreSubclassWindow() {
-    buttonStyle = GetButtonStyle();
+    DWORD winButtonType = (GetButtonStyle() & BS_TYPEMASK);
 
-    if (BS_RADIOBUTTON == (buttonStyle & BS_RADIOBUTTON) || BS_AUTORADIOBUTTON == (buttonStyle & BS_AUTORADIOBUTTON)) {
+    if (BS_RADIOBUTTON == winButtonType || BS_AUTORADIOBUTTON == winButtonType) {
         buttonType = radioType;
-        isAuto = BS_AUTORADIOBUTTON == (buttonStyle & BS_AUTORADIOBUTTON);
-    } else if (BS_CHECKBOX == (buttonStyle & BS_CHECKBOX) || BS_AUTOCHECKBOX == (buttonStyle & BS_AUTOCHECKBOX)) {
+        isAuto = BS_AUTORADIOBUTTON == winButtonType;
+    } else if (BS_3STATE == winButtonType || BS_AUTO3STATE == winButtonType) {
+        buttonType = threeStateType;
+        isAuto = BS_AUTO3STATE == winButtonType;
+    } else if (BS_CHECKBOX == winButtonType || BS_AUTOCHECKBOX == winButtonType) {
         buttonType = checkType;
-        isAuto = BS_AUTOCHECKBOX == (buttonStyle & BS_AUTOCHECKBOX);
+        isAuto = BS_AUTOCHECKBOX == winButtonType;
     }
     ASSERT(buttonType != unknownType);
 
     buttonStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
-    CDarkTheme::getUIFont(font, GetWindowDC(), CDarkTheme::CDDialogFont);
+    CDarkTheme::getFontByType(font, GetWindowDC(), CDarkTheme::CDDialogFont);
     SetFont(&font); //DSUtil checks metrics and resizes.  if our font is a bit different, things can look funny
     CButton::PreSubclassWindow();
 }
@@ -51,7 +54,7 @@ void CDarkRadioOrCheck::OnPaint() {
         bool isDisabled = !IsWindowEnabled();
         bool isFocused = (GetFocus() == this);
 
-        bool isChecked = (SendMessage(BM_GETCHECK) == BST_CHECKED);
+        LRESULT checkState = SendMessage(BM_GETCHECK);
 
         CRect rectCheck;
         CDarkTheme::themeMetrics &tm = CDarkTheme::GetMetrics(&dc);
@@ -72,9 +75,11 @@ void CDarkRadioOrCheck::OnPaint() {
         rectCheck.bottom = rectCheck.top + cbHeight;
 
         if (buttonType == checkType) {
-            CDarkTheme::drawCheckBox(isChecked, isHover, true, rectCheck, &dc);
+            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
+        } else if (buttonType == threeStateType) {
+            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
         } else if (buttonType == radioType) {
-            CDarkTheme::drawCheckBox(isChecked, isHover, true, rectCheck, &dc, true);
+            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc, true);
         }
 
         CString sTitle;

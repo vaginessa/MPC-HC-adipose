@@ -20,6 +20,8 @@
 
 #include "stdafx.h"
 #include "ColorButton.h"
+#include "mplayerc.h"
+#include "CDarkTheme.h"
 
 CColorButton::CColorButton()
 {
@@ -44,9 +46,15 @@ void CColorButton::Initialize()
         m_bInitialized = true;
     }
 
-    VERIFY(m_penInside.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_BTNFACE)));
-    VERIFY(m_penBorder.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_BTNSHADOW)));
-    VERIFY(m_penBorderFocus.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_HIGHLIGHT)));
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        VERIFY(m_penInside.CreatePen(PS_INSIDEFRAME, 1, CDarkTheme::NoBorderColor));
+        VERIFY(m_penBorder.CreatePen(PS_INSIDEFRAME, 1, CDarkTheme::ButtonBorderOuterColor));
+        VERIFY(m_penBorderFocus.CreatePen(PS_INSIDEFRAME, 1, CDarkTheme::ButtonBorderInnerFocusedColor));
+    } else {
+        VERIFY(m_penInside.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_BTNFACE)));
+        VERIFY(m_penBorder.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_BTNSHADOW)));
+        VERIFY(m_penBorderFocus.CreatePen(PS_INSIDEFRAME, 1, GetSysColor(COLOR_HIGHLIGHT)));
+    }
 }
 
 void CColorButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)

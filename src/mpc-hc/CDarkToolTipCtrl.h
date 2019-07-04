@@ -26,7 +26,8 @@ public:
 	CDarkToolTipCtrl();
 	virtual ~CDarkToolTipCtrl();
     void enableFlickerHelper();
-    static void paintTT(CPaintDC& dc, CDarkToolTipCtrl* tt);
+	static void drawText(CDC & dc, CDarkToolTipCtrl * tt, CRect & rect, bool calcRect=false);
+    static void paintTT(CDC& dc, CDarkToolTipCtrl* tt);
     DECLARE_MESSAGE_MAP()
     afx_msg void OnPaint();
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);

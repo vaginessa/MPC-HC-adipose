@@ -8,6 +8,7 @@ CDarkPlayerListCtrl::CDarkPlayerListCtrl(int tStartEditingDelay) : CPlayerListCt
     fullRowSelect = false;
     darkSBHelper = nullptr;
     hasCheckedColors = false;
+    hasCBImages = false;
     if (!CDarkTheme::canUseWin10DarkTheme()) {
         darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
     }
@@ -30,6 +31,12 @@ void CDarkPlayerListCtrl::PreSubclassWindow() {
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
+        CToolTipCtrl *t = GetToolTips();
+        if (nullptr != t) {
+            lvsToolTip.SubclassWindow(t->m_hWnd);
+        }
+        CDarkTheme::getFontByType(MPCThemeFont, GetWindowDC(), CDarkTheme::CDMessageFont);
+        SetFont(&MPCThemeFont);
     }
     subclassHeader();
     CPlayerListCtrl::PreSubclassWindow();
@@ -77,6 +84,10 @@ void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
     } else {
         SetExtendedStyle(GetExtendedStyle() | styles);
     }
+}
+
+void CDarkPlayerListCtrl::setHasCBImages(bool on) {
+    hasCBImages = on;
 }
 
 
@@ -219,22 +230,32 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                 pDC->SetBkColor(bgColor);
 
 
-                CRect rect, rIcon, rText, rTextBG, rectDC;
-                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+                CRect rect, rRow, rIcon, rText, rTextBG, rectDC;
+                GetItemRect(nItem, rRow, LVIR_BOUNDS);
                 GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
                 GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
+                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+                if (0 == nSubItem) { //getsubitemrect gives whole row for 0/LVIR_BOUNDS.  but LVIR_LABEL is limited to text bounds.  MSDN undocumented behavior
+                    rect.right = rText.right;
+                }
 
-                rectDC = rect;
+                rectDC = rRow;
                 CDC dcMem;
                 CBitmap bmMem;
                 CDarkTheme::initMemDC(pDC, dcMem, bmMem, rectDC);
                 rect.OffsetRect(-rectDC.TopLeft());
                 rText.OffsetRect(-rectDC.TopLeft());
                 rIcon.OffsetRect(-rectDC.TopLeft());
+                rRow.OffsetRect(-rectDC.TopLeft());
 
+                if (!IsWindowEnabled() && 0 == nSubItem) { //no gridlines, bg for full row
+                    dcMem.FillSolidRect(rRow, CDarkTheme::ListCtrlDisabledBGColor);
+                } else {
+                    dcMem.FillSolidRect(rect, CDarkTheme::ContentBGColor); //no flicker because we have a memory dc
+                }
+                
                 rTextBG = rText;
-
-
+                
                 HDITEM hditem = { 0 };
                 hditem.mask = HDI_FORMAT;
                 GetHeaderCtrl()->GetItem(nSubItem, &hditem);
@@ -254,36 +275,48 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                     rText.right -= 6;
                 }
 
-                if (!IsWindowEnabled()) { //no gridlines, bg for full row
-                    dcMem.FillSolidRect(rect, CDarkTheme::ListCtrlDisabledBGColor);
-                }
-
                 bool isChecked = false;
-                if (0 != (GetStyle() & LVS_EX_CHECKBOXES)) {
+                int contentLeft = rText.left;
+                if (rIcon.Width() > 0) {
                     LVITEM lvi = { 0 };
                     lvi.iItem = nItem;
                     lvi.iSubItem = 0;
                     lvi.mask = LVIF_IMAGE;
                     GetItem(&lvi);
-                    //following is a bit of a hack.  mpc-hc often sets the "check" state by changing the image index only (not setcheck), so we will use that to control whether "checked" or not
-                    //better solution might be to load different check images based on theme
-                    isChecked = (BST_CHECKED == lvi.iImage || TRUE == GetCheck(nItem));
 
+                    isChecked = (BST_CHECKED == lvi.iImage);
                     if (nSubItem == 0) {
-                        if (rIcon.Width() > 0) { //we have checkbox images, but we will draw manually
+                        contentLeft = rIcon.left;
+                        if (hasCBImages) { //draw manually to match theme
                             rIcon.DeflateRect(0, 0, 1, 0);
-                            rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
+                            if (rIcon.Height() > rIcon.Width()) {
+                                rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
+                            }
 
                             CDarkTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
-                            if (align == HDF_LEFT)
-                                rText.left += 2; //more ident after image
-                        } else { //no images, so we will set the rect manually
-                            int cbSize = GetSystemMetrics(SM_CXMENUCHECK);
-                            int cbYMargin = (rect.Height() - cbSize) / 2;
-                            int cbXMargin = (rText.left - rect.left - cbSize) / 2;
-                            CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
-                            CDarkTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
+                        } else {
+                            DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
+                            if (dwStyle == LVS_ICON) {
+                            } else if (dwStyle == LVS_SMALLICON || dwStyle == LVS_LIST || dwStyle == LVS_REPORT) {
+                                CImageList *ilist = GetImageList(LVSIL_SMALL);
+                                int cx, cy;
+                                ImageList_GetIconSize(ilist->m_hImageList, &cx, &cy);
+                                rIcon.top += (rIcon.Height() - cy) / 2;
+                                ilist->Draw(&dcMem, lvi.iImage, rIcon.TopLeft(), ILD_TRANSPARENT);
+                            }
                         }
+                        if (align == HDF_LEFT)
+                            rText.left += 2; //more ident after image
+                    }
+                }
+                if (0 != (GetExtendedStyle() & LVS_EX_CHECKBOXES)) {
+                    isChecked = (TRUE == GetCheck(nItem));
+                    if (nSubItem == 0) {
+                        int cbSize = GetSystemMetrics(SM_CXMENUCHECK);
+                        int cbYMargin = (rect.Height() - cbSize - 1) / 2;
+                        int cbXMargin = (contentLeft - rect.left - cbSize) / 2;
+                        CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
+                        CDarkTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
                     }
                 }
 

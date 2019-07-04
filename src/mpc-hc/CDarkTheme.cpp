@@ -209,7 +209,7 @@ const UINT CDarkTheme::ThemeRadios[5] = {
     IDB_DT_RADIO_192,
 };
 
-void CDarkTheme::getUIFont(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight) {
+void CDarkTheme::getFontByFace(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight) {
     LOGFONT lf;
     memset(&lf, 0, sizeof(LOGFONT));
 
@@ -223,7 +223,7 @@ void CDarkTheme::getUIFont(CFont &font, CDC *pDC, wchar_t *fontName, int size, L
     font.CreateFontIndirect(&lf);
 }
 
-void CDarkTheme::getUIFont(CFont &font, CDC *pDC, int type, bool underline) {
+void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline) {
     themeMetrics tm = GetMetrics(pDC);
     NONCLIENTMETRICS &m = tm.ncMetrics;
 
@@ -266,7 +266,7 @@ void CDarkTheme::getUIFont(CFont &font, CDC *pDC, int type, bool underline) {
 CSize CDarkTheme::GetTextSize(CString str, HDC hDC, int type) {
     CDC* pDC = CDC::FromHandle(hDC);
     CFont font;
-    getUIFont(font, pDC, type);
+    getFontByType(font, pDC, type);
     CFont* pOldFont = pDC->SelectObject(&font);
 
     CSize cs = pDC->GetTextExtent(str);
@@ -385,7 +385,7 @@ UINT CDarkTheme::getResourceByDPI(CDC *pDC, const UINT *resources) {
     return resources[index];
 }
 
-void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio) {
+void CDarkTheme::drawCheckBox(UINT checkState, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio) {
     COLORREF borderClr, bgClr;
     COLORREF oldBkClr = pDC->GetBkColor(), oldTextClr = pDC->GetTextColor();
     if (isHover) {
@@ -409,7 +409,7 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, 
         int index;
         if (isRadio) {
             index = RadioRegular;
-            if (isChecked) index += 1;
+            if (checkState) index += 1;
             if (isHover) index += 2;
         } else {
             index = CheckBoxRegular;
@@ -418,11 +418,16 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, 
         CRect drawRect(0, 0, size, size);
         //drawRect.OffsetRect(rectCheck.left + (rectCheck.Width() - size) / 2, rectCheck.top + (rectCheck.Height() - size) / 2);
         drawRect.OffsetRect(rectCheck.left, rectCheck.top + (rectCheck.Height() - size) / 2);
-        if (!isRadio && !isChecked) { //we can draw this w/o BMPs
+
+        if (!isRadio && checkState != BST_CHECKED) { //we can draw this w/o BMPs
             CBrush brush(borderClr);
             pDC->FrameRect(drawRect, &brush);
             drawRect.DeflateRect(1, 1);
             pDC->FillSolidRect(drawRect, bgClr);
+            if (checkState == BST_INDETERMINATE) {
+                drawRect.DeflateRect(2, 2);
+                pDC->FillSolidRect(drawRect, CDarkTheme::TextFGColor);
+            }
         } else {
             int left = index * size;
             pDC->BitBlt(drawRect.left, drawRect.top, drawRect.Width(), drawRect.Height(), &mDC, left, 0, SRCCOPY);
@@ -432,7 +437,7 @@ void CDarkTheme::drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, 
         pDC->FrameRect(rectCheck, &brush);
         rectCheck.DeflateRect(1, 1);
         pDC->FillSolidRect(rectCheck, bgClr);
-        if (isChecked) {
+        if (checkState) {
             CBitmap checkBMP;
             CDC dcCheckBMP;
             dcCheckBMP.CreateCompatibleDC(pDC);

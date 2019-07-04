@@ -158,7 +158,7 @@ void CDarkHeaderCtrl::OnPaint() {
     CMemDC memDC(dc, this);
     CDC* pDC = &memDC.GetDC();
     CFont font;
-    CDarkTheme::getUIFont(font, pDC, CDarkTheme::CDDialogFont);
+    CDarkTheme::getFontByType(font, pDC, CDarkTheme::CDDialogFont);
     CFont* pOldFont = pDC->SelectObject(&font);
 
     CRect rectClip;

@@ -31,8 +31,30 @@ BEGIN_MESSAGE_MAP(CDarkToolTipCtrl, CToolTipCtrl)
     ON_WM_SIZE()
 END_MESSAGE_MAP()
 
+void CDarkToolTipCtrl::drawText(CDC& dc, CDarkToolTipCtrl* tt, CRect& rect, bool calcRect) {
+    CFont font;
+    CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDMessageFont);
+    CFont* pOldFont = dc.SelectObject(&font);
 
-void CDarkToolTipCtrl::paintTT(CPaintDC& dc, CDarkToolTipCtrl* tt) {
+    CString text;
+    tt->GetWindowText(text);
+    int maxWidth = tt->GetMaxTipWidth();
+    int calcStyle = 0;
+    if (calcRect) {
+        calcStyle = DT_CALCRECT;
+    }
+    rect.DeflateRect(6, 2);
+    if (maxWidth == -1)
+        dc.DrawText(text, rect, DT_VCENTER | DT_CENTER | DT_SINGLELINE | calcStyle);
+    else
+        dc.DrawText(text, rect, DT_LEFT | DT_WORDBREAK | calcStyle);
+    rect.InflateRect(6, 2); //when calculating, put it back
+
+
+    dc.SelectObject(pOldFont);
+}
+
+void CDarkToolTipCtrl::paintTT(CDC& dc, CDarkToolTipCtrl* tt) {
     CRect r;
     tt->GetClientRect(r);
 
@@ -41,23 +63,8 @@ void CDarkToolTipCtrl::paintTT(CPaintDC& dc, CDarkToolTipCtrl* tt) {
     CBrush fb;
     fb.CreateSolidBrush(CDarkTheme::TooltipBorderColor);
     dc.FrameRect(r, &fb);
-
-    CFont font;
-    CDarkTheme::getUIFont(font, &dc, CDarkTheme::uiTextFont, 9);
-    CFont* pOldFont = dc.SelectObject(&font);
-
     COLORREF oldClr = dc.SetTextColor(CDarkTheme::TextFGColor);
-    CString text;
-    tt->GetWindowText(text);
-    int maxWidth = tt->GetMaxTipWidth();
-    r.DeflateRect(6, 2);
-    if (maxWidth == -1)
-        dc.DrawText(text, r, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-    else
-        dc.DrawText(text, r, DT_LEFT | DT_WORDBREAK);
-
-
-    dc.SelectObject(pOldFont);
+    drawText(dc, tt, r, false);
     dc.SetTextColor(oldClr);
 }
 
@@ -78,6 +85,7 @@ BOOL CDarkToolTipCtrl::OnEraseBkgnd(CDC* pDC) {
 int CDarkToolTipCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (CToolTipCtrl::OnCreate(lpCreateStruct) == -1)
         return -1;
+
     makeHelper();
     return 0;
 }
@@ -93,7 +101,6 @@ void CDarkToolTipCtrl::makeHelper() {
     ClientToScreen(r);
 
     helper = new CDarkToolTipCtrlHelper(this);
-    RECT tr = { r.left, r.top, r.right, r.bottom };
     //do it the long way since no menu for parent
     helper->CreateEx(NULL, AfxRegisterWndClass(0), NULL, WS_POPUP | WS_DISABLED,
         r.left, r.top, r.right - r.left, r.bottom - r.top,
@@ -135,6 +142,7 @@ void CDarkToolTipCtrl::OnMove(int x, int y) {
 
 
 void CDarkToolTipCtrl::OnShowWindow(BOOL bShow, UINT nStatus) {
+
     CToolTipCtrl::OnShowWindow(bShow, nStatus);
     if (!bShow) {
         if (helper != nullptr) {
@@ -145,6 +153,23 @@ void CDarkToolTipCtrl::OnShowWindow(BOOL bShow, UINT nStatus) {
 }
 
 void CDarkToolTipCtrl::OnSize(UINT nType, int cx, int cy) {
+    //hack to make it fit if fonts differ from parent. can be manually avoided
+    //if the parent widget is set to same font (see CDarkPlayerListCtrl using MessageFont now)
+    if (GetMaxTipWidth() == -1) {
+        CWindowDC dc(this);
+
+        CRect cr, origCr, wr, origWr;
+        GetWindowRect(wr);
+        GetClientRect(cr);
+        origCr = cr;
+        origWr = wr;
+        drawText(dc, this, cr, true);//calculate crect required to fit the text
+        wr.right += cr.Width() - origCr.Width();//add the difference to the window
+        if (origWr.right != wr.right) {
+            MoveWindow(wr, FALSE);
+        }
+    }
+
     CToolTipCtrl::OnSize(nType, cx, cy);
     makeHelper();
 }

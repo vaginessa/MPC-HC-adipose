@@ -87,15 +87,6 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST2, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST3, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-/* no owner draw, override onpaint() instead
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_VIDRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_RMRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_QTRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_AUDRND_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_COMBO1, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_D3D9DEVICE_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageOutput), IDC_DX9RESIZER_COMBO, CBS_OWNERDRAWFIXED | CBS_HASSTRINGS);
-*/
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageDVD), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
         CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageExternalFilters), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
     }

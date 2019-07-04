@@ -121,8 +121,8 @@ public:
     static const int CheckWidth;
     static const int CheckHeight;
 
-    static void getUIFont(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
-    static void getUIFont(CFont &font, CDC *pDC, int type, bool underline = false);
+    static void getFontByFace(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
+    static void getFontByType(CFont &font, CDC *pDC, int type, bool underline = false);
     enum fontType {
         CDCaptionFont,
         CDSmallCaptionFont,
@@ -152,7 +152,7 @@ public:
     static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
     static void dbg(CString text, ...);
     static UINT getResourceByDPI(CDC *pDC, const UINT * resources);
-    static void drawCheckBox(bool isChecked, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
+    static void drawCheckBox(UINT checkState, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
     static bool canUseWin10DarkTheme();
     static UINT defaultLogo();
 

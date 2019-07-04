@@ -36,7 +36,7 @@ void CDarkStatic::OnPaint() {
         if (!sTitle.IsEmpty()) {
             CRect centerRect = rectItem;
             CFont font;
-            CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
+            CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDDialogFont);
             CFont* pOldFont = dc.SelectObject(&font);
 
             UINT uFormat = 0;

@@ -214,6 +214,7 @@ BOOL CPPageFormats::OnInitDialog()
     m_onoff.Create(12, 12, ILC_COLOR4 | ILC_MASK, 0, 3);
     m_onoff.Add(CBitmap::FromHandle(onoff), 0xffffff);
     m_list.SetImageList(&m_onoff, LVSIL_SMALL);
+    m_list.setHasCBImages(true);
 
     LoadSettings();
     CreateToolTip();

@@ -22,29 +22,29 @@
 #pragma once
 
 #include "../Subtitles/STS.h"
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
 
 
 // CPPageSubtitles dialog
 
-class CPPageSubtitles : public CPPageBase
+class CPPageSubtitles : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageSubtitles)
 
 private:
     BOOL m_bOverridePlacement;
     int m_nHorPos;
-    CSpinButtonCtrl m_horPosCtrl;
+    CDarkSpinButtonCtrl m_horPosCtrl;
     int m_nVerPos;
-    CSpinButtonCtrl m_verPosCtrl;
+    CDarkSpinButtonCtrl m_verPosCtrl;
     int m_nSPQSize;
-    CSpinButtonCtrl m_SPQSizeCtrl;
-    CComboBox m_cbSPQMaxRes;
+    CDarkSpinButtonCtrl m_SPQSizeCtrl;
+    CDarkComboBox m_cbSPQMaxRes;
     BOOL m_bDisableSubtitleAnimation;
     int m_nRenderAtWhenAnimationIsDisabled;
-    CSpinButtonCtrl m_renderAtCtrl;
+    CDarkSpinButtonCtrl m_renderAtCtrl;
     int m_nAnimationRate;
-    CSpinButtonCtrl m_animationRateCtrl;
+    CDarkSpinButtonCtrl m_animationRateCtrl;
     BOOL m_bAllowDroppingSubpic;
     int m_nSubDelayStep;
     BOOL m_bSubtitleARCompensation;

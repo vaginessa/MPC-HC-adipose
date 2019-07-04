@@ -14,6 +14,7 @@ private:
     enum RadioOrCheck {
         radioType,
         checkType,
+        threeStateType,
         unknownType
     };
     RadioOrCheck buttonType;

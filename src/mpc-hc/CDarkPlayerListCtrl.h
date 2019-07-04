@@ -19,6 +19,7 @@ public:
     void setCheckedColors(COLORREF checkedBG, COLORREF checkedText, COLORREF uncheckedText);
     void subclassHeader();
     void setAdditionalStyles(DWORD styles);
+    void setHasCBImages(bool on);
 
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
@@ -32,13 +33,15 @@ public:
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
     CDarkScrollBarHelper *darkSBHelper;
-    CDarkToolTipCtrl darkTT;
+    CDarkToolTipCtrl darkTT, lvsToolTip;
     UINT_PTR darkTTcid;
     COLORREF checkedBGClr, checkedTextClr, uncheckedTextClr;
     bool hasCheckedColors;
+    bool hasCBImages;
     bool darkGridLines;
     bool fullRowSelect;
     CDarkHeaderCtrl darkHdrCtrl;
+    CFont MPCThemeFont;
     virtual void PreSubclassWindow();
 public:
     void doDefault() { Default(); };

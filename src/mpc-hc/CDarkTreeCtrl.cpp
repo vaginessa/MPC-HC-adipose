@@ -65,7 +65,7 @@ void CDarkTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
 
             if (!CDarkTheme::canUseWin10DarkTheme()) { //regular theme is a bit ugly but better than Explorer theme.  we will clean up the fonts at least
                 pNMCD->uItemState &= ~(CDIS_FOCUS | CDIS_HOT | CDIS_SELECTED);
-                if (font.m_hObject == nullptr) CDarkTheme::getUIFont(font, GetWindowDC(), CDarkTheme::CDMenuFont);
+                if (font.m_hObject == nullptr) CDarkTheme::getFontByType(font, GetWindowDC(), CDarkTheme::CDMenuFont);
                 ::SelectObject(pNMCD->hdc, font.GetSafeHandle());
             }
 

@@ -270,7 +270,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
         COLORREF oldTextFGColor = pDC->SetTextColor(TextFGColor);
         CFont font;
-        CDarkTheme::getUIFont(font, pDC, CDarkTheme::CDMenuFont);
+        CDarkTheme::getFontByType(font, pDC, CDarkTheme::CDMenuFont);
         CFont* pOldFont = pDC->SelectObject(&font);
 
 
@@ -299,7 +299,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
             if (mInfo.hSubMenu) {
                 CFont sfont;
-                CDarkTheme::getUIFont(sfont, pDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CDarkTheme::getFontByFace(sfont, pDC, CDarkTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
 
                 pDC->SelectObject(&sfont);
                 pDC->SetTextColor(ArrowColor);
@@ -318,7 +318,7 @@ void CDarkMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
                     size = 10;
                 }
                 CFont bFont;
-                CDarkTheme::getUIFont(bFont, pDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CDarkTheme::getFontByFace(bFont, pDC, CDarkTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
                 pDC->SelectObject(&bFont);
                 pDC->SetTextColor(TextFGColor);
                 pDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);

@@ -104,7 +104,8 @@ void CDarkSliderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
 }
 
 void CDarkSliderCtrl::invalidateThumb() {
-    SetRangeMax(100, TRUE);
+    int max = GetRangeMax();
+    SetRangeMax(max, TRUE);
 }
 
 

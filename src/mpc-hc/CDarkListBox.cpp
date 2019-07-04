@@ -48,7 +48,7 @@ void CDarkListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     GetText(lpDrawItemStruct->itemID, strText);
 
     CFont font;
-    CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
+    CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDDialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     dc.DrawText(strText, strText.GetLength(), &lpDrawItemStruct->rcItem, DT_VCENTER | DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
 
@@ -200,7 +200,7 @@ void CDarkListBox::OnMouseMove(UINT nFlags, CPoint point) {
 void CDarkListBox::setIntegralHeight() {
     CWindowDC dc(this);
     CFont font;
-    CDarkTheme::getUIFont(font, &dc, CDarkTheme::CDDialogFont);
+    CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDDialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     CRect r(0, 0, 99, 99);
     CString test = _T("W");
