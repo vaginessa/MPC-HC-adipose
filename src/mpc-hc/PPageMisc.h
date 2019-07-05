@@ -21,12 +21,17 @@
 #pragma once
 
 #include <afxcmn.h>
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
+#include "CDarkButton.h"
+#include "CDarkRadioOrCheck.h"
+#include "CDarkEdit.h"
+#include "CDarkSpinButtonCtrl.h"
+#include "CDarkSliderCtrl.h"
 
 
 // CPPageMisc dialog
 
-class CPPageMisc : public CPPageBase
+class CPPageMisc : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageMisc)
 
@@ -40,9 +45,9 @@ private:
     CString m_sHue;
     CString m_sSaturation;
 
-    CButton m_updaterAutoCheckCtrl;
-    CEdit m_updaterDelayCtrl;
-    CSpinButtonCtrl m_updaterDelaySpin;
+    CDarkRadioOrCheck m_updaterAutoCheckCtrl;
+    CDarkEdit m_updaterDelayCtrl;
+    CDarkSpinButtonCtrl m_updaterDelaySpin;
 
     int m_nUpdaterAutoCheck;
     int m_nUpdaterDelay;
@@ -62,11 +67,11 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 public:
-    CSliderCtrl m_SliContrast;
-    CSliderCtrl m_SliBrightness;
-    CSliderCtrl m_SliHue;
-    CSliderCtrl m_SliSaturation;
-    CButton m_ExportKeys;
+    CDarkSliderCtrl m_SliContrast;
+    CDarkSliderCtrl m_SliBrightness;
+    CDarkSliderCtrl m_SliHue;
+    CDarkSliderCtrl m_SliSaturation;
+    CDarkButton m_ExportKeys;
     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg void OnBnClickedReset();
 

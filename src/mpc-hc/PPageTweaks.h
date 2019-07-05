@@ -21,12 +21,12 @@
 
 #pragma once
 
-#include "PPageBase.h"
-
+#include "CDarkPPageBase.h"
+#include "CDarkComboBox.h"
 
 // CPPageTweaks dialog
 
-class CPPageTweaks : public CPPageBase
+class CPPageTweaks : public CDarkPPageBase
 {
     DECLARE_DYNAMIC(CPPageTweaks)
 
@@ -46,10 +46,10 @@ public:
     BOOL m_fUseSearchInFolder;
     BOOL m_fUseTimeTooltip;
     BOOL m_bHideWindowedMousePointer;
-    CComboBox m_TimeTooltipPosition;
-    CComboBox m_FontSize;
-    CComboBox m_FontType;
-    CComboBox m_FastSeekMethod;
+    CDarkComboBox m_TimeTooltipPosition;
+    CDarkComboBox m_FontSize;
+    CDarkComboBox m_FontType;
+    CDarkComboBox m_FastSeekMethod;
     int m_nOSDSize;
     CString m_strOSDFont;
 

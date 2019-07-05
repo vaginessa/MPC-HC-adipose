@@ -37,8 +37,8 @@ void CDarkPlayerListCtrl::PreSubclassWindow() {
         }
         CDarkTheme::getFontByType(MPCThemeFont, GetWindowDC(), CDarkTheme::CDMessageFont);
         SetFont(&MPCThemeFont);
+        subclassHeader();
     }
-    subclassHeader();
     CPlayerListCtrl::PreSubclassWindow();
 }
 

@@ -28,7 +28,7 @@ void CDarkComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF bkCol
     dc.SetTextColor(CDarkTheme::TextFGColor);
 
     CRect textRect = rText;
-    textRect.left += 3;
+    //textRect.left += 3;
 
     CFont font;
     CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDDialogFont);
