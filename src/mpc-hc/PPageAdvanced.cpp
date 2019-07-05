@@ -26,7 +26,7 @@
 #include <strsafe.h>
 
 CPPageAdvanced::CPPageAdvanced()
-    : CPPageBase(IDD, IDD)
+    : CDarkPPageBase(IDD, IDD)
 {
     EventRouter::EventSelection fires;
     fires.insert(MpcEvent::DEFAULT_TOOLBAR_SIZE_CHANGED);
@@ -53,7 +53,8 @@ BOOL CPPageAdvanced::OnInitDialog()
     }
 
     SetRedraw(FALSE);
-    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_AUTOSIZECOLUMNS | LVS_EX_DOUBLEBUFFER | LVS_EX_INFOTIP);
+    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_AUTOSIZECOLUMNS /*| LVS_EX_DOUBLEBUFFER */| LVS_EX_INFOTIP);
+    m_list.setAdditionalStyles(LVS_EX_DOUBLEBUFFER);
     m_list.InsertColumn(COL_NAME, ResStr(IDS_PPAGEADVANCED_COL_NAME), LVCFMT_LEFT);
     m_list.InsertColumn(COL_VALUE, ResStr(IDS_PPAGEADVANCED_COL_VALUE), LVCFMT_RIGHT);
 
@@ -190,7 +191,7 @@ bool CPPageAdvanced::IsDefault(ADVANCED_SETTINGS eSetting) const
     return m_hiddenOptions.at(eSetting)->IsDefault();
 }
 
-BEGIN_MESSAGE_MAP(CPPageAdvanced, CPPageBase)
+BEGIN_MESSAGE_MAP(CPPageAdvanced, CDarkPPageBase)
     ON_BN_CLICKED(IDC_BUTTON1, OnBnClickedDefaultButton)
     ON_UPDATE_COMMAND_UI(IDC_BUTTON1, OnUpdateDefaultButton)
     ON_NOTIFY(NM_DBLCLK, IDC_LIST1, OnNMDblclk)

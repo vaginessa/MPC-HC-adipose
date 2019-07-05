@@ -20,13 +20,16 @@
 
 #pragma once
 
-#include "PPageBase.h"
+#include "CDarkPPageBase.h"
 #include "resource.h"
 #include "EventDispatcher.h"
 #include <utility>
 #include <memory>
 #include <map>
 #include <deque>
+#include "CDarkComboBox.h"
+#include "CDarkSpinButtonCtrl.h"
+#include "CDarkPlayerListCtrl.h"
 
 class SettingsBase
 {
@@ -167,7 +170,7 @@ public:
     }
 };
 
-class CPPageAdvanced : public CPPageBase
+class CPPageAdvanced : public CDarkPPageBase
 {
 public:
     CPPageAdvanced();
@@ -206,8 +209,8 @@ private:
     EventClient m_eventc;
 
     CFont m_fontBold;
-    CComboBox m_comboBox;
-    CSpinButtonCtrl m_spinButtonCtrl;
+    CDarkComboBox m_comboBox;
+    CDarkSpinButtonCtrl m_spinButtonCtrl;
 
     std::map<ADVANCED_SETTINGS, std::shared_ptr<SettingsBase>> m_hiddenOptions;
 
@@ -227,7 +230,7 @@ private:
     };
 
 protected:
-    CListCtrl m_list;
+    CDarkPlayerListCtrl m_list;
 
     virtual void DoDataExchange(CDataExchange* pDX) override;
     virtual BOOL OnInitDialog() override;
