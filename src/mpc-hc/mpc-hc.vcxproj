@@ -171,6 +171,8 @@
     <ClCompile Include="CDarkTreeCtrl.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
+    <ClCompile Include="CMPCThemeCmdUIDialog.cpp" />
+    <ClCompile Include="CMPCThemeResizableDialog.cpp" />
     <ClCompile Include="ColorButton.cpp" />
     <ClCompile Include="ComPropertyPage.cpp" />
     <ClCompile Include="ComPropertySheet.cpp" />
@@ -337,6 +339,8 @@
     <ClInclude Include="CDarkTreeCtrl.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
+    <ClInclude Include="CMPCThemeCmdUIDialog.h" />
+    <ClInclude Include="CMPCThemeResizableDialog.h" />
     <ClInclude Include="ColorButton.h" />
     <ClInclude Include="ComPropertyPage.h" />
     <ClInclude Include="ComPropertySheet.h" />

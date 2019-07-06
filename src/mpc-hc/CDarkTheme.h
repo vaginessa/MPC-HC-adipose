@@ -122,7 +122,7 @@ public:
     static const int CheckHeight;
 
     static void getFontByFace(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
-    static void getFontByType(CFont &font, CDC *pDC, int type, bool underline = false);
+    static void getFontByType(CFont &font, CDC *pDC, int type, bool underline = false, bool bold = false);
     enum fontType {
         CDCaptionFont,
         CDSmallCaptionFont,

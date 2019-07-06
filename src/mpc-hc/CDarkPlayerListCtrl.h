@@ -20,15 +20,18 @@ public:
     void subclassHeader();
     void setAdditionalStyles(DWORD styles);
     void setHasCBImages(bool on);
+    void setItemTextWithDefaultFlag(int nItem, int nSubItem, LPCTSTR lpszText, bool flagged);
+    void setFlaggedItem(int iItem, bool flagged);
+    bool getFlaggedItem(int iItem);
 
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-    afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg BOOL OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
     afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
-    afx_msg void OnCustomDraw(NMHDR * pNMHDR, LRESULT * pResult);
+    afx_msg BOOL OnCustomDraw(NMHDR * pNMHDR, LRESULT * pResult);
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
@@ -36,12 +39,13 @@ protected:
     CDarkToolTipCtrl darkTT, lvsToolTip;
     UINT_PTR darkTTcid;
     COLORREF checkedBGClr, checkedTextClr, uncheckedTextClr;
+    std::map<int, bool> flaggedItems;
     bool hasCheckedColors;
     bool hasCBImages;
     bool darkGridLines;
     bool fullRowSelect;
     CDarkHeaderCtrl darkHdrCtrl;
-    CFont MPCThemeFont;
+    CFont listMPCThemeFont, listMPCThemeFontBold;
     virtual void PreSubclassWindow();
 public:
     void doDefault() { Default(); };

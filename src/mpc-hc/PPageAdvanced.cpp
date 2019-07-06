@@ -91,10 +91,11 @@ void CPPageAdvanced::InitSettings()
 
     auto addBoolItem = [this](int nItem, CString name, bool defaultValue, bool & settingReference, CString toolTipText) {
         auto pItem = std::make_shared<SettingsBool>(name, defaultValue, settingReference, toolTipText);
+        auto eSetting = static_cast<ADVANCED_SETTINGS>(nItem);
         int iItem = m_list.InsertItem(nItem, pItem->GetName());
-        m_list.SetItemText(iItem, COL_VALUE, (pItem->GetValue() ? m_strTrue : m_strFalse));
+        m_hiddenOptions[eSetting] = pItem;
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, (pItem->GetValue() ? m_strTrue : m_strFalse), !IsDefault(eSetting));
         m_list.SetItemData(iItem, nItem);
-        m_hiddenOptions[static_cast<ADVANCED_SETTINGS>(nItem)] = pItem;
     };
 
     // The range parameter defines range (inclusive) that particular option can have.
@@ -106,29 +107,33 @@ void CPPageAdvanced::InitSettings()
             settingReference = defaultValue;
         }
         auto pItem = std::make_shared<SettingsInt>(name, defaultValue, settingReference, range, toolTipText);
+        auto eSetting = static_cast<ADVANCED_SETTINGS>(nItem);
         int iItem = m_list.InsertItem(nItem, pItem->GetName());
+        m_hiddenOptions[eSetting] = pItem;
+
         CString str;
         str.Format(_T("%d"), pItem->GetValue());
-        m_list.SetItemText(iItem, COL_VALUE, str);
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, str, !IsDefault(eSetting));
         m_list.SetItemData(iItem, nItem);
-        m_hiddenOptions[static_cast<ADVANCED_SETTINGS>(nItem)] = pItem;
     };
 
     // The list parameter defines list of the strings that will be in the combobox.
     auto addComboItem = [this](int nItem, CString name, int defaultValue, int& settingReference, std::deque<CString> list, CString toolTipText) {
         auto pItem = std::make_shared<SettingsCombo>(name, defaultValue, settingReference, list, toolTipText);
+        auto eSetting = static_cast<ADVANCED_SETTINGS>(nItem);
         int iItem = m_list.InsertItem(nItem, pItem->GetName());
-        m_list.SetItemText(iItem, COL_VALUE, list.at(settingReference));
+        m_hiddenOptions[eSetting] = pItem;
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, list.at(settingReference), !IsDefault(eSetting));
         m_list.SetItemData(iItem, nItem);
-        m_hiddenOptions[static_cast<ADVANCED_SETTINGS>(nItem)] = pItem;
     };
 
     auto addCStringItem = [this](int nItem, CString name, CString defaultValue, CString & settingReference, CString toolTipText) {
         auto pItem = std::make_shared<SettingsCString>(name, defaultValue, settingReference, toolTipText);
+        auto eSetting = static_cast<ADVANCED_SETTINGS>(nItem);
         int iItem = m_list.InsertItem(nItem, pItem->GetName());
-        m_list.SetItemText(iItem, COL_VALUE, pItem->GetValue());
+        m_hiddenOptions[eSetting] = pItem;
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, pItem->GetValue(), !IsDefault(eSetting));
         m_list.SetItemData(iItem, nItem);
-        m_hiddenOptions[static_cast<ADVANCED_SETTINGS>(nItem)] = pItem;
     };
 
     addBoolItem(HIDE_WINDOWED, IDS_RS_HIDE_WINDOWED_CONTROLS, false, s.bHideWindowedControls, StrRes(IDS_PPAGEADVANCED_HIDE_WINDOWED));
@@ -237,7 +242,7 @@ void CPPageAdvanced::OnBnClickedDefaultButton()
             UNREACHABLE_CODE();
         }
 
-        m_list.SetItemText(iItem, COL_VALUE, str);
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
         UpdateData(FALSE);
         m_list.Update(iItem);
         SetModified();
@@ -263,8 +268,8 @@ void CPPageAdvanced::OnNMDblclk(NMHDR* pNMHDR, LRESULT* pResult)
         auto pItem = m_hiddenOptions.at(eSetting);
         if (auto pItemBool = std::dynamic_pointer_cast<SettingsBool>(pItem)) {
             pItemBool->Toggle();
-            m_list.SetItemText(pNMItemActivate->iItem, COL_VALUE,
-                               pItemBool->GetValue() ? m_strTrue : m_strFalse);
+            m_list.setItemTextWithDefaultFlag(pNMItemActivate->iItem, COL_VALUE,
+                               pItemBool->GetValue() ? m_strTrue : m_strFalse, !IsDefault(eSetting));
             if (pItemBool->GetValue()) {
                 CheckRadioButton(IDC_RADIO1, IDC_RADIO2, IDC_RADIO1);
             } else {
@@ -378,7 +383,7 @@ void CPPageAdvanced::OnBnClickedRadio1()
 
         if (auto pItemBool = std::dynamic_pointer_cast<SettingsBool>(pItem)) {
             pItemBool->SetValue(true);
-            m_list.SetItemText(iItem, COL_VALUE, m_strTrue);
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
             UpdateData(FALSE);
             m_list.Update(iItem);
             SetModified();
@@ -395,7 +400,7 @@ void CPPageAdvanced::OnBnClickedRadio2()
 
         if (auto pItemBool = std::dynamic_pointer_cast<SettingsBool>(pItem)) {
             pItemBool->SetValue(false);
-            m_list.SetItemText(iItem, COL_VALUE, m_strFalse);
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
             UpdateData(FALSE);
             m_list.Update(iItem);
             SetModified();
@@ -414,7 +419,7 @@ void CPPageAdvanced::OnCbnSelchangeCombobox()
         if (auto pItemCombo = std::dynamic_pointer_cast<SettingsCombo>(pItem)) {
             auto list = pItemCombo->GetList();
             pItemCombo->SetValue(iItem);
-            m_list.SetItemText(nItem, COL_VALUE, list.at(iItem));
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
             UpdateData(FALSE);
             m_list.Update(nItem);
             if (m_comboBox.IsWindowVisible()) {
@@ -459,7 +464,7 @@ void CPPageAdvanced::OnEnChangeEdit()
         }
 
         if (bChanged) {
-            m_list.SetItemText(iItem, COL_VALUE, str);
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
             m_list.Update(iItem);
             UpdateData(FALSE);
             SetModified();

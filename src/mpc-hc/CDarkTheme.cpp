@@ -223,7 +223,7 @@ void CDarkTheme::getFontByFace(CFont &font, CDC *pDC, wchar_t *fontName, int siz
     font.CreateFontIndirect(&lf);
 }
 
-void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline) {
+void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline, bool bold) {
     themeMetrics tm = GetMetrics(pDC);
     NONCLIENTMETRICS &m = tm.ncMetrics;
 
@@ -249,14 +249,15 @@ void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline) 
     } else {
         lf = &m.lfMessageFont;
     }
-    if (underline) {
+    if (underline || bold) {
         LOGFONT tlf;
         memset(&tlf, 0, sizeof(LOGFONT));
         tlf.lfHeight = lf->lfHeight;
         tlf.lfQuality = lf->lfQuality;
         tlf.lfWeight = lf->lfWeight;
         wcsncpy_s(tlf.lfFaceName, lf->lfFaceName, LF_FACESIZE);
-        tlf.lfUnderline = TRUE;
+        tlf.lfUnderline = underline;
+        if (bold) tlf.lfWeight = FW_BOLD;
         font.CreateFontIndirect(&tlf);
     } else {
         font.CreateFontIndirect(lf);

@@ -20,14 +20,16 @@
 
 #pragma once
 
-#include "ResizableLib/ResizableDialog.h"
+#include "CMPCThemeResizableDialog.h"
 
 #include "EventDispatcher.h"
 #include "PixelShaderCompiler.h"
 #include "Shaders.h"
 #include "TimerWrappers.h"
+#include "CDarkComboBox.h"
+#include "CDarkEdit.h"
 
-class CModelessDialog : public CResizableDialog
+class CModelessDialog : public CMPCThemeResizableDialog
 {
 public:
     CModelessDialog(UINT nIDTemplate);
@@ -61,8 +63,8 @@ private:
 
 protected:
     int m_iVersion;
-    CComboBox m_Shaders;
-    CEdit m_DebugInfo;
+    CDarkComboBox m_Shaders;
+    CDarkEdit m_DebugInfo;
     CPixelShaderCompiler m_Compiler;
 
     EventClient m_eventc;

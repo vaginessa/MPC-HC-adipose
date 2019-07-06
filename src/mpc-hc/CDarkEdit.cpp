@@ -19,6 +19,11 @@ END_MESSAGE_MAP()
 void CDarkEdit::PreSubclassWindow() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         ModifyStyleEx(WS_BORDER, WS_EX_STATICEDGE, 0);
+        if (CDarkTheme::canUseWin10DarkTheme()) {
+            SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
+        } else {
+            SetWindowTheme(GetSafeHwnd(), L"", NULL);
+        }
     } else {
         __super::PreSubclassWindow();
     }

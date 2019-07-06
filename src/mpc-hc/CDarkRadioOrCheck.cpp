@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CDarkRadioOrCheck.h"
 #include "CDarkTheme.h"
+#include "CDarkButton.h"
 
 CDarkRadioOrCheck::CDarkRadioOrCheck() {
     isHover = false;
@@ -56,86 +57,94 @@ void CDarkRadioOrCheck::OnPaint() {
 
         LRESULT checkState = SendMessage(BM_GETCHECK);
 
-        CRect rectCheck;
-        CDarkTheme::themeMetrics &tm = CDarkTheme::GetMetrics(&dc);
-        int cbWidth = GetSystemMetrics(SM_CXMENUCHECK);
-        int cbHeight = GetSystemMetrics(SM_CYMENUCHECK);
-
-        if (buttonStyle & BS_LEFTTEXT) {
-            rectCheck.left = rectItem.right - cbWidth;
-            rectCheck.right = rectCheck.left + cbWidth;
-            rectItem.right = rectCheck.left - 2;
-        } else {
-            rectCheck.left = rectItem.left;
-            rectCheck.right = rectCheck.left + cbWidth;
-            rectItem.left = rectCheck.right + 2;
-        }
-
-        rectCheck.top = (rectItem.Height() - cbHeight) / 2;
-        rectCheck.bottom = rectCheck.top + cbHeight;
-
-        if (buttonType == checkType) {
-            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
-        } else if (buttonType == threeStateType) {
-            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
-        } else if (buttonType == radioType) {
-            CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc, true);
-        }
-
         CString sTitle;
         GetWindowText(sTitle);
 
-        if (!sTitle.IsEmpty()) {
-            CRect centerRect = rectItem;
-            CFont* pOldFont = dc.SelectObject(&font);
 
-            UINT uFormat = 0;
-            if (buttonStyle & BS_MULTILINE) {
-                uFormat |= DT_WORDBREAK;
+        if (0 != (buttonStyle & BS_PUSHLIKE)) {
+            CFont *oFont;
+            oFont = dc.SelectObject(&font);
+            CDarkButton::drawButtonBase(&dc, rectItem, sTitle, checkState != BST_UNCHECKED, isHover, isFocused, checkState == BST_INDETERMINATE, false);
+            dc.SelectObject(oFont);
+        } else {
+            CRect rectCheck;
+            int cbWidth = GetSystemMetrics(SM_CXMENUCHECK);
+            int cbHeight = GetSystemMetrics(SM_CYMENUCHECK);
+
+            if (buttonStyle & BS_LEFTTEXT) {
+                rectCheck.left = rectItem.right - cbWidth;
+                rectCheck.right = rectCheck.left + cbWidth;
+                rectItem.right = rectCheck.left - 2;
             } else {
-                uFormat |= DT_SINGLELINE;
+                rectCheck.left = rectItem.left;
+                rectCheck.right = rectCheck.left + cbWidth;
+                rectItem.left = rectCheck.right + 2;
             }
 
-            if (buttonStyle & BS_VCENTER) {
-                uFormat |= DT_VCENTER;
+            rectCheck.top = (rectItem.Height() - cbHeight) / 2;
+            rectCheck.bottom = rectCheck.top + cbHeight;
+
+            if (buttonType == checkType) {
+                CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
+            } else if (buttonType == threeStateType) {
+                CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
+            } else if (buttonType == radioType) {
+                CDarkTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc, true);
             }
 
-            if ((buttonStyle & BS_CENTER) == BS_CENTER) {
-                uFormat |= DT_CENTER;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect((centerRect.Width() - rectItem.Width()) / 2,
-                    (centerRect.Height() - rectItem.Height()) / 2);
-            } else if ((buttonStyle & BS_RIGHT) == BS_RIGHT) {
-                uFormat |= DT_RIGHT;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect(centerRect.Width() - rectItem.Width(),
-                    (centerRect.Height() - rectItem.Height()) / 2);
-            } else { // if ((buttonStyle & BS_LEFT) == BS_LEFT) {
-                uFormat |= DT_LEFT;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect(0, (centerRect.Height() - rectItem.Height()) / 2);
-            }
+            if (!sTitle.IsEmpty()) {
+                CRect centerRect = rectItem;
+                CFont* pOldFont = dc.SelectObject(&font);
 
-            dc.SetBkColor(CDarkTheme::WindowBGColor);
-            if (isDisabled) {
-                dc.SetTextColor(CDarkTheme::ButtonDisabledFGColor);
-                dc.DrawText(sTitle, -1, &rectItem, uFormat);
-            } else {
-                dc.SetTextColor(CDarkTheme::TextFGColor);
-                dc.DrawText(sTitle, -1, &rectItem, uFormat);
-            }
-            dc.SelectObject(pOldFont);
+                UINT uFormat = 0;
+                if (buttonStyle & BS_MULTILINE) {
+                    uFormat |= DT_WORDBREAK;
+                } else {
+                    uFormat |= DT_SINGLELINE;
+                }
 
-            if (isFocused) {
-                CRect focusRect = rectItem;
-                focusRect.InflateRect(0, 0);
-                dc.SetTextColor(CDarkTheme::ButtonBorderKBFocusColor); //no example of this in explorer, but white seems too harsh
-                CBrush *dotted = dc.GetHalftoneBrush();
-                dc.FrameRect(focusRect, dotted);
-                DeleteObject(dotted);
-            }
+                if (buttonStyle & BS_VCENTER) {
+                    uFormat |= DT_VCENTER;
+                }
 
+                if ((buttonStyle & BS_CENTER) == BS_CENTER) {
+                    uFormat |= DT_CENTER;
+                    dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
+                    rectItem.OffsetRect((centerRect.Width() - rectItem.Width()) / 2,
+                        (centerRect.Height() - rectItem.Height()) / 2);
+                } else if ((buttonStyle & BS_RIGHT) == BS_RIGHT) {
+                    uFormat |= DT_RIGHT;
+                    dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
+                    rectItem.OffsetRect(centerRect.Width() - rectItem.Width(),
+                        (centerRect.Height() - rectItem.Height()) / 2);
+                } else { // if ((buttonStyle & BS_LEFT) == BS_LEFT) {
+                    uFormat |= DT_LEFT;
+                    dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
+                    rectItem.OffsetRect(0, (centerRect.Height() - rectItem.Height()) / 2);
+                }
+
+                dc.SetBkColor(CDarkTheme::WindowBGColor);
+                if (isDisabled) {
+                    dc.SetTextColor(CDarkTheme::ButtonDisabledFGColor);
+                    dc.DrawText(sTitle, -1, &rectItem, uFormat);
+                } else {
+                    dc.SetTextColor(CDarkTheme::TextFGColor);
+                    dc.DrawText(sTitle, -1, &rectItem, uFormat);
+                }
+                dc.SelectObject(pOldFont);
+
+                if (isFocused) {
+                    CRect focusRect = rectItem;
+                    focusRect.InflateRect(0, 0);
+                    dc.SetTextColor(CDarkTheme::ButtonBorderKBFocusColor); //no example of this in explorer, but white seems too harsh
+                    CBrush *dotted = dc.GetHalftoneBrush();
+                    dc.FrameRect(focusRect, dotted);
+                    DeleteObject(dotted);
+                }
+
+            }
         }
+
         dc.SetBkColor(oldBkColor);
         dc.SetTextColor(oldTextColor);
     } else {

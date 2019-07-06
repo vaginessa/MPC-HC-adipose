@@ -35,8 +35,9 @@ void CDarkPlayerListCtrl::PreSubclassWindow() {
         if (nullptr != t) {
             lvsToolTip.SubclassWindow(t->m_hWnd);
         }
-        CDarkTheme::getFontByType(MPCThemeFont, GetWindowDC(), CDarkTheme::CDMessageFont);
-        SetFont(&MPCThemeFont);
+        CDarkTheme::getFontByType(listMPCThemeFont, GetWindowDC(), CDarkTheme::CDMessageFont);
+        CDarkTheme::getFontByType(listMPCThemeFontBold, GetWindowDC(), CDarkTheme::CDMessageFont, false, true);
+        SetFont(&listMPCThemeFont);
         subclassHeader();
     }
     CPlayerListCtrl::PreSubclassWindow();
@@ -47,11 +48,11 @@ IMPLEMENT_DYNAMIC(CDarkPlayerListCtrl, CPlayerListCtrl)
 BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_WM_NCPAINT()
     ON_WM_CREATE()
-    ON_NOTIFY_REFLECT(LVN_ENDSCROLL, &CDarkPlayerListCtrl::OnLvnEndScroll)
+    ON_NOTIFY_REFLECT_EX(LVN_ENDSCROLL, OnLvnEndScroll)
     ON_WM_MOUSEMOVE()
     ON_WM_MOUSEWHEEL()
     ON_WM_NCCALCSIZE()
-    ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw)
+    ON_NOTIFY_REFLECT_EX(NM_CUSTOMDRAW, OnCustomDraw)
     ON_WM_ERASEBKGND()
     ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
@@ -88,6 +89,24 @@ void CDarkPlayerListCtrl::setAdditionalStyles(DWORD styles) {
 
 void CDarkPlayerListCtrl::setHasCBImages(bool on) {
     hasCBImages = on;
+}
+
+void CDarkPlayerListCtrl::setItemTextWithDefaultFlag(int nItem, int nSubItem, LPCTSTR lpszText, bool flagged) {
+    SetItemText(nItem, nSubItem, lpszText);
+    setFlaggedItem(nItem, flagged);
+}
+
+void CDarkPlayerListCtrl::setFlaggedItem(int iItem, bool flagged) {
+    flaggedItems[iItem] = flagged;
+}
+
+bool CDarkPlayerListCtrl::getFlaggedItem(int iItem) {
+    auto it = flaggedItems.find(iItem);
+    if (it != flaggedItems.end()) {
+        return it->second;
+    } else {
+        return false;
+    }
 }
 
 
@@ -136,11 +155,14 @@ int CDarkPlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     return 0;
 }
 
-void CDarkPlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+BOOL CDarkPlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->updateDarkScrollInfo();
+        }
+        *pResult = 0;
     }
-    *pResult = 0;
+    return FALSE;
 }
 
 void CDarkPlayerListCtrl::updateSB() {
@@ -204,11 +226,11 @@ void CDarkPlayerListCtrl::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* 
     __super::OnNcCalcSize(bCalcValidRects, lpncsp);
 }
 
-void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
-    NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
-
-    *pResult = CDRF_DODEFAULT;
+BOOL CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
+
+        *pResult = CDRF_DODEFAULT;
         if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
@@ -352,7 +374,9 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
                     }
                 }
 
-
+                if (getFlaggedItem(nItem)) { //could be a setting, but flagged items are bold for now
+                    dcMem.SelectObject(listMPCThemeFontBold);
+                }
                 //CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
                 dcMem.DrawText(text, rText, textFormat);
                 CDarkTheme::flushMemDC(pDC, dcMem, rectDC);
@@ -361,7 +385,9 @@ void CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
             }
             *pResult = CDRF_SKIPDEFAULT;
         }
+        return TRUE;
     }
+    return FALSE;
 }
 
 

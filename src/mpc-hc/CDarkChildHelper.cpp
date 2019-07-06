@@ -63,7 +63,9 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             ::GetClassName(tChild->GetSafeHwnd(), windowClass, _countof(windowClass));
             DWORD style = tChild->GetStyle();
             DWORD buttonType = (style & BS_TYPEMASK);
+            DWORD staticStyle = (style &  SS_TYPEMASK);
             CString t;
+
             if (tChild->m_hWnd)
                 tChild->GetWindowText(t);
             if (runtimeClass.Find(_T("CDark")) != 0 && runtimeClass.Find(_T("CMPCTheme")) != 0) {
@@ -85,16 +87,18 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         allocatedRadioButtons.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
                     } else { //what other buttons?
-                        int a = 1;
+//                        int a = 1;
                     }
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && buttonType == BS_GROUPBOX) {
+                } else if (0 == _tcsicmp(windowClass, WC_SCROLLBAR)) {
+                } else if (0 == _tcsicmp(windowClass, WC_BUTTON) && buttonType == BS_GROUPBOX) {
                     CDarkGroupBox * pObject = new CDarkGroupBox();
                     allocatedGroupBoxes.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
                     SetWindowTheme(tChild->GetSafeHwnd(), L"", L"");
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_ICON == (style & SS_ICON)) { //don't touch icons for now
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC) && SS_BITMAP == (style & SS_BITMAP)) { //don't touch BITMAPS for now
-                } else if (DLGC_STATIC == (lRes & DLGC_STATIC)) {
+                } else if (0 == _tcsicmp(windowClass, WC_STATIC) && SS_ICON == staticStyle) { //don't touch icons for now
+                } else if (0 == _tcsicmp(windowClass, WC_STATIC) && SS_BITMAP == staticStyle) { //don't touch BITMAPS for now
+                } else if (0 == _tcsicmp(windowClass, WC_STATIC) && SS_OWNERDRAW == staticStyle) { //don't touch OWNERDRAW for now
+                } else if (0 == _tcsicmp(windowClass, WC_STATIC) && ( staticStyle < SS_OWNERDRAW || SS_ETCHEDHORZ == staticStyle || SS_ETCHEDVERT == staticStyle || SS_ETCHEDFRAME == staticStyle))  {
                     tChild->SetFont(&dialogFont);
                     LITEM li = { 0 };
                     li.mask = LIF_ITEMINDEX | LIF_ITEMID;

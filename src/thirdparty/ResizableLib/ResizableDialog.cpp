@@ -109,6 +109,7 @@ void CResizableDialog::OnDestroy()
 void CResizableDialog::OnSize(UINT nType, int cx, int cy) 
 {
 	__super::OnSize(nType, cx, cy);
+
 	
 	if (nType == SIZE_MAXHIDE || nType == SIZE_MAXSHOW)
 		return;		// arrangement not needed
@@ -139,6 +140,9 @@ void CResizableDialog::EnableSaveRestore(LPCTSTR pszSection, BOOL bRectOnly)
 
 	// restore immediately
 	LoadWindowRect(pszSection, bRectOnly);
+    //mpc-hc changes to allow theming background
+    Invalidate();
+    //end mpc-hc changes
 }
 
 BOOL CResizableDialog::OnEraseBkgnd(CDC* pDC) 
