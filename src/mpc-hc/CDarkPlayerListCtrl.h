@@ -46,8 +46,10 @@ protected:
     bool fullRowSelect;
     CDarkHeaderCtrl darkHdrCtrl;
     CFont listMPCThemeFont, listMPCThemeFontBold;
+    void drawItem(CDC* pDC, int nItem, int nSubItem);
     virtual void PreSubclassWindow();
 public:
     void doDefault() { Default(); };
+    afx_msg void OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult);
 };
 

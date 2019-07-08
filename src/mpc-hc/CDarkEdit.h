@@ -1,7 +1,8 @@
 #pragma once
 #include <afxwin.h>
+#include "CDarkScrollBarHelper.h"
 class CDarkEdit :
-	public CEdit
+	public CEdit, public CDarkScrollable
 {
     DECLARE_DYNAMIC(CDarkEdit)
 public:
@@ -13,6 +14,11 @@ public:
     afx_msg void OnNcPaint();
 protected:
     CWnd *buddy;
+    CDarkScrollBarHelper *darkSBHelper;
 
+public:
+    afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+    afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+    afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };
 

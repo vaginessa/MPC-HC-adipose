@@ -55,6 +55,8 @@ BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_NOTIFY_REFLECT_EX(NM_CUSTOMDRAW, OnCustomDraw)
     ON_WM_ERASEBKGND()
     ON_WM_CTLCOLOR()
+    ON_NOTIFY(HDN_ENDTRACKA, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
+    ON_NOTIFY(HDN_ENDTRACKW, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
 END_MESSAGE_MAP()
 
 void CDarkPlayerListCtrl::subclassHeader() {
@@ -226,6 +228,158 @@ void CDarkPlayerListCtrl::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* 
     __super::OnNcCalcSize(bCalcValidRects, lpncsp);
 }
 
+void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
+    if (IsItemVisible(nItem)) {
+
+        CRect rect, rRow, rIcon, rText, rTextBG, rectDC, rClient;
+        GetClientRect(rClient);
+        GetItemRect(nItem, rRow, LVIR_BOUNDS);
+        GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
+        GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
+        GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+        if (0 == nSubItem) { //getsubitemrect gives whole row for 0/LVIR_BOUNDS.  but LVIR_LABEL is limited to text bounds.  MSDN undocumented behavior
+            rect.right = rText.right;
+        }
+
+        //issubitemvisible
+        if (rClient.left <= rect.right && rClient.right >= rect.left && rClient.top <= rect.bottom && rClient.bottom >= rect.top) {
+            COLORREF textColor = CDarkTheme::TextFGColor;
+            COLORREF bgColor = CDarkTheme::ContentBGColor;
+
+            COLORREF oldTextColor = pDC->GetTextColor();
+            COLORREF oldBkColor = pDC->GetBkColor();
+
+            CString text = GetItemText(nItem, nSubItem);
+            pDC->SetTextColor(textColor);
+            pDC->SetBkColor(bgColor);
+
+
+
+            rectDC = rRow;
+            CDC dcMem;
+            CBitmap bmMem;
+            CDarkTheme::initMemDC(pDC, dcMem, bmMem, rectDC);
+            rect.OffsetRect(-rectDC.TopLeft());
+            rText.OffsetRect(-rectDC.TopLeft());
+            rIcon.OffsetRect(-rectDC.TopLeft());
+            rRow.OffsetRect(-rectDC.TopLeft());
+
+            if (!IsWindowEnabled() && 0 == nSubItem) { //no gridlines, bg for full row
+                dcMem.FillSolidRect(rRow, CDarkTheme::ListCtrlDisabledBGColor);
+            } else {
+                dcMem.FillSolidRect(rect, CDarkTheme::ContentBGColor); //no flicker because we have a memory dc
+            }
+
+            rTextBG = rText;
+
+            HDITEM hditem = { 0 };
+            hditem.mask = HDI_FORMAT;
+            GetHeaderCtrl()->GetItem(nSubItem, &hditem);
+            int align = hditem.fmt & HDF_JUSTIFYMASK;
+            UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
+            if (align == HDF_CENTER)
+                textFormat |= DT_CENTER;
+            else if (align == HDF_LEFT) {
+                textFormat |= DT_LEFT;
+                if (nSubItem == 0) {//less indent for first column
+                    rText.left += 2;
+                } else {
+                    rText.left += 6;
+                }
+            } else {
+                textFormat |= DT_RIGHT;
+                rText.right -= 6;
+            }
+
+            bool isChecked = false;
+            int contentLeft = rText.left;
+            if (rIcon.Width() > 0) {
+                LVITEM lvi = { 0 };
+                lvi.iItem = nItem;
+                lvi.iSubItem = 0;
+                lvi.mask = LVIF_IMAGE;
+                GetItem(&lvi);
+
+                isChecked = (BST_CHECKED == lvi.iImage);
+                if (nSubItem == 0) {
+                    contentLeft = rIcon.left;
+                    if (hasCBImages) { //draw manually to match theme
+                        rIcon.DeflateRect(0, 0, 1, 0);
+                        if (rIcon.Height() > rIcon.Width()) {
+                            rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
+                        }
+
+                        CDarkTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
+                    } else {
+                        DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
+                        if (dwStyle == LVS_ICON) {
+                        } else if (dwStyle == LVS_SMALLICON || dwStyle == LVS_LIST || dwStyle == LVS_REPORT) {
+                            CImageList *ilist = GetImageList(LVSIL_SMALL);
+                            int cx, cy;
+                            ImageList_GetIconSize(ilist->m_hImageList, &cx, &cy);
+                            rIcon.top += (rIcon.Height() - cy) / 2;
+                            ilist->Draw(&dcMem, lvi.iImage, rIcon.TopLeft(), ILD_TRANSPARENT);
+                        }
+                    }
+                    if (align == HDF_LEFT)
+                        rText.left += 2; //more ident after image
+                }
+            }
+            if (0 != (GetExtendedStyle() & LVS_EX_CHECKBOXES)) {
+                isChecked = (TRUE == GetCheck(nItem));
+                if (nSubItem == 0) {
+                    int cbSize = GetSystemMetrics(SM_CXMENUCHECK);
+                    int cbYMargin = (rect.Height() - cbSize - 1) / 2;
+                    int cbXMargin = (contentLeft - rect.left - cbSize) / 2;
+                    CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
+                    CDarkTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
+                }
+            }
+
+            COLORREF bgClr = CDarkTheme::ContentBGColor;
+            if (IsWindowEnabled()) {
+                if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
+                    bgClr = CDarkTheme::ContentSelectedColor;
+                } else if (hasCheckedColors) {
+                    if (isChecked && checkedBGClr != -1) {
+                        bgClr = checkedBGClr;
+                    }
+                    if (isChecked && checkedTextClr != -1) dcMem.SetTextColor(checkedTextClr);
+                    if (!isChecked && uncheckedTextClr != -1)
+                        dcMem.SetTextColor(uncheckedTextClr);
+                }
+                dcMem.FillSolidRect(rTextBG, bgClr);
+
+                if (darkGridLines) {
+                    CRect rGrid = rect;
+                    rGrid.bottom -= 1;
+                    CPen gridPen, *oldPen;
+                    gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
+                    oldPen = dcMem.SelectObject(&gridPen);
+                    if (nSubItem != 0) {
+                        dcMem.MoveTo(rGrid.TopLeft());
+                        dcMem.LineTo(rGrid.left, rGrid.bottom);
+                    } else {
+                        dcMem.MoveTo(rGrid.left, rGrid.bottom);
+                    }
+                    dcMem.LineTo(rGrid.BottomRight());
+                    dcMem.LineTo(rGrid.right, rGrid.top);
+                    dcMem.SelectObject(oldPen);
+                }
+            }
+
+            if (getFlaggedItem(nItem)) { //could be a setting, but flagged items are bold for now
+                dcMem.SelectObject(listMPCThemeFontBold);
+            }
+            //CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
+            dcMem.DrawText(text, rText, textFormat);
+            CDarkTheme::flushMemDC(pDC, dcMem, rectDC);
+            pDC->SetTextColor(oldTextColor);
+            pDC->SetBkColor(oldBkColor);
+        }
+    }
+}
+
 BOOL CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
@@ -239,149 +393,8 @@ BOOL CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
             int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
             if (IsItemVisible(nItem)) {
                 int nSubItem = pLVCD->iSubItem;
-
-                COLORREF textColor = CDarkTheme::TextFGColor;
-                COLORREF bgColor = CDarkTheme::ContentBGColor;
-
                 CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
-                COLORREF oldTextColor = pDC->GetTextColor();
-                COLORREF oldBkColor = pDC->GetBkColor();
-
-                CString text = GetItemText(nItem, nSubItem);
-                pDC->SetTextColor(textColor);
-                pDC->SetBkColor(bgColor);
-
-
-                CRect rect, rRow, rIcon, rText, rTextBG, rectDC;
-                GetItemRect(nItem, rRow, LVIR_BOUNDS);
-                GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
-                GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
-                GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
-                if (0 == nSubItem) { //getsubitemrect gives whole row for 0/LVIR_BOUNDS.  but LVIR_LABEL is limited to text bounds.  MSDN undocumented behavior
-                    rect.right = rText.right;
-                }
-
-                rectDC = rRow;
-                CDC dcMem;
-                CBitmap bmMem;
-                CDarkTheme::initMemDC(pDC, dcMem, bmMem, rectDC);
-                rect.OffsetRect(-rectDC.TopLeft());
-                rText.OffsetRect(-rectDC.TopLeft());
-                rIcon.OffsetRect(-rectDC.TopLeft());
-                rRow.OffsetRect(-rectDC.TopLeft());
-
-                if (!IsWindowEnabled() && 0 == nSubItem) { //no gridlines, bg for full row
-                    dcMem.FillSolidRect(rRow, CDarkTheme::ListCtrlDisabledBGColor);
-                } else {
-                    dcMem.FillSolidRect(rect, CDarkTheme::ContentBGColor); //no flicker because we have a memory dc
-                }
-                
-                rTextBG = rText;
-                
-                HDITEM hditem = { 0 };
-                hditem.mask = HDI_FORMAT;
-                GetHeaderCtrl()->GetItem(nSubItem, &hditem);
-                int align = hditem.fmt & HDF_JUSTIFYMASK;
-                UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
-                if (align == HDF_CENTER)
-                    textFormat |= DT_CENTER;
-                else if (align == HDF_LEFT) {
-                    textFormat |= DT_LEFT;
-                    if (nSubItem == 0) {//less indent for first column
-                        rText.left += 2;
-                    } else {
-                        rText.left += 6;
-                    }
-                } else {
-                    textFormat |= DT_RIGHT;
-                    rText.right -= 6;
-                }
-
-                bool isChecked = false;
-                int contentLeft = rText.left;
-                if (rIcon.Width() > 0) {
-                    LVITEM lvi = { 0 };
-                    lvi.iItem = nItem;
-                    lvi.iSubItem = 0;
-                    lvi.mask = LVIF_IMAGE;
-                    GetItem(&lvi);
-
-                    isChecked = (BST_CHECKED == lvi.iImage);
-                    if (nSubItem == 0) {
-                        contentLeft = rIcon.left;
-                        if (hasCBImages) { //draw manually to match theme
-                            rIcon.DeflateRect(0, 0, 1, 0);
-                            if (rIcon.Height() > rIcon.Width()) {
-                                rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
-                            }
-
-                            CDarkTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
-                        } else {
-                            DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
-                            if (dwStyle == LVS_ICON) {
-                            } else if (dwStyle == LVS_SMALLICON || dwStyle == LVS_LIST || dwStyle == LVS_REPORT) {
-                                CImageList *ilist = GetImageList(LVSIL_SMALL);
-                                int cx, cy;
-                                ImageList_GetIconSize(ilist->m_hImageList, &cx, &cy);
-                                rIcon.top += (rIcon.Height() - cy) / 2;
-                                ilist->Draw(&dcMem, lvi.iImage, rIcon.TopLeft(), ILD_TRANSPARENT);
-                            }
-                        }
-                        if (align == HDF_LEFT)
-                            rText.left += 2; //more ident after image
-                    }
-                }
-                if (0 != (GetExtendedStyle() & LVS_EX_CHECKBOXES)) {
-                    isChecked = (TRUE == GetCheck(nItem));
-                    if (nSubItem == 0) {
-                        int cbSize = GetSystemMetrics(SM_CXMENUCHECK);
-                        int cbYMargin = (rect.Height() - cbSize - 1) / 2;
-                        int cbXMargin = (contentLeft - rect.left - cbSize) / 2;
-                        CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
-                        CDarkTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
-                    }
-                }
-
-                COLORREF bgClr = CDarkTheme::ContentBGColor;
-                if (IsWindowEnabled()) {
-                    if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
-                        bgClr = CDarkTheme::ContentSelectedColor;
-                    } else if (hasCheckedColors) {
-                        if (isChecked && checkedBGClr != -1) {
-                            bgClr = checkedBGClr;
-                        }
-                        if (isChecked && checkedTextClr != -1) dcMem.SetTextColor(checkedTextClr);
-                        if (!isChecked && uncheckedTextClr != -1)
-                            dcMem.SetTextColor(uncheckedTextClr);
-                    }
-                    dcMem.FillSolidRect(rTextBG, bgClr);
-
-                    if (darkGridLines) {
-                        CRect rGrid = rect;
-                        rGrid.bottom -= 1;
-                        CPen gridPen, *oldPen;
-                        gridPen.CreatePen(PS_SOLID, 1, CDarkTheme::WindowBorderColorDim);
-                        oldPen = dcMem.SelectObject(&gridPen);
-                        if (nSubItem != 0) {
-                            dcMem.MoveTo(rGrid.TopLeft());
-                            dcMem.LineTo(rGrid.left, rGrid.bottom);
-                        } else {
-                            dcMem.MoveTo(rGrid.left, rGrid.bottom);
-                        }
-                        dcMem.LineTo(rGrid.BottomRight());
-                        dcMem.LineTo(rGrid.right, rGrid.top);
-                        dcMem.SelectObject(oldPen);
-                    }
-                }
-
-                if (getFlaggedItem(nItem)) { //could be a setting, but flagged items are bold for now
-                    dcMem.SelectObject(listMPCThemeFontBold);
-                }
-                //CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
-                dcMem.DrawText(text, rText, textFormat);
-                CDarkTheme::flushMemDC(pDC, dcMem, rectDC);
-                pDC->SetTextColor(oldTextColor);
-                pDC->SetBkColor(oldBkColor);
+                drawItem(pDC, nItem, nSubItem);
             }
             *pResult = CDRF_SKIPDEFAULT;
         }
@@ -443,4 +456,15 @@ HBRUSH CDarkPlayerListCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     } else {
         return __super::OnCtlColor(pDC, pWnd, nCtlColor);
     }
+}
+
+
+void CDarkPlayerListCtrl::OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult) {
+//    LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->updateDarkScrollInfo();
+        }
+    }
+    *pResult = 0;
 }

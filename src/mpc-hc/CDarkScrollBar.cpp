@@ -154,7 +154,7 @@ void CDarkScrollBar::SendScrollMsg(WORD wSBcode, WORD wHiWPARAM /*= 0*/) {
     ASSERT(::IsWindow(m_hWnd));
     if (nullptr != m_scrollWindow && ::IsWindow(m_scrollWindow->m_hWnd)) {
         if (SB_ENDSCROLL != wSBcode)
-        m_scrollWindow->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL, MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
+            m_scrollWindow->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL, MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
     } else if (nullptr != m_pParent && ::IsWindow(m_pParent->m_hWnd)) {
         m_pParent->SendMessage((m_bHorizontal) ? WM_HSCROLL : WM_VSCROLL, MAKELONG(wSBcode, wHiWPARAM), (LPARAM)m_hWnd);
     }

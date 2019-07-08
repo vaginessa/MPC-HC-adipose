@@ -177,9 +177,6 @@ void CDarkHeaderCtrl::OnPaint() {
         ::GetCursorPos(&ptCursor);
         ScreenToClient(&ptCursor);
 
-        HDHITTESTINFO hdHitTestInfo;
-        hdHitTestInfo.pt = ptCursor;
-
         GetItemRect(i, rectItem);
 
         CRgn rgnClip;

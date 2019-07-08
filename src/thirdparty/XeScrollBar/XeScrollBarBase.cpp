@@ -845,16 +845,22 @@ void CXeScrollBarBase::OnMouseMove( UINT nFlags, CPoint point )
 			nTrackPos = m_nMinPos;
 		else if( nTrackPos > m_nMaxReportedPos )
 			nTrackPos = m_nMaxReportedPos;
-		if( bStartDrag || m_nTrackPos != nTrackPos )
+
+        //adipose: moved this block to before sending scroll message.  otherwise scrollbar updates poorly on slower windows (listctrl)
+        //also call updatewindow to redraw immediately
+        // Recalculate thumb XY pos. and redraw if pos. changed.
+        if (RecalcRectsThumbTrack(point)) {
+            Invalidate();
+            UpdateWindow();
+        }
+            
+        if( bStartDrag || m_nTrackPos != nTrackPos )
 		{	// Send scroll message when user starts dragging
 			// OR when track pos has changed.
 			m_nTrackPos = nTrackPos;
 			SendScrollMsg( SB_THUMBTRACK, m_nTrackPos );
 			m_bNeedEndScroll = TRUE;
 		}
-		// Recalculate thumb XY pos. and redraw if pos. changed.
-		if( RecalcRectsThumbTrack( point ) )
-			Invalidate();
 	}
 
 	if( m_eMouseOverArea != eOldMouseArea )

@@ -13,7 +13,7 @@ public:
 class CDarkScrollBarHelper
 {
 protected:
-    CWnd *window;
+    CWnd *window, *pParent;
     CDarkScrollBar darkVSB, darkHSB;
     bool hasVSB;
     bool hasHSB;

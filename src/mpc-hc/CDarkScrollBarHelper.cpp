@@ -11,7 +11,7 @@ CDarkScrollBarHelper::~CDarkScrollBarHelper() {
 }
 
 void CDarkScrollBarHelper::createSB() {
-    CWnd* pParent = window->GetParent();
+    pParent = window->GetParent();
     hasVSB = 0 != (window->GetStyle() & WS_VSCROLL);
     hasHSB = 0 != (window->GetStyle() & WS_HSCROLL);
     if (nullptr != pParent && IsWindow(pParent->m_hWnd)) {
@@ -132,7 +132,15 @@ bool CDarkScrollBarHelper::WindowProc(CListCtrl *list, UINT message, WPARAM wPar
                 size.cx = sizeAll.cx*(nPos - sih.nPos) / (sih.nMax + 1);
                 size.cy = sizeAll.cy*siv.nPos / (siv.nMax + 1);
             }
-            list->Scroll(size);
+            //adipose: this code is needed to prevent listctrl glitchy drawing.
+            //scroll sends a cascade of redraws which are untenable during a thumb drag
+            //only one redraw per scroll call this way
+            if (nullptr != pParent && IsWindow(pParent->m_hWnd)) {
+                pParent->SetRedraw(FALSE);
+                list->Scroll(size);
+                pParent->SetRedraw();
+                list->Invalidate();
+            }
             return true; //processed
         }
     }
@@ -141,7 +149,7 @@ bool CDarkScrollBarHelper::WindowProc(CListCtrl *list, UINT message, WPARAM wPar
 
 void CDarkScrollBarHelper::darkNcPaintWithSB() {
     createSB();
-    if (IsWindow(darkVSB.m_hWnd) || !IsWindow(darkHSB.m_hWnd)) {
+    if (IsWindow(darkVSB.m_hWnd) || IsWindow(darkHSB.m_hWnd)) {
         CRect wr, cr;
         CWindowDC dc(window);
         setDarkDrawingArea(cr, wr, false); //temporarily allow full clipping window

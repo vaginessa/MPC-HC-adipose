@@ -7,10 +7,17 @@ IMPLEMENT_DYNAMIC(CDarkListBox, CListBox)
 
 CDarkListBox::CDarkListBox() {
     darkTTcid = (UINT_PTR)-1;
+    darkSBHelper = nullptr;
+    if (!CDarkTheme::canUseWin10DarkTheme()) {
+        darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
+    }
 }
 
 
 CDarkListBox::~CDarkListBox() {
+    if (nullptr != darkSBHelper) {
+        delete darkSBHelper;
+    }
 }
 
 BEGIN_MESSAGE_MAP(CDarkListBox, CListBox)
@@ -63,69 +70,13 @@ void CDarkListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 void CDarkListBox::OnNcPaint() {
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        CRect wr, cr;
-
-        CWindowDC dc(this);
-        setDarkDrawingArea(cr, wr, false); //temporarily allow full clipping window
-        dc.ExcludeClipRect(&cr);
-        CBrush brush(CDarkTheme::WindowBorderColorLight); //color used for column sep in explorer
-        dc.FillSolidRect(wr, CDarkTheme::ContentBGColor);
-
-        dc.FrameRect(wr, &brush);
-        hideSB(); //set back scrollbar clipping window
+        if (nullptr != darkSBHelper) {
+            darkSBHelper->darkNcPaintWithSB();
+        } else {
+            CDarkScrollBarHelper::darkNcPaint(this, this);
+        }
     } else {
         __super::OnNcPaint();
-    }
-}
-
-
-void CDarkListBox::setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping) {
-    GetClientRect(&cr);
-    ClientToScreen(&cr);
-    GetWindowRect(&wr);
-
-    CRect pwr;
-    GetParent()->GetWindowRect(&pwr);
-    LONG sbTop = wr.top - pwr.top;
-    LONG sbRight = wr.right - pwr.left;
-
-    int nWidth = cr.Width(); //this will be about where the scrollbar starts
-
-    cr.OffsetRect(-wr.left, -wr.top);
-    wr.OffsetRect(-wr.left, -wr.top);
-
-
-    if (clipping) {
-        int width = GetSystemMetrics(SM_CXVSCROLL);
-        int border = GetSystemMetrics(SM_CXEDGE);
-        wr.right = wr.left + nWidth - border;
-
-        if (GetStyle()&WS_VSCROLL) {
-            darkVSB.MoveWindow(sbRight - width - border, sbTop + border, width, wr.Height() - 2 * border);
-            darkVSB.ShowWindow(SW_SHOW);
-            updateDarkScrollInfo();
-        } else {
-            darkVSB.ShowWindow(SW_HIDE);
-        }
-
-    }
-
-    HRGN iehrgn = CreateRectRgn(wr.left, wr.top, wr.right, wr.bottom);
-    SetWindowRgn(iehrgn, false);
-}
-
-void CDarkListBox::hideSB() {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        CRect wr, cr;
-        setDarkDrawingArea(cr, wr, true);
-    }
-}
-
-void CDarkListBox::updateDarkScrollInfo() {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        darkVSB.updateScrollInfo();
     }
 }
 
@@ -138,12 +89,11 @@ BOOL CDarkListBox::PreTranslateMessage(MSG* pMsg) {
 
 void CDarkListBox::PreSubclassWindow() {
     CListBox::PreSubclassWindow();
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        if (CWnd* pParent = GetParent()) {
-            VERIFY(darkVSB.Create(SBS_VERT | WS_CHILD |
-                WS_VISIBLE, CRect(0, 0, 0, 0), pParent, 0));
-            darkVSB.setScrollWindow(this); //we want messages from this SB
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (CDarkTheme::canUseWin10DarkTheme()) {
+            SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
+        } else {
+            SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
         darkTT.Create(this, TTS_ALWAYSTIP);
         darkTT.enableFlickerHelper();
@@ -154,7 +104,9 @@ void CDarkListBox::PreSubclassWindow() {
 
 BOOL CDarkListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     CListBox::OnMouseWheel(nFlags, zDelta, pt);
-    updateDarkScrollInfo();
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
     ScreenToClient(&pt);
     updateToolTip(pt);
     return TRUE;
@@ -162,11 +114,15 @@ BOOL CDarkListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
 
 void CDarkListBox::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     CListBox::OnVScroll(nSBCode, nPos, pScrollBar);
-    updateDarkScrollInfo();
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
 }
 
 void CDarkListBox::OnLbnSelchange() {
-    updateDarkScrollInfo();
+    if (nullptr != darkSBHelper) {
+        darkSBHelper->updateDarkScrollInfo();
+    }
 }
 
 

@@ -2,24 +2,23 @@
 #include <afxwin.h>
 #include "CDarkScrollBar.h"
 #include "CDarkToolTipCtrl.h"
+#include "CDarkScrollBarHelper.h"
 
 class CDarkListBox :
-	public CListBox
+	public CListBox, public CDarkScrollable
 {
     DECLARE_DYNAMIC(CDarkListBox)
 private:
     CDarkScrollBar darkVSB;
     CDarkToolTipCtrl darkTT;
     UINT_PTR darkTTcid;
+    CDarkScrollBarHelper *darkSBHelper;
 protected:
     virtual void PreSubclassWindow();
 public:
 	CDarkListBox();
 	virtual ~CDarkListBox();
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
-    void setDarkDrawingArea(CRect &cr, CRect &wr, bool clipping);
-    void hideSB();
-    void updateDarkScrollInfo();
     BOOL PreTranslateMessage(MSG * pMsg);
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
