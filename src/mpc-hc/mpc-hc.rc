@@ -1340,6 +1340,18 @@ BEGIN
         HORZGUIDE, 204
     END
 
+    IDD_PPAGESUBMISC, DIALOG
+    BEGIN
+    END
+
+    IDD_UPDATE_DIALOG, DIALOG
+    BEGIN
+    END
+
+    IDD_DEBUGSHADERS_DLG, DIALOG
+    BEGIN
+    END
+
     IDD_PPAGEADVANCED, DIALOG
     BEGIN
         VERTGUIDE, 10
@@ -2255,6 +2267,17 @@ IDB_DT_RADIO_120        PNG                     "res\\darktheme\\radios-120.png"
 IDB_DT_RADIO_144        PNG                     "res\\darktheme\\radios-144.png"
 
 IDB_DT_RADIO_192        PNG                     "res\\darktheme\\radios-192.png"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_SUBTITLEDL_DLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

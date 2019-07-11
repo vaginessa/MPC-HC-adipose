@@ -13,6 +13,7 @@ public:
     explicit CDarkDialog(UINT nIDTemplate, CWnd* pParentWnd = NULL);
     virtual ~CDarkDialog();
     void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    DECLARE_DYNAMIC(CDarkDialog)
     DECLARE_MESSAGE_MAP()
 public:
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

@@ -15,7 +15,7 @@ CDarkDialog::CDarkDialog(UINT nIDTemplate, CWnd * pParentWnd) : CDialog(nIDTempl
 CDarkDialog::~CDarkDialog() {
 }
 
-
+IMPLEMENT_DYNAMIC(CDarkDialog, CDialog)
 
 BEGIN_MESSAGE_MAP(CDarkDialog, CDialog)
     ON_WM_CTLCOLOR()

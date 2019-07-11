@@ -24,10 +24,10 @@
 #include "UpdateCheckerDlg.h"
 #include "mpc-hc_config.h"
 
-IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CDialog)
+IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CDarkDialog)
 
 UpdateCheckerDlg::UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, CWnd* pParent /*=nullptr*/)
-    : CDialog(UpdateCheckerDlg::IDD, pParent)
+    : CDarkDialog(UpdateCheckerDlg::IDD, pParent)
     , m_updateStatus(updateStatus)
 {
     switch (updateStatus) {
@@ -59,16 +59,17 @@ UpdateCheckerDlg::~UpdateCheckerDlg()
 
 void UpdateCheckerDlg::DoDataExchange(CDataExchange* pDX)
 {
-    CDialog::DoDataExchange(pDX);
+    CDarkDialog::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_UPDATE_DLG_TEXT, m_text);
     DDX_Control(pDX, IDC_UPDATE_ICON, m_icon);
     DDX_Control(pDX, IDC_UPDATE_DL_BUTTON, m_dlButton);
     DDX_Control(pDX, IDC_UPDATE_LATER_BUTTON, m_laterButton);
     DDX_Control(pDX, IDC_UPDATE_IGNORE_BUTTON, m_ignoreButton);
+    enableDarkThemeIfActive();
 }
 
 
-BEGIN_MESSAGE_MAP(UpdateCheckerDlg, CDialog)
+BEGIN_MESSAGE_MAP(UpdateCheckerDlg, CDarkDialog)
     ON_BN_CLICKED(IDC_UPDATE_DL_BUTTON, OnOpenDownloadPage)
     ON_BN_CLICKED(IDC_UPDATE_LATER_BUTTON, OnUpdateLater)
     ON_BN_CLICKED(IDC_UPDATE_IGNORE_BUTTON, OnIgnoreUpdate)

@@ -166,7 +166,7 @@ void CDarkScrollBarHelper::darkNcPaint(CWnd *window, CDarkScrollable *swindow) {
         SCROLLBARINFO sbHorz = { sizeof(SCROLLBARINFO) };
         if (window->GetScrollBarInfo(OBJID_HSCROLL, &sbHorz)) {
             if (0 == (sbHorz.rgstate[0] & (STATE_SYSTEM_INVISIBLE | STATE_SYSTEM_UNAVAILABLE))) {
-                swindow->doDefault(); //required to get the horz sb buttons to draw
+                swindow->doDefault(); //required to get the horz sb buttons to draw in listctrl
             }
         }
     }

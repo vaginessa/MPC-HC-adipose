@@ -23,8 +23,10 @@
 #include <afxwin.h>
 #include "resource.h"
 #include "UpdateChecker.h"
+#include "CDarkDialog.h"
+#include "CDarkButton.h"
 
-class UpdateCheckerDlg : public CDialog
+class UpdateCheckerDlg : public CDarkDialog
 {
     DECLARE_DYNAMIC(UpdateCheckerDlg)
 
@@ -46,7 +48,7 @@ private:
     Update_Status m_updateStatus;
     CString m_text;
     CStatic m_icon;
-    CButton m_dlButton;
-    CButton m_laterButton;
-    CButton m_ignoreButton;
+    CDarkButton m_dlButton;
+    CDarkButton m_laterButton;
+    CDarkButton m_ignoreButton;
 };

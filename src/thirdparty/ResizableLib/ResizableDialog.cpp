@@ -122,6 +122,9 @@ void CResizableDialog::OnSize(UINT nType, int cx, int cy)
 	// update grip and layout
 	UpdateSizeGrip();
 	ArrangeLayout();
+    //mpc-hc changes to fix redraw bugs
+    Invalidate();
+    //end mpc-hc
 }
 
 void CResizableDialog::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI) 
@@ -140,9 +143,6 @@ void CResizableDialog::EnableSaveRestore(LPCTSTR pszSection, BOOL bRectOnly)
 
 	// restore immediately
 	LoadWindowRect(pszSection, bRectOnly);
-    //mpc-hc changes to allow theming background
-    Invalidate();
-    //end mpc-hc changes
 }
 
 BOOL CResizableDialog::OnEraseBkgnd(CDC* pDC) 

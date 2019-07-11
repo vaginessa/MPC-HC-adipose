@@ -5,9 +5,10 @@
 CDarkEdit::CDarkEdit() {
     buddy = nullptr;
     darkSBHelper = nullptr;
-    if (!CDarkTheme::canUseWin10DarkTheme()) {
+//horizontal scrollbar broken for CEdit, we must theme ourselves
+//    if (!CDarkTheme::canUseWin10DarkTheme()) {
         darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
-    }
+//    }
 }
 
 

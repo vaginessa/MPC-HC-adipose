@@ -250,7 +250,9 @@ BOOL CSubtitleDlDlg::OnInitDialog()
     AddAnchor(IDOK, BOTTOM_RIGHT);
     AddAnchor(IDC_STATUSBAR, BOTTOM_LEFT, BOTTOM_RIGHT);
 
-    const CSize s(500, 250);
+    CRect cr;
+    GetClientRect(cr);
+    const CSize s(cr.Width(), 250);
     SetMinTrackSize(s);
     EnableSaveRestore(IDS_R_DLG_SUBTITLEDL, TRUE);
 
