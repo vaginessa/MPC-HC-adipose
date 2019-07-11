@@ -24,9 +24,7 @@ END_MESSAGE_MAP()
 
 HBRUSH CMPCThemeCmdUIDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        pDC->SetTextColor(CDarkTheme::TextFGColor);
-        pDC->SetBkColor(CDarkTheme::ContentBGColor);
-        return darkContentBrush;
+        return DarkCtlColor(pDC, pWnd, nCtlColor);
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;

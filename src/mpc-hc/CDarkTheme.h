@@ -90,6 +90,12 @@ public:
     static const COLORREF ListCtrlDisabledBGColor;
     static const COLORREF ListCtrlGridColor;
 
+    static const COLORREF StatusBarBGColor;
+    static const COLORREF StatusBarSeparatorColor;
+
+    static const COLORREF ProgressBarBGColor;
+    static const COLORREF ProgressBarColor;
+
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
     static const int gripPatternShort;

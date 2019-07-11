@@ -41,23 +41,25 @@ void CDarkEdit::PreSubclassWindow() {
 
 void CDarkEdit::OnNcPaint() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->darkNcPaintWithSB();
+        if (0 != (GetStyle() & (WS_VSCROLL | WS_HSCROLL) )) { //scrollable edit will be treated like a window, not a field
+            if (nullptr != darkSBHelper) {
+                darkSBHelper->darkNcPaintWithSB();
+            } else {
+                CDarkScrollBarHelper::darkNcPaint(this, this);
+            }
         } else {
-            CDarkScrollBarHelper::darkNcPaint(this, this);
+            CWindowDC dc(this);
+
+            CRect rect;
+            GetWindowRect(&rect);
+            rect.OffsetRect(-rect.left, -rect.top);
+
+            CBrush brush(CDarkTheme::EditBorderColor);
+
+            dc.FrameRect(&rect, &brush);
+            if (nullptr != buddy) buddy->Invalidate();
         }
 
-        CDC* pDC = GetWindowDC();
-
-        CRect rect;
-        GetWindowRect(&rect);
-        rect.OffsetRect(-rect.left, -rect.top);
-
-        CBrush brush(CDarkTheme::EditBorderColor);
-
-        pDC->FrameRect(&rect, &brush);
-        if (nullptr != buddy) buddy->Invalidate();
-        ReleaseDC(pDC);
     } else {
         __super::OnNcPaint();
     }

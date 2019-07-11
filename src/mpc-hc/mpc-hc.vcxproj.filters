@@ -497,6 +497,7 @@
     <ClCompile Include="CDarkEdit.cpp" />
     <ClCompile Include="CMPCThemeCmdUIDialog.cpp" />
     <ClCompile Include="CMPCThemeResizableDialog.cpp" />
+    <ClCompile Include="CMPCThemeStatusBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -933,6 +934,7 @@
     <ClInclude Include="CDarkStaticLink.h" />
     <ClInclude Include="CMPCThemeCmdUIDialog.h" />
     <ClInclude Include="CMPCThemeResizableDialog.h" />
+    <ClInclude Include="CMPCThemeStatusBar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

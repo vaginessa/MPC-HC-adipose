@@ -26,8 +26,9 @@
 #include "MainFrm.h"
 #include "ISOLang.h"
 #include "PPageSubMisc.h"
+#include "CDarkTheme.h"
 
-BEGIN_MESSAGE_MAP(CSubtitleDlDlgListCtrl, CListCtrl)
+BEGIN_MESSAGE_MAP(CSubtitleDlDlgListCtrl, CDarkPlayerListCtrl)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolNeedText)
 END_MESSAGE_MAP()
 
@@ -86,7 +87,7 @@ enum {
 };
 
 CSubtitleDlDlg::CSubtitleDlDlg(CMainFrame* pParentWnd)
-    : CResizableDialog(IDD, pParentWnd)
+    : CMPCThemeResizableDialog(IDD, pParentWnd)
     , m_ps(nullptr, 0, 0)
     , m_bIsRefreshed(false)
     , m_pMainFrame(pParentWnd)
@@ -99,6 +100,7 @@ void CSubtitleDlDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LIST1, m_list);
     DDX_Control(pDX, IDC_PROGRESS1, m_progress);
     DDX_Control(pDX, IDC_STATUSBAR, m_status);
+    enableDarkThemeIfActive();
 }
 
 void CSubtitleDlDlg::SetStatusText(const CString& status, BOOL bPropagate/* = TRUE*/)
@@ -180,13 +182,18 @@ int CALLBACK CSubtitleDlDlg::SortCompare(LPARAM lParam1, LPARAM lParam2, LPARAM 
 BOOL CSubtitleDlDlg::OnInitDialog()
 {
     __super::OnInitDialog();
-
     m_progress.SetParent(&m_status);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        SetWindowTheme(m_progress.GetSafeHwnd(), _T(""), _T(""));
+        m_progress.SetBarColor(CDarkTheme::ProgressBarColor);
+        m_progress.SetBkColor(CDarkTheme::ProgressBarBGColor);
+    }
     m_progress.UpdateWindow();
 
     m_list.SetExtendedStyle(m_list.GetExtendedStyle()
-                            | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT
-                            | LVS_EX_CHECKBOXES   | LVS_EX_LABELTIP);
+                            /*| LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT */
+                            | LVS_EX_CHECKBOXES | LVS_EX_LABELTIP);
+    m_list.setAdditionalStyles(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT);
 
     m_list.SetImageList(&m_pMainFrame->m_pSubtitlesProviders->GetImageList(), LVSIL_SMALL);
 
@@ -409,7 +416,7 @@ void CSubtitleDlDlg::DownloadSelectedSubtitles()
 }
 
 // ON_UPDATE_COMMAND_UI does not work for modeless dialogs
-BEGIN_MESSAGE_MAP(CSubtitleDlDlg, CResizableDialog)
+BEGIN_MESSAGE_MAP(CSubtitleDlDlg, CMPCThemeResizableDialog)
     ON_WM_ERASEBKGND()
     ON_WM_SIZE()
     ON_COMMAND(IDC_BUTTON1, OnRefresh)
