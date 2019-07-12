@@ -73,13 +73,8 @@ void CMPCThemeStatusBar::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
 void CMPCThemeStatusBar::OnNcPaint() {
-    __super::OnNcPaint();
-}
-
-
-BOOL CMPCThemeStatusBar::OnEraseBkgnd(CDC* pDC) {
     if (!AfxGetAppSettings().bDarkThemeLoaded) {
-        return CStatusBar::OnEraseBkgnd(pDC);
+        return __super::OnNcPaint();
     } else {
         CWindowDC dc(this);
 
@@ -87,8 +82,15 @@ BOOL CMPCThemeStatusBar::OnEraseBkgnd(CDC* pDC) {
         GetWindowRect(rcWindow);
         ScreenToClient(rcWindow);
         rcWindow.OffsetRect(-rcWindow.TopLeft());
-
         dc.FillSolidRect(rcWindow, CDarkTheme::StatusBarBGColor);
+    }
+}
+
+
+BOOL CMPCThemeStatusBar::OnEraseBkgnd(CDC* pDC) {
+    if (!AfxGetAppSettings().bDarkThemeLoaded) {
+        return __super::OnEraseBkgnd(pDC);
+    } else {
         return TRUE;
     }
 }
