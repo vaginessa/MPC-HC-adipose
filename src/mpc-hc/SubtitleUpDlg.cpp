@@ -25,6 +25,7 @@
 #include "AuthDlg.h"
 #include "PPageSubMisc.h"
 #include "mplayerc.h"
+#include "CDarkTheme.h"
 
 // User Defined Window Messages
 enum {
@@ -37,7 +38,7 @@ enum {
 };
 
 CSubtitleUpDlg::CSubtitleUpDlg(CMainFrame* pParentWnd)
-    : CResizableDialog(IDD, pParentWnd)
+    : CMPCThemeResizableDialog(IDD, pParentWnd)
     , m_pMainFrame(pParentWnd)
 {
 }
@@ -48,6 +49,7 @@ void CSubtitleUpDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LIST1, m_list);
     DDX_Control(pDX, IDC_PROGRESS1, m_progress);
     DDX_Control(pDX, IDC_STATUSBAR, m_status);
+    enableDarkThemeIfActive();
 }
 
 void CSubtitleUpDlg::SetStatusText(const CString& status, BOOL bPropagate/* = TRUE*/)
@@ -63,6 +65,11 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     __super::OnInitDialog();
 
     m_progress.SetParent(&m_status);
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        SetWindowTheme(m_progress.GetSafeHwnd(), _T(""), _T(""));
+        m_progress.SetBarColor(CDarkTheme::ProgressBarColor);
+        m_progress.SetBkColor(CDarkTheme::ProgressBarBGColor);
+    }
     m_progress.UpdateWindow();
 
     int n = 0, curPos = 0;
@@ -80,8 +87,10 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     }
 
     m_list.SetExtendedStyle(m_list.GetExtendedStyle()
-                            | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT
+                            /* | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT */
                             | LVS_EX_CHECKBOXES   | LVS_EX_LABELTIP);
+    m_list.setAdditionalStyles(LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT);
+
 
     m_list.SetImageList(&m_pMainFrame->m_pSubtitlesProviders->GetImageList(), LVSIL_SMALL);
 
@@ -123,7 +132,9 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     AddAnchor(IDOK, BOTTOM_RIGHT);
     AddAnchor(IDC_STATUSBAR, BOTTOM_LEFT, BOTTOM_RIGHT);
 
-    const CSize s(500, 250);
+    CRect cr;
+    GetClientRect(cr);
+    const CSize s(cr.Width(), 250);
     SetMinTrackSize(s);
     EnableSaveRestore(IDS_R_DLG_SUBTITLEUP, TRUE);
 
@@ -228,7 +239,7 @@ void CSubtitleUpDlg::DownloadSelectedSubtitles()
 }
 
 // ON_UPDATE_COMMAND_UI dows not work for modless dialogs
-BEGIN_MESSAGE_MAP(CSubtitleUpDlg, CResizableDialog)
+BEGIN_MESSAGE_MAP(CSubtitleUpDlg, CMPCThemeResizableDialog)
     ON_WM_ERASEBKGND()
     ON_WM_SIZE()
     ON_COMMAND(IDC_BUTTON1, OnAbort)
