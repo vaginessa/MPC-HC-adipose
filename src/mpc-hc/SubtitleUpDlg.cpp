@@ -26,6 +26,7 @@
 #include "PPageSubMisc.h"
 #include "mplayerc.h"
 #include "CDarkTheme.h"
+#include "CDarkMenu.h"
 
 // User Defined Window Messages
 enum {
@@ -296,7 +297,7 @@ void CSubtitleUpDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
             COPY_URL
         };
 
-        CMenu m;
+        CDarkMenu m;
         m.CreatePopupMenu();
         m.AppendMenu(MF_STRING | (provider.Flags(SPF_LOGIN) ? MF_ENABLED : MF_DISABLED), SET_CREDENTIALS,
                      ResStr(IDS_SUBMENU_SETUP));
@@ -309,6 +310,9 @@ void CSubtitleUpDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
         m.AppendMenu(MF_SEPARATOR);
         m.AppendMenu(MF_STRING | MF_ENABLED, OPEN_URL, ResStr(IDS_SUBMENU_OPENURL));
         m.AppendMenu(MF_STRING | MF_ENABLED, COPY_URL, ResStr(IDS_SUBMENU_COPYURL));
+        if (s.bDarkThemeLoaded) {
+            m.ActivateDarkTheme();
+        }
 
         CPoint pt = lpnmlv->ptAction;
         ::MapWindowPoints(lpnmlv->hdr.hwndFrom, HWND_DESKTOP, &pt, 1);

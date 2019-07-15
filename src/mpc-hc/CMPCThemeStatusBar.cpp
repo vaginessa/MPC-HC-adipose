@@ -62,6 +62,7 @@ void CMPCThemeStatusBar::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     CFont font;
     CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDMessageFont);
     dc.SelectObject(&font);
+    dc.FillSolidRect(rect, CDarkTheme::StatusBarBGColor);
     dc.DrawText(texts[item], rect, 0);
     if (item < numParts - 1) { //draw a separator
         CRect separator(rect.right, rect.top, rect.right + 1, rect.bottom);

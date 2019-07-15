@@ -3722,6 +3722,20 @@ BEGIN
     IDS_CMD_SHADERPRESET    "/shaderpreset ""Pr""\tStart using ""Pr"" shader preset"
 END
 
+STRINGTABLE
+BEGIN
+    IDS_MESSAGEBOX_CANCEL   "Cancel"
+    IDS_MESSAGEBOX_ABORT    "&Abort"
+    IDS_MESSAGEBOX_RETRY    "&Retry"
+    IDS_MESSAGEBOX_IGNORE   "&Ignore"
+    IDS_MESSAGEBOX_OK       "OK"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_MESSAGEBOX_CONTINUE "&Continue"
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

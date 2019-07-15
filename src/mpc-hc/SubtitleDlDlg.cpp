@@ -27,6 +27,7 @@
 #include "ISOLang.h"
 #include "PPageSubMisc.h"
 #include "CDarkTheme.h"
+#include "CDarkMenu.h"
 
 BEGIN_MESSAGE_MAP(CSubtitleDlDlgListCtrl, CDarkPlayerListCtrl)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolNeedText)
@@ -477,12 +478,15 @@ void CSubtitleDlDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
             COPY_URL
         };
 
-        CMenu m;
+        CDarkMenu m;
         m.CreatePopupMenu();
         m.AppendMenu(MF_STRING | (m_list.GetCheck(lpnmlv->iItem) != -1 ? MF_ENABLED : MF_DISABLED), DOWNLOAD, ResStr(IDS_SUBMENU_DOWNLOAD));
         m.AppendMenu(MF_SEPARATOR);
         m.AppendMenu(MF_STRING | (!subtitlesInfo.url.empty() ? MF_ENABLED : MF_DISABLED), OPEN_URL, ResStr(IDS_SUBMENU_OPENURL));
         m.AppendMenu(MF_STRING | (!subtitlesInfo.url.empty() ? MF_ENABLED : MF_DISABLED), COPY_URL, ResStr(IDS_SUBMENU_COPYURL));
+        if (AfxGetAppSettings().bDarkThemeLoaded) {
+            m.ActivateDarkTheme();
+        }
 
         CPoint pt = lpnmlv->ptAction;
         ::MapWindowPoints(lpnmlv->hdr.hwndFrom, HWND_DESKTOP, &pt, 1);

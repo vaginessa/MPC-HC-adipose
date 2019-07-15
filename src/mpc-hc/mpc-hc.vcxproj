@@ -139,6 +139,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.cpp" />
     <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="AppSettings.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
     <ClCompile Include="CMPCThemeCmdUIDialog.cpp" />
+    <ClCompile Include="CMPCThemeMsgBox.cpp" />
     <ClCompile Include="CMPCThemeResizableDialog.cpp" />
     <ClCompile Include="CMPCThemeStatusBar.cpp" />
     <ClCompile Include="ColorButton.cpp" />
@@ -308,6 +310,7 @@
     <ClCompile Include="YoutubeDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.h" />
     <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AppSettings.h" />
@@ -341,6 +344,7 @@
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
     <ClInclude Include="CMPCThemeCmdUIDialog.h" />
+    <ClInclude Include="CMPCThemeMsgBox.h" />
     <ClInclude Include="CMPCThemeResizableDialog.h" />
     <ClInclude Include="CMPCThemeStatusBar.h" />
     <ClInclude Include="ColorButton.h" />

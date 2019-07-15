@@ -46,6 +46,7 @@
 #include <regex>
 #include "ExceptionHandler.h"
 #include "FGFilterLAV.h"
+#include "CMPCThemeMsgBox.h"
 
 #define HOOKS_BUGS_URL _T("https://trac.mpc-hc.org/ticket/3739")
 
@@ -649,6 +650,24 @@ CMPlayerCApp::~CMPlayerCApp()
     }
     // Wait for any pending I/O operations to be canceled
     while (WAIT_IO_COMPLETION == SleepEx(0, TRUE));
+}
+
+int CMPlayerCApp::DoMessageBox(LPCTSTR lpszPrompt, UINT nType,
+    UINT nIDPrompt) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+
+        CWnd* pParentWnd = CWnd::GetActiveWindow();
+        if (pParentWnd == NULL) {
+            pParentWnd = GetMainWnd()->GetLastActivePopup();
+        }
+
+        CMPCThemeMsgBox dlgMessage(pParentWnd, lpszPrompt, _T(""), nType,
+            nIDPrompt);
+
+        return (int)dlgMessage.DoModal();
+    } else {
+        return CWinApp::DoMessageBox(lpszPrompt, nType, nIDPrompt);
+    }
 }
 
 void CMPlayerCApp::DelayedIdle()
