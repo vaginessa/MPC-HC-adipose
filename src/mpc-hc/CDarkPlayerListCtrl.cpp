@@ -271,11 +271,14 @@ void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             }
 
             rTextBG = rText;
-
-            HDITEM hditem = { 0 };
-            hditem.mask = HDI_FORMAT;
-            GetHeaderCtrl()->GetItem(nSubItem, &hditem);
-            int align = hditem.fmt & HDF_JUSTIFYMASK;
+            CHeaderCtrl *hdrCtrl = GetHeaderCtrl();
+            int align = DT_LEFT;
+            if (nullptr != hdrCtrl) {
+                HDITEM hditem = { 0 };
+                hditem.mask = HDI_FORMAT;
+                hdrCtrl->GetItem(nSubItem, &hditem);
+                align = hditem.fmt & HDF_JUSTIFYMASK;
+            }
             UINT textFormat = DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS;
             if (align == HDF_CENTER)
                 textFormat |= DT_CENTER;
@@ -340,6 +343,11 @@ void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             if (IsWindowEnabled()) {
                 if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
                     bgClr = CDarkTheme::ContentSelectedColor;
+                    if (LVS_REPORT != (GetExtendedStyle() & LVS_TYPEMASK)) { //in list mode we don't fill the "whole" column
+                        CRect tmp = rText;
+                        dcMem.DrawText(text, tmp, textFormat | DT_CALCRECT); //end of string
+                        rTextBG.right = tmp.right + (rText.left - rTextBG.left); //end of string plus same indent from the left side
+                    }
                 } else if (hasCheckedColors) {
                     if (isChecked && checkedBGClr != -1) {
                         bgClr = checkedBGClr;
@@ -388,7 +396,14 @@ BOOL CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
         if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
-            *pResult = CDRF_NOTIFYSUBITEMDRAW;
+            if (LVS_REPORT == (GetExtendedStyle() & LVS_TYPEMASK)) {
+                *pResult = CDRF_NOTIFYSUBITEMDRAW;
+            } else {
+                int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
+                CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
+                drawItem(pDC, nItem, 0);
+                *pResult = CDRF_SKIPDEFAULT;
+            }
         } else if (pLVCD->nmcd.dwDrawStage == (CDDS_ITEMPREPAINT | CDDS_SUBITEM)) {
             int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
             if (IsItemVisible(nItem)) {
