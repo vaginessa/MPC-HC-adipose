@@ -22,10 +22,11 @@
 #pragma once
 
 #include "SaveImageDialog.h"
+#include "CDarkChildHelper.h"
 
 // CSaveThumbnailsDialog
 
-class CSaveThumbnailsDialog : public CSaveImageDialog
+class CSaveThumbnailsDialog : public CSaveImageDialog, public CDarkChildHelper
 {
     DECLARE_DYNAMIC(CSaveThumbnailsDialog)
 
@@ -35,15 +36,16 @@ public:
         LPCTSTR lpszDefExt = nullptr, LPCTSTR lpszFileName = nullptr,
         LPCTSTR lpszFilter = nullptr, CWnd* pParentWnd = nullptr);
     virtual ~CSaveThumbnailsDialog();
+    virtual INT_PTR DoModal();
 
 protected:
     DECLARE_MESSAGE_MAP()
     virtual BOOL OnInitDialog();
     virtual BOOL OnFileNameOK();
-
 public:
     int m_rows, m_cols, m_width;
     CSpinButtonCtrl m_rowsctrl;
     CSpinButtonCtrl m_colsctrl;
     CSpinButtonCtrl m_widthctrl;
+    CEdit edit3;
 };

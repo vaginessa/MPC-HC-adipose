@@ -159,6 +159,7 @@ CAppSettings::CAppSettings()
     , bPreferHearingImpairedSubtitles(false)
     , bDarkTheme(false)
     , bDarkThemeLoaded(false)
+    , bWindows10DarkThemeActive(false)
     , nJumpDistS(DEFAULT_JUMPDISTANCE_1)
     , nJumpDistM(DEFAULT_JUMPDISTANCE_2)
     , nJumpDistL(DEFAULT_JUMPDISTANCE_3)
@@ -1538,6 +1539,16 @@ void CAppSettings::LoadSettings()
     bPreferHearingImpairedSubtitles = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_PREFERHEARINGIMPAIREDSUBTITLES, FALSE);
     bDarkTheme = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_DARKTHEME, FALSE);
     bDarkThemeLoaded = bDarkTheme;
+    if (IsWindows10OrGreater()) {
+        CRegKey key;
+        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"), KEY_READ)) {
+            DWORD useTheme = -1;
+            if (ERROR_SUCCESS == key.QueryDWORDValue(_T("AppsUseLightTheme"), useTheme)) {
+                if (0 == useTheme) bWindows10DarkThemeActive = true;
+            }
+        }
+    }
+
     strSubtitlesProviders = pApp->GetProfileString(IDS_R_SETTINGS, IDS_RS_SUBTITLESPROVIDERS, _T("<|OpenSubtitles|||1|1|>"));
     strSubtitlePaths = pApp->GetProfileString(IDS_R_SETTINGS, IDS_RS_SUBTITLEPATHS, DEFAULT_SUBTITLE_PATHS);
     fUseDefaultSubtitlesStyle = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_USEDEFAULTSUBTITLESSTYLE, FALSE);

@@ -2,12 +2,15 @@
 #include "CDarkChildHelper.h"
 #include "CDarkTheme.h"
 #include "mplayerc.h"
+#include "MainFrm.h"
+
 #undef SubclassWindow
 
 
 CBrush CDarkChildHelper::darkContentBrush = CBrush();
 CBrush CDarkChildHelper::darkWindowBrush = CBrush();
 CBrush CDarkChildHelper::darkControlAreaBrush = CBrush();
+CBrush CDarkChildHelper::W10DarkThemeFileDialogInjectedBGBrush = CBrush();
 
 CFont CDarkChildHelper::dialogFont = CFont();
 
@@ -48,10 +51,7 @@ CDarkChildHelper::~CDarkChildHelper() {
 void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
 
-        if (darkContentBrush.m_hObject == nullptr) darkContentBrush.CreateSolidBrush(CDarkTheme::ContentBGColor);
-        if (darkWindowBrush.m_hObject == nullptr) darkWindowBrush.CreateSolidBrush(CDarkTheme::WindowBGColor);
-        if (darkControlAreaBrush.m_hObject == nullptr) darkControlAreaBrush.CreateSolidBrush(CDarkTheme::ControlAreaBGColor);
-        if (dialogFont.m_hObject == nullptr) CDarkTheme::getFontByType(dialogFont, wnd->GetWindowDC(), CDarkTheme::CDDialogFont);
+        initHelperObjects(wnd);
 
         CWnd* pChild = wnd->GetWindow(GW_CHILD);
         while (pChild) {
@@ -128,6 +128,63 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
     }
 }
 
+void CDarkChildHelper::initHelperObjects(CWnd* wnd) {
+    if (darkContentBrush.m_hObject == nullptr) darkContentBrush.CreateSolidBrush(CDarkTheme::ContentBGColor);
+    if (darkWindowBrush.m_hObject == nullptr) darkWindowBrush.CreateSolidBrush(CDarkTheme::WindowBGColor);
+    if (darkControlAreaBrush.m_hObject == nullptr) darkControlAreaBrush.CreateSolidBrush(CDarkTheme::ControlAreaBGColor);
+    if (W10DarkThemeFileDialogInjectedBGBrush.m_hObject == nullptr) W10DarkThemeFileDialogInjectedBGBrush.CreateSolidBrush(CDarkTheme::W10DarkThemeFileDialogInjectedBGColor);
+    if (dialogFont.m_hObject == nullptr) CDarkTheme::getFontByType(dialogFont, wnd->GetWindowDC(), CDarkTheme::CDDialogFont);
+}
+
+LRESULT CALLBACK wndProcFileDialog(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    WNDPROC wndProcSink = NULL;
+    wndProcSink = (WNDPROC)GetProp(hWnd, _T("WNDPROC_SINK"));
+    VERIFY(wndProcSink);
+    if (WM_CTLCOLOREDIT == uMsg) {
+        return (LRESULT)CDarkChildHelper::DarkCtlColorFileDialog((HDC)wParam, CTLCOLOR_EDIT);
+    }
+    if (!wndProcSink) return 0;
+    return ::CallWindowProc(wndProcSink, hWnd, uMsg, wParam, lParam);
+}
+
+
+void CDarkChildHelper::subClassFileDialog(CWnd* wnd, HWND hWnd, bool findSink) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        initHelperObjects(wnd);
+        HWND pChild = ::GetWindow(hWnd, GW_CHILD);
+
+        while (pChild) {
+            TCHAR childWindowClass[MAX_PATH];
+            ::GetClassName(pChild, childWindowClass, _countof(childWindowClass));
+            if (findSink) {
+                if (0 == _tcsicmp(childWindowClass, _T("FloatNotifySink"))) { //children are the injected controls
+                    subClassFileDialog(wnd, pChild, false); //recurse into the sinks
+                }
+            } else {
+                if (0 == _tcsicmp(childWindowClass, WC_STATIC)) {
+                    CWnd* c = CWnd::FromHandle(pChild);
+                    c->UnsubclassWindow();
+                    CDarkStatic* pObject = new CDarkStatic();
+                    pObject->setFileDialogChild(true);
+                    allocatedStatics.push_back(pObject);
+                    pObject->SubclassWindow(pChild);
+                } else if (0 == _tcsicmp(childWindowClass, WC_EDIT)) {
+                    CWnd* c = CWnd::FromHandle(pChild);
+                    c->UnsubclassWindow();
+                    CDarkEdit* pObject = new CDarkEdit();
+                    pObject->setFileDialogChild(true);
+                    allocatedEdits.push_back(pObject);
+                    pObject->SubclassWindow(pChild);
+                    if (nullptr == GetProp(hWnd, _T("WNDPROC_SINK"))) {
+                        LONG_PTR wndProcOld = ::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)wndProcFileDialog);
+                        SetProp(hWnd, _T("WNDPROC_SINK"), (HANDLE)wndProcOld);
+                    }
+                }
+            }
+            pChild = ::GetNextWindow(pChild, GW_HWNDNEXT);
+        }
+    }
+}
 AFX_STATIC DLGITEMTEMPLATE* AFXAPI _AfxFindNextDlgItem(DLGITEMTEMPLATE* pItem, BOOL bDialogEx);
 AFX_STATIC DLGITEMTEMPLATE* AFXAPI _AfxFindFirstDlgItem(const DLGTEMPLATE* pTemplate);
 
@@ -207,6 +264,24 @@ bool CDarkChildHelper::ModifyTemplates(CPropertySheet *sheet, CRuntimeClass* pag
     return true;
 }
 
+void CDarkChildHelper::enableFileDialogHook() {
+    CMainFrame* pMainFrame = AfxGetMainFrame();
+    pMainFrame->enableFileDialogHook(this);
+}
+
+HBRUSH CDarkChildHelper::DarkCtlColorFileDialog(HDC hDC, UINT nCtlColor) {
+    if (CTLCOLOR_EDIT == nCtlColor) {
+        ::SetTextColor(hDC, CDarkTheme::W10DarkThemeFileDialogInjectedTextColor);
+        ::SetBkColor(hDC, CDarkTheme::W10DarkThemeFileDialogInjectedBGColor);
+        return W10DarkThemeFileDialogInjectedBGBrush;
+    } else if (CTLCOLOR_STATIC == nCtlColor) {
+        ::SetTextColor(hDC, CDarkTheme::W10DarkThemeFileDialogInjectedTextColor);
+        ::SetBkColor(hDC, CDarkTheme::W10DarkThemeFileDialogInjectedBGColor);
+        return W10DarkThemeFileDialogInjectedBGBrush;
+    } else {
+        return NULL;
+    }
+}
 
 HBRUSH CDarkChildHelper::DarkCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {

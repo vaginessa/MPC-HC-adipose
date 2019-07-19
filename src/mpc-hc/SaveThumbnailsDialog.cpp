@@ -22,7 +22,8 @@
 #include "stdafx.h"
 #include "mplayerc.h"
 #include "SaveThumbnailsDialog.h"
-
+#include "CDarkStatic.h"
+#undef SubclassWindow
 
 // CSaveThumbnailsDialog
 
@@ -61,6 +62,11 @@ CSaveThumbnailsDialog::CSaveThumbnailsDialog(
 
 CSaveThumbnailsDialog::~CSaveThumbnailsDialog()
 {
+}
+
+INT_PTR CSaveThumbnailsDialog::DoModal() {
+    enableFileDialogHook();
+    return __super::DoModal();
 }
 
 BOOL CSaveThumbnailsDialog::OnInitDialog()

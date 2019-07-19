@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "CDarkStatic.h"
 #include "CDarkTheme.h"
+#include "CDarkChildHelper.h"
 
 CDarkStatic::CDarkStatic() {
+    isFileDialogChild = false;
 }
 
 
@@ -127,9 +129,14 @@ void CDarkStatic::OnEnable(BOOL bEnable) {
     }
 }
 
-
 BOOL CDarkStatic::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (isFileDialogChild) {
+            CRect r;
+            GetClientRect(r);
+            HBRUSH hBrush=CDarkChildHelper::DarkCtlColorFileDialog(pDC->GetSafeHdc(), CTLCOLOR_STATIC);
+            ::FillRect(pDC->GetSafeHdc(), r, hBrush);
+        }
         return TRUE;
     } else {
         return CStatic::OnEraseBkgnd(pDC);

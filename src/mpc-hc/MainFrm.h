@@ -1050,6 +1050,8 @@ public:
         DWORD dwExStyle = 0,
         CCreateContext* pContext = NULL);
     CDarkMenu *m_DefaultDarkMenu = nullptr;
+    void enableFileDialogHook(CDarkChildHelper* helper);
+
 protected:
     afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
     // GDI+
@@ -1122,4 +1124,8 @@ private:
     bool CanSendToYoutubeDL(const CString url);
     bool ProcessYoutubeDLURL(CString url, bool append);
     bool DownloadWithYoutubeDL(CString url, CString filename);
+
+    bool watchingFileDialog;
+    HWND fileDialogHandle;
+    CDarkChildHelper* fileDialogHookHelper;
 };

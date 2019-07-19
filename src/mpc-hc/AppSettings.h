@@ -629,6 +629,7 @@ public:
     bool            bPreferHearingImpairedSubtitles;
     bool            bDarkThemeLoaded;
     bool            bDarkTheme;
+    bool            bWindows10DarkThemeActive;
     CString         strSubtitlesProviders;
     CString         strSubtitlePaths;
 

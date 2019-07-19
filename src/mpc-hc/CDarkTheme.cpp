@@ -93,6 +93,11 @@ const COLORREF CDarkTheme::ListCtrlGridColor = COLORREF(RGB(99, 99, 99));
 const COLORREF CDarkTheme::StatusBarBGColor = COLORREF(RGB(51, 51, 51));
 const COLORREF CDarkTheme::StatusBarSeparatorColor = COLORREF(RGB(247, 247, 247));
 
+const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedTextColor = COLORREF(RGB(255, 255, 255));
+const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedBGColor = COLORREF(RGB(56, 56, 56));
+const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedBGColorEditBorderColor = COLORREF(RGB(155, 155, 155));
+
+
 const COLORREF CDarkTheme::ProgressBarBGColor = COLORREF(RGB(0, 0, 0));
 const COLORREF CDarkTheme::ProgressBarColor = COLORREF(RGB(75, 75, 75));
 

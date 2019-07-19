@@ -15,10 +15,14 @@ public:
 	virtual ~CDarkChildHelper();
     static bool ModifyTemplates(CPropertySheet * sheet, CRuntimeClass* pageClass, DWORD id, DWORD addStyle, DWORD removeStyle = 0);
 
+    void enableFileDialogHook();
+
+    static HBRUSH DarkCtlColorFileDialog(HDC hDC, UINT nCtlColor);
     HBRUSH DarkCtlColor(CDC * pDC, CWnd * pWnd, UINT nCtlColor);
+    void subClassFileDialog(CWnd* wnd, HWND hwnd, bool findSink = true);
 
 protected:
-    static CBrush darkContentBrush, darkWindowBrush, darkControlAreaBrush;
+    static CBrush darkContentBrush, darkWindowBrush, darkControlAreaBrush, W10DarkThemeFileDialogInjectedBGBrush;
     static CFont dialogFont;
     std::vector<CDarkButton *> allocatedButtons;
     std::vector<CDarkGroupBox *> allocatedGroupBoxes;
@@ -31,5 +35,6 @@ protected:
     std::vector<CDarkStatic *> allocatedStatics;
 
     void enableDarkThemeIfActive(CWnd *wnd);
+    void initHelperObjects(CWnd* wnd);
 };
 

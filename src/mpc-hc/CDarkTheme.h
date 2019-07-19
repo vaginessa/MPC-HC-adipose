@@ -92,6 +92,11 @@ public:
 
     static const COLORREF StatusBarBGColor;
     static const COLORREF StatusBarSeparatorColor;
+    static const COLORREF StatusBarEditBorderColor;
+
+    static const COLORREF W10DarkThemeFileDialogInjectedTextColor;
+    static const COLORREF W10DarkThemeFileDialogInjectedBGColor;
+    static const COLORREF W10DarkThemeFileDialogInjectedBGColorEditBorderColor;
 
     static const COLORREF ProgressBarBGColor;
     static const COLORREF ProgressBarColor;

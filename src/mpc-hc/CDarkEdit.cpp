@@ -5,6 +5,7 @@
 CDarkEdit::CDarkEdit() {
     buddy = nullptr;
     darkSBHelper = nullptr;
+    isFileDialogChild = false;
 //horizontal scrollbar broken for CEdit, we must theme ourselves
 //    if (!CDarkTheme::canUseWin10DarkTheme()) {
         darkSBHelper = DEBUG_NEW CDarkScrollBarHelper(this);
@@ -29,7 +30,7 @@ END_MESSAGE_MAP()
 
 void CDarkEdit::PreSubclassWindow() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        ModifyStyleEx(WS_BORDER, WS_EX_STATICEDGE, 0);
+        ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
         if (CDarkTheme::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
@@ -55,7 +56,12 @@ void CDarkEdit::OnNcPaint() {
             GetWindowRect(&rect);
             rect.OffsetRect(-rect.left, -rect.top);
 
-            CBrush brush(CDarkTheme::EditBorderColor);
+            CBrush brush;
+            if (isFileDialogChild) {//special case for edits injected to file dialog
+                brush.CreateSolidBrush(CDarkTheme::W10DarkThemeFileDialogInjectedBGColorEditBorderColor);
+            } else {
+                brush.CreateSolidBrush(CDarkTheme::EditBorderColor);
+            }
 
             dc.FrameRect(&rect, &brush);
             if (nullptr != buddy) buddy->Invalidate();
@@ -86,5 +92,5 @@ void CDarkEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     __super::OnHScroll(nSBCode, nPos, pScrollBar);
     if (nullptr != darkSBHelper) {
         darkSBHelper->updateDarkScrollInfo();
-    }
+    } 
 }

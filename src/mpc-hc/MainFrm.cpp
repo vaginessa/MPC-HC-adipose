@@ -782,6 +782,8 @@ CMainFrame::CMainFrame()
     , m_dLastVideoScaleFactor(0)
     , m_bExtOnTop(false)
     , m_bIsBDPlay(false)
+    , watchingFileDialog(false)
+    , fileDialogHookHelper(nullptr)
 {
     // Don't let CFrameWnd handle automatically the state of the menu items.
     // This means that menu items without handlers won't be automatically
@@ -16428,6 +16430,14 @@ BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwS
     return FALSE;
 }
 
+void CMainFrame::enableFileDialogHook(CDarkChildHelper* helper) {
+    if (AfxGetAppSettings().bWindows10DarkThemeActive) { //hard coded behavior for windows 10 dark theme file dialogs, irrespsective of theme loaded by user (fixing windows bugs)
+        watchingFileDialog = true;
+        fileDialogHookHelper = helper;
+        fileDialogHandle = nullptr;
+    }
+}
+
 LRESULT CMainFrame::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
     if ((message == WM_COMMAND) && (THBN_CLICKED == HIWORD(wParam))) {
@@ -16458,6 +16468,19 @@ LRESULT CMainFrame::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
                 break;
         }
         return 0;
+    } else if (watchingFileDialog && message == WM_ACTIVATE && LOWORD(wParam) == WA_INACTIVE) {
+        fileDialogHandle = (HWND)lParam;
+        watchingFileDialog = false;
+        //capture but process message normally
+    } else if (message == WM_GETICON && nullptr != fileDialogHandle) {
+        HWND duiview = ::FindWindowEx(fileDialogHandle, NULL, _T("DUIViewWndClassName"), NULL);
+        HWND duihwnd = ::FindWindowEx(duiview, NULL, _T("DirectUIHWND"), NULL);
+        HWND firstchild = ::GetWindow(duihwnd, GW_CHILD);
+        if (nullptr != firstchild) {
+            fileDialogHookHelper->subClassFileDialog(this, duihwnd);
+            ::RedrawWindow(duiview, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+            fileDialogHandle = nullptr;
+        }
     }
 
     LRESULT ret = 0;
