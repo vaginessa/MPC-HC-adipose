@@ -4,6 +4,7 @@
 
 CDarkScrollBarHelper::CDarkScrollBarHelper(CWnd* scrollWindow) {
     window = scrollWindow;
+    pParent == nullptr;
 }
 
 
@@ -35,6 +36,7 @@ void CDarkScrollBarHelper::setDarkDrawingArea(CRect &cr, CRect &wr, bool clippin
     window->GetWindowRect(&wr);
 
     CRect wrOnParent = wr;
+    pParent = window->GetParent();
     if (nullptr != pParent) {
         pParent->ScreenToClient(wrOnParent);
     }

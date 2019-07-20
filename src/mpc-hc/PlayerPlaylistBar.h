@@ -22,7 +22,7 @@
 #pragma once
 
 #include <afxcoll.h>
-#include "PlayerBar.h"
+#include "CMPCThemePlayerBar.h"
 #include "CDarkPlayerListCtrl.h"
 #include "Playlist.h"
 #include "DropTarget.h"
@@ -34,7 +34,7 @@ class OpenMediaData;
 
 class CMainFrame;
 
-class CPlayerPlaylistBar : public CPlayerBar, public CDropClient
+class CPlayerPlaylistBar : public CMPCThemePlayerBar, public CDropClient
 {
     DECLARE_DYNAMIC(CPlayerPlaylistBar)
 
@@ -163,10 +163,4 @@ public:
     afx_msg void OnXButtonDown(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonUp(UINT nFlags, UINT nButton, CPoint point);
     afx_msg void OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point);
-    afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-    void NcPaintGripper(CDC* pDC, CRect rcClient);
-    void mpc_fillNcBG(CDC *mdc, CRect rcDraw);
-    void OnLvnItemchangedList(NMHDR * pNMHDR, LRESULT * pResult);
-    LRESULT OnDelayed_updateListCtrl(WPARAM, LPARAM);
 };

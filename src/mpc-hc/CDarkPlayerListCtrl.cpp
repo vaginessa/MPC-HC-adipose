@@ -57,6 +57,8 @@ BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_WM_CTLCOLOR()
     ON_NOTIFY(HDN_ENDTRACKA, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
     ON_NOTIFY(HDN_ENDTRACKW, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
+    ON_NOTIFY_REFLECT(LVN_ITEMCHANGED, &CDarkPlayerListCtrl::OnLvnItemchanged)
+    ON_MESSAGE(PLAYER_PLAYLIST_LVN_ITEMCHANGED, OnDelayed_updateListCtrl)
 END_MESSAGE_MAP()
 
 void CDarkPlayerListCtrl::subclassHeader() {
@@ -482,6 +484,20 @@ void CDarkPlayerListCtrl::OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult) {
         if (nullptr != darkSBHelper) {
             darkSBHelper->updateDarkScrollInfo();
         }
+    }
+    *pResult = 0;
+}
+
+LRESULT CDarkPlayerListCtrl::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
+    updateDarkScrollInfo();
+    return 0;
+}
+
+void CDarkPlayerListCtrl::OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult) {
+    LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+    const CAppSettings& s = AfxGetAppSettings();
+    if (s.bDarkThemeLoaded) {
+        ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);
     }
     *pResult = 0;
 }

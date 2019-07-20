@@ -36,7 +36,7 @@
 
 
 
-IMPLEMENT_DYNAMIC(CPlayerPlaylistBar, CPlayerBar)
+IMPLEMENT_DYNAMIC(CPlayerPlaylistBar, CMPCThemePlayerBar)
 CPlayerPlaylistBar::CPlayerPlaylistBar(CMainFrame* pMainFrame)
     : m_pMainFrame(pMainFrame)
     , m_list(0)
@@ -913,7 +913,7 @@ void CPlayerPlaylistBar::SavePlaylist()
     }
 }
 
-BEGIN_MESSAGE_MAP(CPlayerPlaylistBar, CPlayerBar)
+BEGIN_MESSAGE_MAP(CPlayerPlaylistBar, CMPCThemePlayerBar)
     ON_WM_DESTROY()
     ON_WM_SIZE()
     ON_NOTIFY(LVN_KEYDOWN, IDC_PLAYLIST, OnLvnKeyDown)
@@ -930,8 +930,6 @@ BEGIN_MESSAGE_MAP(CPlayerPlaylistBar, CPlayerBar)
     ON_WM_CONTEXTMENU()
     ON_NOTIFY(LVN_BEGINLABELEDIT, IDC_PLAYLIST, OnLvnBeginlabeleditList)
     ON_NOTIFY(LVN_ENDLABELEDIT, IDC_PLAYLIST, OnLvnEndlabeleditList)
-    ON_NOTIFY(LVN_ITEMCHANGED, IDC_PLAYLIST, OnLvnItemchangedList)
-    ON_MESSAGE(PLAYER_PLAYLIST_LVN_ITEMCHANGED, OnDelayed_updateListCtrl)
     ON_WM_XBUTTONDOWN()
     ON_WM_XBUTTONUP()
     ON_WM_XBUTTONDBLCLK()
@@ -1868,127 +1866,4 @@ void CPlayerPlaylistBar::OnXButtonUp(UINT nFlags, UINT nButton, CPoint point)
 void CPlayerPlaylistBar::OnXButtonDblClk(UINT nFlags, UINT nButton, CPoint point)
 {
     OnXButtonDown(nFlags, nButton, point);
-}
-
-BOOL CPlayerPlaylistBar::OnEraseBkgnd(CDC * pDC) {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        CRect rect;
-        pDC->GetClipBox(&rect);
-        pDC->FillSolidRect(rect.left, rect.top, rect.Width(), rect.Height(), CDarkTheme::WindowBGColor);
-
-        return TRUE;
-    } else {
-        return __super::OnEraseBkgnd(pDC);
-    }
-}
-
-void biHidePaintDark(CDC* pDC, CSCBButton b) //derived from CSCBButton::Paint
-{
-    CRect rc = b.GetRect();
-
-    if (b.bPushed)
-        pDC->FillSolidRect(rc, CDarkTheme::ClosePushColor);
-    else if (b.bRaised)
-        pDC->FillSolidRect(rc, CDarkTheme::CloseHoverColor);
-
-    COLORREF clrOldTextColor = pDC->GetTextColor();
-    pDC->SetTextColor(CDarkTheme::TextFGColor);
-    int nPrevBkMode = pDC->SetBkMode(TRANSPARENT);
-    CFont font;
-    int ppi = pDC->GetDeviceCaps(LOGPIXELSX);
-    int pointsize = MulDiv(60, 96, ppi); // 6 points at 96 ppi
-    font.CreatePointFont(pointsize, _T("Marlett"));
-    CFont* oldfont = pDC->SelectObject(&font);
-
-    //mpc-hc custom code start
-    // TextOut is affected by the layout so we need to account for that
-    DWORD dwLayout = pDC->GetLayout();
-    CRect pt = b.GetRect();
-    pDC->TextOut(pt.left + (dwLayout == LAYOUT_LTR ? 2 : -1), pt.top + 2, CString(_T("r"))); // x-like
-    //mpc-hc custom code end
-
-    pDC->SelectObject(oldfont);
-    pDC->SetBkMode(nPrevBkMode);
-    pDC->SetTextColor(clrOldTextColor);
-}
-
-
-void CPlayerPlaylistBar::NcPaintGripper(CDC * pDC, CRect rcClient){ //derived from CSizingControlBarG base implementation
-    const CAppSettings& s = AfxGetAppSettings();
-    if (!s.bDarkThemeLoaded) {
-        __super::NcPaintGripper(pDC, rcClient);
-        return;
-    }
-
-    if (!HasGripper())
-        return;
-
-    CRect gripper = rcClient;
-    CRect rcbtn = m_biHide.GetRect();
-    BOOL bHorz = IsHorzDocked();
-    CBitmap patternBMP;
-
-    gripper.DeflateRect(1, 1);
-
-    if (bHorz) {   // gripper at left
-        gripper.left -= m_cyGripper;
-        gripper.right = gripper.left + CDarkTheme::gripPatternLong;
-        gripper.top = rcbtn.bottom + 3;
-        patternBMP.CreateBitmap(CDarkTheme::gripPatternLong, CDarkTheme::gripPatternShort, 1, 1, CDarkTheme::GripperBitsV);
-    } else {   // gripper at top
-        gripper.top -= m_cyGripper;
-        gripper.bottom = gripper.top + CDarkTheme::gripPatternLong;
-        gripper.right = rcbtn.left - 3;
-        patternBMP.CreateBitmap(CDarkTheme::gripPatternShort, CDarkTheme::gripPatternLong, 1, 1, CDarkTheme::GripperBitsH);
-    }
-
-    CBrush brush;
-    brush.CreatePatternBrush(&patternBMP);
-
-    CDC dcMemory;
-    CBitmap gb;
-    CRect memRect(0, 0, gripper.Width(), gripper.Height());
-    gb.CreateCompatibleBitmap(pDC, memRect.right, memRect.bottom);
-    dcMemory.CreateCompatibleDC(pDC);
-    dcMemory.SelectObject(&gb);
-    dcMemory.SetTextColor(CDarkTheme::WindowBGColor);
-    dcMemory.SetBkColor(CDarkTheme::GripperPatternColor);
-    dcMemory.FillRect(memRect, &brush);
-
-    pDC->BitBlt(gripper.left, gripper.top, gripper.Width(), gripper.Height(), &dcMemory, 0, 0, SRCCOPY);
-
-    biHidePaintDark(pDC, m_biHide);
-}
-
-void CPlayerPlaylistBar::mpc_fillNcBG(CDC* mdc, CRect rcDraw) {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        if (IsFloating()) {
-            rcDraw.DeflateRect(1, 1);
-        }
-        mdc->FillSolidRect(rcDraw, CDarkTheme::WindowBGColor);
-    } else {
-        __super::mpc_fillNcBG(mdc, rcDraw);
-    }
-}
-
-void CPlayerPlaylistBar::OnLvnItemchangedList(NMHDR* pNMHDR, LRESULT* pResult) {
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);
-    }
-    *pResult = 0;
-}
-
-LRESULT CPlayerPlaylistBar::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
-    m_list.updateDarkScrollInfo();
-    return 0;
-}
-
-VOID CPlayerPlaylistBar::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
-    int nID = pScrollBar->GetDlgCtrlID();
-    if (nID == IDC_DARKVSCROLLBAR) { //we are getting scroll messages for the dark scrollbars
-        m_list.SendMessage(WM_VSCROLL, MAKELONG(nSBCode, nPos), 0); //forces a scroll event, which will update the darkscrollbar too
-    }
 }

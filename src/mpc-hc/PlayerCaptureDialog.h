@@ -22,11 +22,15 @@
 #pragma once
 
 #include "FloatEdit.h"
-#include "ResizableLib/ResizableDialog.h"
+#include "CMPCThemeResizableDialog.h"
 #include "resource.h"
 #include <atlcoll.h>
 #include <dvdmedia.h>
-
+#include "CDarkComboBox.h"
+#include "CDarkSpinButtonCtrl.h"
+#include "CDarkEdit.h"
+#include "CDarkButton.h"
+#include "CDarkRadioOrCheck.h"
 
 class CMainFrame;
 
@@ -346,7 +350,7 @@ typedef CAtlArray<Codec> CCodecArray;
 
 // CPlayerCaptureDialog dialog
 
-class CPlayerCaptureDialog : public CResizableDialog
+class CPlayerCaptureDialog : public CMPCThemeResizableDialog
 {
     //DECLARE_DYNAMIC(CPlayerCaptureDialog)
 
@@ -354,36 +358,37 @@ private:
     CMainFrame* m_pMainFrame;
     bool m_bInitialized;
 
-    CComboBox m_vidinput;
-    CComboBox m_vidtype;
-    CComboBox m_viddimension;
-    CSpinButtonCtrl m_vidhor;
-    CSpinButtonCtrl m_vidver;
-    CEdit m_vidhoredit;
-    CEdit m_vidveredit;
+    CDarkButton m_openFile;
+    CDarkComboBox m_vidinput;
+    CDarkComboBox m_vidtype;
+    CDarkComboBox m_viddimension;
+    CDarkSpinButtonCtrl m_vidhor;
+    CDarkSpinButtonCtrl m_vidver;
+    CDarkEdit m_vidhoredit;
+    CDarkEdit m_vidveredit;
     CMPCThemeFloatEdit m_vidfpsedit;
     float m_vidfps;
-    CButton m_vidsetres;
-    CComboBox m_audinput;
-    CComboBox m_audtype;
-    CComboBox m_auddimension;
-    CComboBox m_vidcodec;
-    CComboBox m_vidcodectype;
-    CComboBox m_vidcodecdimension;
-    CButton m_vidoutput;
-    CButton m_vidpreview;
-    CComboBox m_audcodec;
-    CComboBox m_audcodectype;
-    CComboBox m_audcodecdimension;
-    CButton m_audoutput;
-    CButton m_audpreview;
+    CDarkButton m_vidsetres;
+    CDarkComboBox m_audinput;
+    CDarkComboBox m_audtype;
+    CDarkComboBox m_auddimension;
+    CDarkComboBox m_vidcodec;
+    CDarkComboBox m_vidcodectype;
+    CDarkComboBox m_vidcodecdimension;
+    CDarkRadioOrCheck m_vidoutput;
+    CDarkRadioOrCheck m_vidpreview;
+    CDarkComboBox m_audcodec;
+    CDarkComboBox m_audcodectype;
+    CDarkComboBox m_audcodecdimension;
+    CDarkRadioOrCheck m_audoutput;
+    CDarkRadioOrCheck m_audpreview;
     int m_nVidBuffers;
     int m_nAudBuffers;
-    CButton m_recordbtn;
+    CDarkButton m_recordbtn;
     UINT_PTR m_nRecordTimerID;
     BOOL m_fSepAudio;
     int m_muxtype;
-    CComboBox m_muxctrl;
+    CDarkComboBox m_muxctrl;
     bool m_fEnableOgm;
 
     // video input

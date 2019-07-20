@@ -500,6 +500,7 @@
     <ClCompile Include="CMPCThemeStatusBar.cpp" />
     <ClCompile Include="CMPCThemeMsgBox.cpp" />
     <ClCompile Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.cpp" />
+    <ClCompile Include="CMPCThemePlayerBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -939,6 +940,7 @@
     <ClInclude Include="CMPCThemeStatusBar.h" />
     <ClInclude Include="CMPCThemeMsgBox.h" />
     <ClInclude Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.h" />
+    <ClInclude Include="CMPCThemePlayerBar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">

@@ -51,5 +51,7 @@ protected:
 public:
     void doDefault() { Default(); };
     afx_msg void OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg LRESULT OnDelayed_updateListCtrl(WPARAM, LPARAM);
+    afx_msg void OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
