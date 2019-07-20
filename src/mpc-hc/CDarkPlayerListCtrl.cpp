@@ -237,6 +237,8 @@ void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
         GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rText);
         GetSubItemRect(nItem, nSubItem, LVIR_ICON, rIcon);
         GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
+        DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
+
         if (0 == nSubItem) { //getsubitemrect gives whole row for 0/LVIR_BOUNDS.  but LVIR_LABEL is limited to text bounds.  MSDN undocumented behavior
             rect.right = rText.right;
         }
@@ -314,7 +316,6 @@ void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
 
                         CDarkTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
                     } else {
-                        DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
                         if (dwStyle == LVS_ICON) {
                         } else if (dwStyle == LVS_SMALLICON || dwStyle == LVS_LIST || dwStyle == LVS_REPORT) {
                             CImageList *ilist = GetImageList(LVSIL_SMALL);
@@ -343,7 +344,7 @@ void CDarkPlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             if (IsWindowEnabled()) {
                 if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
                     bgClr = CDarkTheme::ContentSelectedColor;
-                    if (LVS_REPORT != (GetExtendedStyle() & LVS_TYPEMASK)) { //in list mode we don't fill the "whole" column
+                    if (LVS_REPORT != dwStyle) { //in list mode we don't fill the "whole" column
                         CRect tmp = rText;
                         dcMem.DrawText(text, tmp, textFormat | DT_CALCRECT); //end of string
                         rTextBG.right = tmp.right + (rText.left - rTextBG.left); //end of string plus same indent from the left side
@@ -396,7 +397,8 @@ BOOL CDarkPlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
         if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
-            if (LVS_REPORT == (GetExtendedStyle() & LVS_TYPEMASK)) {
+            DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
+            if (LVS_REPORT == dwStyle) {
                 *pResult = CDRF_NOTIFYSUBITEMDRAW;
             } else {
                 int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);

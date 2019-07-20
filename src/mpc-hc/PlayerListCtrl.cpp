@@ -506,14 +506,11 @@ int CPlayerListCtrl::HitTestEx(const CPoint& point, int* col) const
     }
 
     int row;
-    if ((GetExtendedStyle() & LVS_TYPEMASK) != LVS_REPORT) { 
+    if ((GetStyle() & LVS_TYPEMASK) != LVS_REPORT) { 
         row = HitTest(point, nullptr);//adipose to keep from breaking list view, use point.x
+        return row;
     } else {
         row = HitTest(CPoint(0, point.y), nullptr); //in report mode x=0 is ok?
-    }
-
-    if ((GetExtendedStyle() & LVS_TYPEMASK) != LVS_REPORT) {
-        return row;
     }
 
     int nColumnCount = ((CHeaderCtrl*)GetDlgItem(0))->GetItemCount();
