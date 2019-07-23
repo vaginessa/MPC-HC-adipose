@@ -173,10 +173,12 @@
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CmdLineHelpDlg.cpp" />
     <ClCompile Include="CMPCThemeCmdUIDialog.cpp" />
+    <ClCompile Include="CMPCThemeComPropertyPage.cpp" />
     <ClCompile Include="CMPCThemeMsgBox.cpp" />
     <ClCompile Include="CMPCThemePlayerBar.cpp" />
     <ClCompile Include="CMPCThemeResizableDialog.cpp" />
     <ClCompile Include="CMPCThemeStatusBar.cpp" />
+    <ClCompile Include="CMPCThemeTabCtrl.cpp" />
     <ClCompile Include="ColorButton.cpp" />
     <ClCompile Include="ComPropertyPage.cpp" />
     <ClCompile Include="ComPropertySheet.cpp" />
@@ -345,10 +347,12 @@
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="CmdLineHelpDlg.h" />
     <ClInclude Include="CMPCThemeCmdUIDialog.h" />
+    <ClInclude Include="CMPCThemeComPropertyPage.h" />
     <ClInclude Include="CMPCThemeMsgBox.h" />
     <ClInclude Include="CMPCThemePlayerBar.h" />
     <ClInclude Include="CMPCThemeResizableDialog.h" />
     <ClInclude Include="CMPCThemeStatusBar.h" />
+    <ClInclude Include="CMPCThemeTabCtrl.h" />
     <ClInclude Include="ColorButton.h" />
     <ClInclude Include="ComPropertyPage.h" />
     <ClInclude Include="ComPropertySheet.h" />

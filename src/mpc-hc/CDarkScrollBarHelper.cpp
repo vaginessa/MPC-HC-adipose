@@ -4,7 +4,7 @@
 
 CDarkScrollBarHelper::CDarkScrollBarHelper(CWnd* scrollWindow) {
     window = scrollWindow;
-    pParent == nullptr;
+    pParent = nullptr;
 }
 
 

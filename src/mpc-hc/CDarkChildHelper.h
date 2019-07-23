@@ -1,12 +1,5 @@
 #pragma once
-#include <afxwin.h>
-#include "CDarkButton.h"
-#include "CDarkGroupBox.h"
-#include "CDarkLinkCtrl.h"
-#include "CDarkRadioOrCheck.h"
-#include "CDarkEdit.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkStatic.h"
+#include <vector>
 
 class CDarkChildHelper
 {
@@ -24,15 +17,19 @@ public:
 protected:
     static CBrush darkContentBrush, darkWindowBrush, darkControlAreaBrush, W10DarkThemeFileDialogInjectedBGBrush;
     static CFont dialogFont;
-    std::vector<CDarkButton *> allocatedButtons;
-    std::vector<CDarkGroupBox *> allocatedGroupBoxes;
-    std::vector<CDarkLinkCtrl *> allocatedLinkCtrls;
-    std::vector<CDarkRadioOrCheck *> allocatedCheckBoxes;
-    std::vector<CDarkRadioOrCheck *> allocatedRadioButtons;
-    std::vector<CDarkRadioOrCheck *> allocated3States;
-    std::vector<CDarkEdit *> allocatedEdits;
-    std::vector<CDarkSpinButtonCtrl *> allocatedSpinButtons;
-    std::vector<CDarkStatic *> allocatedStatics;
+    std::vector<CWnd *> allocatedButtons;
+    std::vector<CWnd *> allocatedGroupBoxes;
+    std::vector<CWnd *> allocatedLinkCtrls;
+    std::vector<CWnd *> allocatedCheckBoxes;
+    std::vector<CWnd *> allocatedRadioButtons;
+    std::vector<CWnd *> allocated3States;
+    std::vector<CWnd *> allocatedEdits;
+    std::vector<CWnd *> allocatedSpinButtons;
+    std::vector<CWnd *> allocatedStatics;
+    std::vector<CWnd*> allocatedDialogs;
+    std::vector<CWnd*> allocatedComboBoxes;
+    std::vector<CWnd*> allocatedSliders;
+    std::vector<CWnd*> allocatedTabCtrls;
 
     void enableDarkThemeIfActive(CWnd *wnd);
     void initHelperObjects(CWnd* wnd);

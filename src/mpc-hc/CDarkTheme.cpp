@@ -90,6 +90,10 @@ const COLORREF CDarkTheme::StaticEtchedColor = COLORREF(RGB(65, 65, 65));
 const COLORREF CDarkTheme::ListCtrlDisabledBGColor = COLORREF(RGB(40, 40, 40));
 const COLORREF CDarkTheme::ListCtrlGridColor = COLORREF(RGB(99, 99, 99));
 
+const COLORREF CDarkTheme::TabCtrlBorderColor = COLORREF(RGB(99, 99, 99));
+const COLORREF CDarkTheme::TabCtrlInactiveColor = COLORREF(RGB(40, 40, 40));
+
+
 const COLORREF CDarkTheme::StatusBarBGColor = COLORREF(RGB(51, 51, 51));
 const COLORREF CDarkTheme::StatusBarSeparatorColor = COLORREF(RGB(247, 247, 247));
 
@@ -256,6 +260,7 @@ void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline, 
         tlf.lfQuality = CLEARTYPE_QUALITY;
         tlf.lfWeight = FW_REGULAR;
         wcsncpy_s(tlf.lfFaceName, m.lfMessageFont.lfFaceName, LF_FACESIZE);
+        //wcsncpy_s(tlf.lfFaceName, _T("MS Shell Dlg"), LF_FACESIZE);
         lf = &tlf;
     } else {
         lf = &m.lfMessageFont;

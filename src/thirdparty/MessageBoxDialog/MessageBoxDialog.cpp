@@ -793,12 +793,12 @@ void CMessageBoxDialog::CreateIconControl ( )
 		CRect rcDummy;
 
 		// Create the control for the icon.
-		m_stcIcon.Create(NULL, WS_CHILD | WS_VISIBLE | WS_DISABLED | SS_ICON,
+		BOOL created = m_stcIcon.Create(NULL, WS_CHILD | WS_VISIBLE | WS_DISABLED | SS_ICON,
 			rcDummy, this, (UINT)IDC_STATIC);
 
 		// Set the icon of the control.
 		m_stcIcon.SetIcon(m_hIcon);
-        m_stcIcon.UnsubclassWindow();
+        //m_stcIcon.UnsubclassWindow();
 	}
 }
 
@@ -983,11 +983,10 @@ void CMessageBoxDialog::DefineLayout ( )
 	int nYPosition = YDialogUnitToPixel(CY_TEXTPADDING);
 
 	// Check whether an icon is defined.
-	if ( m_hIcon != NULL )
+	if ( m_hIcon != NULL && ::IsWindow(m_stcIcon))
 	{
 		// Move the icon control.
-		m_stcIcon.MoveWindow(XDialogUnitToPixel(CX_BORDER), 
-			YDialogUnitToPixel(CY_BORDER), m_sIcon.cx, m_sIcon.cy);
+		m_stcIcon.MoveWindow(XDialogUnitToPixel(CX_BORDER), YDialogUnitToPixel(CY_BORDER), m_sIcon.cx, m_sIcon.cy);
 
 		// Add the size of the icon to the size of the dialog.
 		sClient.cx += m_sIcon.cx + XDialogUnitToPixel(CX_BORDER);

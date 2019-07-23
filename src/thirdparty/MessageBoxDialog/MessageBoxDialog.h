@@ -141,9 +141,10 @@ private:
 	int			m_nDefaultButton;	// ID of the default button.
 	int			m_nEscapeButton;	// ID of the escape button.
 
-	//mpc-hc use themed static instead
-    CDarkStatic	m_stcIcon;			// Static control for the icon.
-	CDarkStatic	m_stcMessage;		// Static control for the message.
+
+    CStatic	m_stcIcon;			// Static control for the icon.
+    //mpc-hc use themed static instead (for message only--themed static has no impl for icons)
+    CDarkStatic	m_stcMessage;		// Static control for the message.
 
 	CWnd*		m_pParent;
 

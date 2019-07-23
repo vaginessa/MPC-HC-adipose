@@ -3,6 +3,11 @@
 #include "CDarkTheme.h"
 #include "mplayerc.h"
 #include "MainFrm.h"
+#include "CDarkStatic.h"
+#include "CDarkDialog.h"
+#include "CDarkSliderCtrl.h"
+#include "CMPCThemeTabCtrl.h"
+
 
 #undef SubclassWindow
 
@@ -44,6 +49,18 @@ CDarkChildHelper::~CDarkChildHelper() {
     }
     for (u_int i = 0; i < allocatedStatics.size(); i++) {
         delete allocatedStatics[i];
+    }
+    for (u_int i = 0; i < allocatedDialogs.size(); i++) {
+        delete allocatedDialogs[i];
+    }
+    for (u_int i = 0; i < allocatedComboBoxes.size(); i++) {
+        delete allocatedComboBoxes[i];
+    }
+    for (u_int i = 0; i < allocatedSliders.size(); i++) {
+        delete allocatedSliders[i];
+    }
+    for (u_int i = 0; i < allocatedTabCtrls.size(); i++) {
+        delete allocatedTabCtrls[i];
     }
 }
 
@@ -118,6 +135,25 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                 } else if (0 == _tcsicmp(windowClass, UPDOWN_CLASS)) {
                     CDarkSpinButtonCtrl * pObject = new CDarkSpinButtonCtrl();
                     allocatedSpinButtons.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (0 == _tcsicmp(windowClass, _T("#32770"))) { //dialog class
+                    if (CWnd::FromHandlePermanent(tChild->GetSafeHwnd()) == NULL) {
+                        CDarkDialog* pObject = new CDarkDialog();
+                        allocatedDialogs.push_back(pObject);
+                        pObject->SubclassWindow(tChild->GetSafeHwnd());
+                    }
+                    enableDarkThemeIfActive(tChild);
+                } else if (0 == _tcsicmp(windowClass, WC_COMBOBOX)) {
+                    CDarkComboBox* pObject = new CDarkComboBox();
+                    allocatedDialogs.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (0 == _tcsicmp(windowClass, TRACKBAR_CLASS)) {
+                    CDarkSliderCtrl* pObject = new CDarkSliderCtrl();
+                    allocatedSliders.push_back(pObject);
+                    pObject->SubclassWindow(tChild->GetSafeHwnd());
+                } else if (0 == _tcsicmp(windowClass, WC_TABCONTROL)) {
+                    CMPCThemeTabCtrl* pObject = new CMPCThemeTabCtrl();
+                    allocatedSliders.push_back(pObject);
                     pObject->SubclassWindow(tChild->GetSafeHwnd());
                 } else {
 //                    int a = 1;

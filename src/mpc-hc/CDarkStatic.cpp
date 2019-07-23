@@ -36,7 +36,6 @@ void CDarkStatic::OnPaint() {
         UINT style = GetStyle();
 
         if (!sTitle.IsEmpty()) {
-            CRect centerRect = rectItem;
             CFont font;
             CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDDialogFont);
             CFont* pOldFont = dc.SelectObject(&font);
@@ -48,24 +47,20 @@ void CDarkStatic::OnPaint() {
                 uFormat |= DT_WORDBREAK;
             }
 
-            if (style & BS_VCENTER) {
-                uFormat |= DT_VCENTER;
+            if (0 != (style & SS_CENTERIMAGE) && sTitle.Find(_T("\n")) == -1) {
+                //If the static control contains a single line of text, the text is centered vertically in the client area of the control. msdn
+                uFormat |= DT_SINGLELINE;
+                uFormat |= DT_VCENTER; 
+            } else {
+                uFormat |= DT_TOP;
             }
 
             if ((style & SS_CENTER) == SS_CENTER) {
                 uFormat |= DT_CENTER;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect((centerRect.Width() - rectItem.Width()) / 2,
-                    (centerRect.Height() - rectItem.Height()) / 2);
             } else if ((style & SS_RIGHT) == SS_RIGHT) {
                 uFormat |= DT_RIGHT;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect(centerRect.Width() - rectItem.Width(),
-                    (centerRect.Height() - rectItem.Height()) / 2);
             } else { // if ((style & SS_LEFT) == SS_LEFT || (style & SS_LEFTNOWORDWRAP) == SS_LEFTNOWORDWRAP) {
                 uFormat |= DT_LEFT;
-                dc.DrawText(sTitle, -1, &rectItem, uFormat | DT_CALCRECT);
-                rectItem.OffsetRect(0, (centerRect.Height() - rectItem.Height()) / 2);
             }
 
             dc.SetBkColor(CDarkTheme::WindowBGColor);

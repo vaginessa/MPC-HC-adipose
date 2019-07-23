@@ -90,6 +90,9 @@ public:
     static const COLORREF ListCtrlDisabledBGColor;
     static const COLORREF ListCtrlGridColor;
 
+    static const COLORREF TabCtrlBorderColor;
+    static const COLORREF TabCtrlInactiveColor;
+
     static const COLORREF StatusBarBGColor;
     static const COLORREF StatusBarSeparatorColor;
     static const COLORREF StatusBarEditBorderColor;

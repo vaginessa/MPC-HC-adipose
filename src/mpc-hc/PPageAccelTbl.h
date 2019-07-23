@@ -29,6 +29,7 @@
 #include "CDarkPPageBase.h"
 #include "CDarkPlayerListCtrl.h"
 #include "CDarkStaticLink.h"
+#include "CDarkEdit.h"
 
 // CPPageAccelTbl dialog
 
