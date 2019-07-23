@@ -18,7 +18,7 @@ const COLORREF CDarkTheme::MenuItemDisabledColor = COLORREF(RGB(109, 109, 109));
 
 const COLORREF CDarkTheme::ShadowColor = COLORREF(RGB(25, 25, 25));
 const COLORREF CDarkTheme::TextFGColor = COLORREF(RGB(255, 255, 255));
-const COLORREF CDarkTheme::ContentTextDisabledFGColorWarn = COLORREF(RGB(128, 0, 0));
+const COLORREF CDarkTheme::ContentTextDisabledFGColorWarn = COLORREF(RGB(200, 0, 0));
 const COLORREF CDarkTheme::ContentTextDisabledFGColorFade = COLORREF(RGB(109, 109, 109));
 const COLORREF CDarkTheme::ContentTextDisabledFGColorFade2 = COLORREF(RGB(60, 60, 60)); //even more faded, used for NA text on CListCtrl/audio switcher
 
