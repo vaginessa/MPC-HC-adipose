@@ -81,10 +81,10 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
             DWORD style = tChild->GetStyle();
             DWORD buttonType = (style & BS_TYPEMASK);
             DWORD staticStyle = (style &  SS_TYPEMASK);
-            CString t;
+            CString windowTitle;
 
             if (tChild->m_hWnd)
-                tChild->GetWindowText(t);
+                tChild->GetWindowText(windowTitle);
             if (runtimeClass.Find(_T("CDark")) != 0 && runtimeClass.Find(_T("CMPCTheme")) != 0) {
                 if (DLGC_BUTTON == (lRes & DLGC_BUTTON)) {
                     if (DLGC_DEFPUSHBUTTON == (lRes & DLGC_DEFPUSHBUTTON) || DLGC_UNDEFPUSHBUTTON == (lRes & DLGC_UNDEFPUSHBUTTON)) {
@@ -142,6 +142,8 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         allocatedDialogs.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
                     }
+                    enableDarkThemeIfActive(tChild);
+                } else if (windowTitle == _T("CInternalPropertyPageWnd")) { //internal window encompassing property pages
                     enableDarkThemeIfActive(tChild);
                 } else if (0 == _tcsicmp(windowClass, WC_COMBOBOX)) {
                     CDarkComboBox* pObject = new CDarkComboBox();
@@ -336,4 +338,19 @@ HBRUSH CDarkChildHelper::DarkCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
         }
     }
     return nullptr;
+}
+
+bool CDarkChildHelper::MPCThemeEraseBkgnd(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CRect rect;
+        pWnd->GetClientRect(rect);
+        if (CTLCOLOR_DLG == nCtlColor) { //only supported "class" for now
+            pDC->FillSolidRect(rect, CDarkTheme::WindowBGColor);
+        } else {
+            return false;
+        }
+        return true;
+    } else {
+        return false;
+    }
 }

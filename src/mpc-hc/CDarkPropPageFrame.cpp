@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CDarkPropPageFrame.h"
 #include "CDarkTheme.h"
+#include "CDarkChildHelper.h"
 #include "TreePropSheet/PropPageFrameDefault.h"
 
 CDarkPropPageFrame::CDarkPropPageFrame() : CPropPageFrameDefault() {
@@ -54,11 +55,9 @@ void CDarkPropPageFrame::OnPaint() {
 }
 
 BOOL CDarkPropPageFrame::OnEraseBkgnd(CDC * pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CRect   rect;
-        GetClientRect(rect);
-        pDC->FillSolidRect(rect, CDarkTheme::WindowBGColor);
-        return TRUE;
+    bool ret = CDarkChildHelper::MPCThemeEraseBkgnd(pDC, this, CTLCOLOR_DLG);
+    if (ret) {
+        return ret;
     } else {
         return __super::OnEraseBkgnd(pDC);
     }

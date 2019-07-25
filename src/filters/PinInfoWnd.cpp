@@ -159,6 +159,8 @@ BOOL CPinInfoWnd::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* 
 
 BEGIN_MESSAGE_MAP(CPinInfoWnd, CInternalPropertyPageWnd)
     ON_CBN_SELCHANGE(IDC_PP_COMBO1, OnSelectedPinChange)
+    ON_WM_CTLCOLOR()
+    ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 void CPinInfoWnd::AddLine(CString str)
@@ -254,4 +256,24 @@ void CPinInfoWnd::OnSelectedPinChange()
     EndEnumMediaTypes(pmt);
 
     m_info_edit.SetSel(0, 0);
+}
+
+
+HBRUSH CPinInfoWnd::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
+    HBRUSH ret;
+    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    if (nullptr != ret) {
+        return ret;
+    } else {
+        return __super::OnCtlColor(pDC, pWnd, nCtlColor);
+    }
+}
+
+BOOL CPinInfoWnd::OnEraseBkgnd(CDC* pDC) {
+    bool ret = MPCThemeEraseBkgnd(pDC, this, CTLCOLOR_DLG);
+    if (ret) {
+        return ret;
+    } else {
+        return __super::OnEraseBkgnd(pDC);
+    }
 }

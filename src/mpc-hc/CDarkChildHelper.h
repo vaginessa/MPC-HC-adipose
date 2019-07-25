@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <afxdlgs.h>
 
 class CDarkChildHelper
 {
@@ -12,6 +13,7 @@ public:
 
     static HBRUSH DarkCtlColorFileDialog(HDC hDC, UINT nCtlColor);
     HBRUSH DarkCtlColor(CDC * pDC, CWnd * pWnd, UINT nCtlColor);
+    static bool MPCThemeEraseBkgnd(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
     void subClassFileDialog(CWnd* wnd, HWND hwnd, bool findSink = true);
 
 protected:

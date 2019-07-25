@@ -4,7 +4,7 @@
 #include <strsafe.h>
 #include "AppSettings.h"
 #include "PPageAccelTbl.h"
-
+#include "mplayerc.h"
 
 std::map<UINT, CDarkMenu*> CDarkMenu::subMenuIDs;
 const int CDarkMenu::subMenuPadding = 20;
@@ -42,55 +42,56 @@ CDarkMenu::~CDarkMenu() {
 }
 
 void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        MENUINFO MenuInfo = { 0 };
+        MenuInfo.cbSize = sizeof(MENUINFO);
+        MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
+        MenuInfo.dwStyle = MNS_AUTODISMISS;
+        MenuInfo.hbrBack = ::CreateSolidBrush(CDarkTheme::MenuBGColor);
+        SetMenuInfo(&MenuInfo);
 
-    MENUINFO MenuInfo = { 0 };
-    MenuInfo.cbSize = sizeof(MENUINFO);
-    MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
-    MenuInfo.dwStyle = MNS_AUTODISMISS;
-    MenuInfo.hbrBack = ::CreateSolidBrush(CDarkTheme::MenuBGColor);
-    SetMenuInfo(&MenuInfo);
+        int iMaxItems = GetMenuItemCount();
+        for (int i = 0; i < iMaxItems; i++) {
+            CString nameHolder;
+            MenuObject* pObject = new MenuObject;
+            allocatedItems.push_back(pObject);
+            pObject->m_hIcon = NULL;
+            pObject->isMenubar = isMenubar;
+            if (i == 0) pObject->isFirstMenuInMenuBar = true;
 
-    int iMaxItems = GetMenuItemCount();
-    for (int i = 0; i < iMaxItems; i++) {
-		CString nameHolder;
-        MenuObject* pObject = new MenuObject;
-        allocatedItems.push_back(pObject);
-        pObject->m_hIcon = NULL;
-        pObject->isMenubar = isMenubar;
-        if (i == 0) pObject->isFirstMenuInMenuBar = true;
+            GetMenuString(i, pObject->m_strCaption, MF_BYPOSITION);
 
-        GetMenuString(i, pObject->m_strCaption, MF_BYPOSITION);
+            UINT nID = GetMenuItemID(i);
+            pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
 
-        UINT nID = GetMenuItemID(i);
-        pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
+            subMenuIDs[nID] = this;
 
-        subMenuIDs[nID] = this;
+            MENUITEMINFO tInfo;
+            ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
+            tInfo.fMask = MIIM_FTYPE;
+            tInfo.cbSize = sizeof(MENUITEMINFO);
+            GetMenuItemInfo(i, &tInfo, true);
 
-        MENUITEMINFO tInfo;
-        ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
-        tInfo.fMask = MIIM_FTYPE;
-        tInfo.cbSize = sizeof(MENUITEMINFO);
-        GetMenuItemInfo(i, &tInfo, true);
+            if (tInfo.fType & MFT_SEPARATOR) {
+                pObject->isSeparator = true;
+            }
 
-        if (tInfo.fType & MFT_SEPARATOR) {
-            pObject->isSeparator = true;
-        }
+            MENUITEMINFO mInfo;
+            ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
 
-        MENUITEMINFO mInfo;
-        ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+            mInfo.fMask = MIIM_FTYPE | MIIM_DATA;
+            mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
+            mInfo.cbSize = sizeof(MENUITEMINFO);
+            mInfo.dwItemData = (ULONG_PTR)pObject;
+            SetMenuItemInfo(i, &mInfo, true);
 
-        mInfo.fMask = MIIM_FTYPE | MIIM_DATA;
-        mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
-        mInfo.cbSize = sizeof(MENUITEMINFO);
-        mInfo.dwItemData = (ULONG_PTR)pObject;
-        SetMenuItemInfo(i, &mInfo, true);
-
-        CMenu *t = GetSubMenu(i);
-        if (nullptr != t) {
-            CDarkMenu* pSubMenu = new CDarkMenu;
-            allocatedMenus.push_back(pSubMenu);
-            pSubMenu->Attach(t->GetSafeHmenu());
-            pSubMenu->ActivateDarkTheme();
+            CMenu* t = GetSubMenu(i);
+            if (nullptr != t) {
+                CDarkMenu* pSubMenu = new CDarkMenu;
+                allocatedMenus.push_back(pSubMenu);
+                pSubMenu->Attach(t->GetSafeHmenu());
+                pSubMenu->ActivateDarkTheme();
+            }
         }
     }
 }
