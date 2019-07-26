@@ -113,7 +113,7 @@ bool CPinInfoWnd::OnActivate()
                          _T("EDIT"),
                          _T(""),
                          dwStyle |
-                         WS_BORDER |
+                        /* WS_BORDER | */ // equivalent to WS_EX_CLIENTEDGE 
                          WS_VSCROLL |
                          WS_HSCROLL |
                          ES_MULTILINE |
@@ -129,7 +129,7 @@ bool CPinInfoWnd::OnActivate()
         pWnd->SetFont(&m_font, FALSE);
     }
 
-    m_info_edit.SetFont(&m_monospacefont);
+    m_info_edit.SetFixedWidthFont(m_monospacefont);
 
     // subclass the edit control
     OldControlProc = (WNDPROC)SetWindowLongPtr(m_info_edit.m_hWnd, GWLP_WNDPROC, (LONG_PTR)ControlProc);

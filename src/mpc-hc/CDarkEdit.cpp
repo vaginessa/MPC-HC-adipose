@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CDarkEdit.h"
 #include "CDarkTheme.h"
+#include "CDarkChildHelper.h"
 
 CDarkEdit::CDarkEdit() {
     buddy = nullptr;
@@ -31,6 +32,10 @@ END_MESSAGE_MAP()
 void CDarkEdit::PreSubclassWindow() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
+        CRect r;
+        GetClientRect(r);
+        r.DeflateRect(2, 2); //some default padding for those spaceless fonts
+        SetRect(r);
         if (CDarkTheme::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
@@ -58,7 +63,7 @@ void CDarkEdit::OnNcPaint() {
 
             CBrush brush;
             if (isFileDialogChild) {//special case for edits injected to file dialog
-                brush.CreateSolidBrush(CDarkTheme::W10DarkThemeFileDialogInjectedBGColorEditBorderColor);
+                brush.CreateSolidBrush(CDarkTheme::W10DarkThemeFileDialogInjectedEditBorderColor);
             } else {
                 brush.CreateSolidBrush(CDarkTheme::EditBorderColor);
             }
@@ -69,6 +74,16 @@ void CDarkEdit::OnNcPaint() {
 
     } else {
         __super::OnNcPaint();
+    }
+}
+
+void CDarkEdit::SetFixedWidthFont(CFont& f) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CWindowDC dc(this);
+        CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDFixedFont);
+        SetFont(&font);
+    } else {
+        SetFont(&f);
     }
 }
 

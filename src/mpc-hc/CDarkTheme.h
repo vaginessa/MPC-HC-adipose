@@ -99,7 +99,7 @@ public:
 
     static const COLORREF W10DarkThemeFileDialogInjectedTextColor;
     static const COLORREF W10DarkThemeFileDialogInjectedBGColor;
-    static const COLORREF W10DarkThemeFileDialogInjectedBGColorEditBorderColor;
+    static const COLORREF W10DarkThemeFileDialogInjectedEditBorderColor;
 
     static const COLORREF ProgressBarBGColor;
     static const COLORREF ProgressBarColor;
@@ -144,6 +144,7 @@ public:
         CDStatusFont,
         CDMessageFont,
         CDDialogFont,
+        CDFixedFont,
     };
 
     static CSize GetTextSize(CString str, HDC hDC, int type);

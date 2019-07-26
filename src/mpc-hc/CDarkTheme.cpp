@@ -99,7 +99,7 @@ const COLORREF CDarkTheme::StatusBarSeparatorColor = COLORREF(RGB(247, 247, 247)
 
 const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedTextColor = COLORREF(RGB(255, 255, 255));
 const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedBGColor = COLORREF(RGB(56, 56, 56));
-const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedBGColorEditBorderColor = COLORREF(RGB(155, 155, 155));
+const COLORREF CDarkTheme::W10DarkThemeFileDialogInjectedEditBorderColor = COLORREF(RGB(155, 155, 155));
 
 
 const COLORREF CDarkTheme::ProgressBarBGColor = COLORREF(RGB(0, 0, 0));
@@ -261,6 +261,14 @@ void CDarkTheme::getFontByType(CFont &font, CDC *pDC, int type, bool underline, 
         tlf.lfWeight = FW_REGULAR;
         wcsncpy_s(tlf.lfFaceName, m.lfMessageFont.lfFaceName, LF_FACESIZE);
         //wcsncpy_s(tlf.lfFaceName, _T("MS Shell Dlg"), LF_FACESIZE);
+        lf = &tlf;
+    } else if (type == CDFixedFont) {
+        LOGFONT tlf;
+        memset(&tlf, 0, sizeof(LOGFONT));
+        tlf.lfHeight = -MulDiv(10, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
+        tlf.lfQuality = CLEARTYPE_QUALITY;
+        tlf.lfWeight = FW_REGULAR;
+        wcsncpy_s(tlf.lfFaceName, _T("Consolas"), LF_FACESIZE);
         lf = &tlf;
     } else {
         lf = &m.lfMessageFont;
