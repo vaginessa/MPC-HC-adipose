@@ -7,6 +7,7 @@ public:
     CMPCThemeTabCtrl();
     virtual ~CMPCThemeTabCtrl();
     void PreSubclassWindow();
+    DECLARE_DYNAMIC(CMPCThemeTabCtrl)
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:

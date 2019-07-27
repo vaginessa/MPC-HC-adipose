@@ -17,6 +17,7 @@ CMPCThemeCmdUIDialog::CMPCThemeCmdUIDialog(LPCTSTR lpszTemplateName, CWnd* pPare
 CMPCThemeCmdUIDialog::~CMPCThemeCmdUIDialog() {
 }
 
+IMPLEMENT_DYNAMIC(CMPCThemeCmdUIDialog, CCmdUIDialog)
 BEGIN_MESSAGE_MAP(CMPCThemeCmdUIDialog, CCmdUIDialog)
     ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()

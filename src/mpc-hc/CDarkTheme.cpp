@@ -495,3 +495,23 @@ bool CDarkTheme::canUseWin10DarkTheme() {
 UINT CDarkTheme::defaultLogo() {
     return IDF_LOGO4;
 }
+
+struct AFX_CTLCOLOR {
+    HWND hWnd;
+    HDC hDC;
+    UINT nCtlType;
+};
+
+void CDarkTheme::getParentDialogBG(CWnd* wnd, CDC *pDC, CBrush &brush) {
+    WPARAM w = (WPARAM)pDC;
+    AFX_CTLCOLOR ctl;
+    ctl.hWnd = wnd->GetSafeHwnd();
+    ctl.nCtlType = CTLCOLOR_DLG;
+    ctl.hDC = pDC->GetSafeHdc();
+    CWnd *parent = wnd->GetParent();
+    if (nullptr == parent) {
+        parent = wnd;
+    }
+    HBRUSH bg = (HBRUSH)parent->SendMessage(WM_CTLCOLORDLG, w, (LPARAM)& ctl);
+    brush.Attach(bg);
+}

@@ -12,6 +12,7 @@ public:
     CMPCThemeCmdUIDialog(LPCTSTR lpszTemplateName, CWnd* pParent = nullptr);
     virtual ~CMPCThemeCmdUIDialog();
     void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    DECLARE_DYNAMIC(CMPCThemeCmdUIDialog)
     DECLARE_MESSAGE_MAP()
 public:
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

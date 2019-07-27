@@ -11,9 +11,9 @@ CMPCThemeTabCtrl::~CMPCThemeTabCtrl() {
 }
 
 void CMPCThemeTabCtrl::PreSubclassWindow() {
-    ModifyStyle(0, TCS_OWNERDRAWFIXED);
 }
 
+IMPLEMENT_DYNAMIC(CMPCThemeTabCtrl, CTabCtrl)
 BEGIN_MESSAGE_MAP(CMPCThemeTabCtrl, CTabCtrl)
     ON_WM_CTLCOLOR()
     ON_WM_ERASEBKGND()
@@ -105,68 +105,80 @@ void CMPCThemeTabCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 }
 
 BOOL CMPCThemeTabCtrl::OnEraseBkgnd(CDC* pDC) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CRect r;
+        GetClientRect(r);
+        CBrush cbg;
+        CDarkTheme::getParentDialogBG(this, pDC, cbg);
+        pDC->FillRect(r, &cbg);
+        cbg.Detach();
+    }
     return TRUE;
 }
 
 
 
 void CMPCThemeTabCtrl::OnPaint() {
-    CPaintDC dc(this); // device context for painting
-    int oldDC = dc.SaveDC();
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CPaintDC dc(this); // device context for painting
+        int oldDC = dc.SaveDC();
 
-    dc.SelectObject(GetFont());
+        dc.SelectObject(GetFont());
 
-    DRAWITEMSTRUCT dItemStruct;
-    dItemStruct.CtlType = ODT_TAB;
-    dItemStruct.CtlID = GetDlgCtrlID();
-    dItemStruct.hwndItem = GetSafeHwnd();
-    dItemStruct.hDC = dc.GetSafeHdc();
-    dItemStruct.itemAction = ODA_DRAWENTIRE;
+        DRAWITEMSTRUCT dItemStruct;
+        dItemStruct.CtlType = ODT_TAB;
+        dItemStruct.CtlID = GetDlgCtrlID();
+        dItemStruct.hwndItem = GetSafeHwnd();
+        dItemStruct.hDC = dc.GetSafeHdc();
+        dItemStruct.itemAction = ODA_DRAWENTIRE;
 
-    CRect rClient, rContent;
-    GetClientRect(&dItemStruct.rcItem);
-    rContent = dItemStruct.rcItem;
-    AdjustRect(FALSE, rContent);
-    dItemStruct.rcItem.top = rContent.top - 2;
+        CRect rClient, rContent;
+        GetClientRect(&dItemStruct.rcItem);
+        rContent = dItemStruct.rcItem;
+        AdjustRect(FALSE, rContent);
+        dItemStruct.rcItem.top = rContent.top - 2;
 
-    COLORREF oldTextColor = dc.GetTextColor();
-    COLORREF oldBkColor = dc.GetBkColor();
+        COLORREF oldTextColor = dc.GetTextColor();
+        COLORREF oldBkColor = dc.GetBkColor();
 
-    CBrush contentFrameBrush;
-    contentFrameBrush.CreateSolidBrush(CDarkTheme::TabCtrlBorderColor);
-    rContent.InflateRect(1, 1);
-    dc.FrameRect(rContent, &CDarkChildHelper::darkWindowBrush);
-    rContent.InflateRect(1, 1);
-    dc.FrameRect(rContent, &contentFrameBrush);
+        CBrush contentFrameBrush;
+        contentFrameBrush.CreateSolidBrush(CDarkTheme::TabCtrlBorderColor);
+        rContent.InflateRect(1, 1);
+        dc.FrameRect(rContent, &CDarkChildHelper::darkWindowBrush);
+        rContent.InflateRect(1, 1);
+        dc.FrameRect(rContent, &contentFrameBrush);
 
-    dc.SetTextColor(oldTextColor);
-    dc.SetBkColor(oldBkColor);
+        dc.SetTextColor(oldTextColor);
+        dc.SetBkColor(oldBkColor);
 
 
-    int nTab = GetItemCount();
-    int nSel = GetCurSel();
+        int nTab = GetItemCount();
+        int nSel = GetCurSel();
 
-    if (!nTab) return;
+        if (!nTab) return;
 
-    while (nTab--) {
-        if (nTab != nSel) {
-            dItemStruct.itemID = nTab;
-            dItemStruct.itemState = 0;
+        while (nTab--) {
+            if (nTab != nSel) {
+                dItemStruct.itemID = nTab;
+                dItemStruct.itemState = 0;
 
-            VERIFY(GetItemRect(nTab, &dItemStruct.rcItem));
-            DrawItem(&dItemStruct);
+                VERIFY(GetItemRect(nTab, &dItemStruct.rcItem));
+                DrawItem(&dItemStruct);
+            }
         }
+
+        dItemStruct.itemID = nSel;
+        dItemStruct.itemState = ODS_SELECTED;
+
+        VERIFY(GetItemRect(nSel, &dItemStruct.rcItem));
+
+        dItemStruct.rcItem.bottom += 2;
+        dItemStruct.rcItem.top -= 2;
+        DrawItem(&dItemStruct);
+
+        dc.RestoreDC(oldDC);
+    } else {
+        __super::OnPaint();
     }
-
-    dItemStruct.itemID = nSel;
-    dItemStruct.itemState = ODS_SELECTED;
-
-    VERIFY(GetItemRect(nSel, &dItemStruct.rcItem));
-
-    dItemStruct.rcItem.bottom += 2;
-    dItemStruct.rcItem.top -= 2;
-    DrawItem(&dItemStruct);
-
-    dc.RestoreDC(oldDC);
 }
 

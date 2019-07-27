@@ -24,12 +24,13 @@
 #include "mplayerc.h"
 #include "MainFrm.h"
 #include <strsafe.h>
+#include "CDarkTheme.h"
 
 // CFavoriteOrganizeDlg dialog
 
-//IMPLEMENT_DYNAMIC(CFavoriteOrganizeDlg, CResizableDialog)
+//IMPLEMENT_DYNAMIC(CFavoriteOrganizeDlg, CMPCThemeResizableDialog)
 CFavoriteOrganizeDlg::CFavoriteOrganizeDlg(CWnd* pParent /*=nullptr*/)
-    : CResizableDialog(CFavoriteOrganizeDlg::IDD, pParent)
+    : CMPCThemeResizableDialog(CFavoriteOrganizeDlg::IDD, pParent)
 {
 }
 
@@ -97,10 +98,11 @@ void CFavoriteOrganizeDlg::DoDataExchange(CDataExchange* pDX)
     __super::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_TAB1, m_tab);
     DDX_Control(pDX, IDC_LIST2, m_list);
+    enableDarkThemeIfActive();
 }
 
 
-BEGIN_MESSAGE_MAP(CFavoriteOrganizeDlg, CResizableDialog)
+BEGIN_MESSAGE_MAP(CFavoriteOrganizeDlg, CMPCThemeResizableDialog)
     ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, OnTcnSelchangeTab1)
     ON_WM_DRAWITEM()
     ON_BN_CLICKED(IDC_BUTTON1, OnRenameBnClicked)
@@ -135,7 +137,8 @@ BOOL CFavoriteOrganizeDlg::OnInitDialog()
 
     m_list.InsertColumn(0, _T(""));
     m_list.InsertColumn(1, _T(""));
-    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
+    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_INFOTIP);
+    m_list.setAdditionalStyles(LVS_EX_FULLROWSELECT);
 
     const CAppSettings& s = AfxGetAppSettings();
     s.GetFav(FAV_FILE, m_sl[0]);
@@ -153,7 +156,7 @@ BOOL CFavoriteOrganizeDlg::OnInitDialog()
     AddAnchor(IDOK, BOTTOM_RIGHT);
 
     EnableSaveRestore(IDS_R_DLG_ORGANIZE_FAV);
-
+    SetSizeGripBkMode(TRANSPARENT); //fix for gripper in mpc theme
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -190,20 +193,36 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
     CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
-        CBrush b1, b2;
-        b1.CreateSolidBrush(0xf1dacc);
-        pDC->FillRect(rcItem, &b1);
-        b2.CreateSolidBrush(0xc56a31);
-        pDC->FrameRect(rcItem, &b2);
+        if (AfxGetAppSettings().bDarkThemeLoaded) {
+            CBrush b(CDarkTheme::ContentSelectedColor);
+            pDC->FillRect(rcItem, &b);
+        } else {
+            CBrush b1, b2;
+            b1.CreateSolidBrush(0xf1dacc);
+            pDC->FillRect(rcItem, &b1);
+            b2.CreateSolidBrush(0xc56a31);
+            pDC->FrameRect(rcItem, &b2);
+        }
     } else {
-        CBrush b;
-        b.CreateSysColorBrush(COLOR_WINDOW);
-        pDC->FillRect(rcItem, &b);
+        if (AfxGetAppSettings().bDarkThemeLoaded) {
+            CBrush b(CDarkTheme::ContentBGColor);
+            pDC->FillRect(rcItem, &b);
+        } else {
+            CBrush b;
+            b.CreateSysColorBrush(COLOR_WINDOW);
+            pDC->FillRect(rcItem, &b);
+        }
     }
 
-    CString str;
-    pDC->SetTextColor(0);
+    COLORREF textcolor;
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        textcolor = CDarkTheme::TextFGColor;
+    } else {
+        textcolor = 0;
+    }
+    pDC->SetTextColor(textcolor);
 
+    CString str;
     str = m_list.GetItemText(nItem, 0);
     pDC->TextOut(rcItem.left + 3, (rcItem.top + rcItem.bottom - pDC->GetTextExtent(str).cy) / 2, str);
     str = m_list.GetItemText(nItem, 1);
