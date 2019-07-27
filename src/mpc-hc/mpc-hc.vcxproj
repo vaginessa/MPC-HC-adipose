@@ -176,6 +176,8 @@
     <ClCompile Include="CMPCThemeComPropertyPage.cpp" />
     <ClCompile Include="CMPCThemeMsgBox.cpp" />
     <ClCompile Include="CMPCThemePlayerBar.cpp" />
+    <ClCompile Include="CMPCThemePropertyPage.cpp" />
+    <ClCompile Include="CMPCThemePropertySheet.cpp" />
     <ClCompile Include="CMPCThemeResizableDialog.cpp" />
     <ClCompile Include="CMPCThemeStatusBar.cpp" />
     <ClCompile Include="CMPCThemeTabCtrl.cpp" />
@@ -350,6 +352,8 @@
     <ClInclude Include="CMPCThemeComPropertyPage.h" />
     <ClInclude Include="CMPCThemeMsgBox.h" />
     <ClInclude Include="CMPCThemePlayerBar.h" />
+    <ClInclude Include="CMPCThemePropertyPage.h" />
+    <ClInclude Include="CMPCThemePropertySheet.h" />
     <ClInclude Include="CMPCThemeResizableDialog.h" />
     <ClInclude Include="CMPCThemeStatusBar.h" />
     <ClInclude Include="CMPCThemeTabCtrl.h" />

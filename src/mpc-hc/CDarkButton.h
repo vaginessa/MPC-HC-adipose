@@ -3,6 +3,7 @@
 class CDarkButton :	public CMFCButton {
 protected:
     void drawButton(HDC hdc, CRect rect, UINT state);
+    CFont font;
 public:
 	CDarkButton();
 	virtual ~CDarkButton();

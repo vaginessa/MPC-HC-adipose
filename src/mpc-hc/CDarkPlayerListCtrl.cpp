@@ -494,7 +494,7 @@ LRESULT CDarkPlayerListCtrl::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
 }
 
 void CDarkPlayerListCtrl::OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult) {
-    LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+    //LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
         ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);

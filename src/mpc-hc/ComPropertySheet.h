@@ -31,7 +31,9 @@ interface IComPropertyPageDirty
 
 // CComPropertySheet
 
-class CComPropertySheet : public CPropertySheet, public IComPropertyPageDirty, public CDarkChildHelper
+class CComPropertySheet : public CPropertySheet
+    , public IComPropertyPageDirty
+    , public CDarkChildHelper
 {
     DECLARE_DYNAMIC(CComPropertySheet)
 

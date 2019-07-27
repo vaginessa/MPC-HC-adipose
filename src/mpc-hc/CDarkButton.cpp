@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CDarkButton.h"
 #include "CDarkTheme.h"
+#include "CDarkChildHelper.h"
 #include "mplayerc.h"
 
 CDarkButton::CDarkButton() {
@@ -88,6 +89,8 @@ void CDarkButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool sel
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
     CDC* pDC = CDC::FromHandle(hdc);
+    CFont* oldFont, *curFont = GetFont();
+    oldFont = pDC->SelectObject(curFont);
 
     CString strText;
     GetWindowText(strText);
@@ -99,9 +102,9 @@ void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
     GetImageList(&imgList);
     CImageList *images = CImageList::FromHandlePermanent(imgList.himl);
     bool thin = (images != nullptr); //thin borders for image buttons
-
+   
     drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin);
-    
+
     int imageIndex = 0; //Normal
     if (state & ODS_DISABLED) {
         imageIndex = 1;
@@ -116,6 +119,7 @@ void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
         rect.DeflateRect((rect.Width() - width) / 2, max(0, (rect.Height() - height) / 2));
         images->Draw(pDC, imageIndex, rect.TopLeft(), ILD_NORMAL);
     }
+    pDC->SelectObject(oldFont);
 }
 
 void CDarkButton::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {

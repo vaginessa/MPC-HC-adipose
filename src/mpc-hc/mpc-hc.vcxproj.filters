@@ -503,6 +503,8 @@
     <ClCompile Include="CMPCThemePlayerBar.cpp" />
     <ClCompile Include="CMPCThemeComPropertyPage.cpp" />
     <ClCompile Include="CMPCThemeTabCtrl.cpp" />
+    <ClCompile Include="CMPCThemePropertyPage.cpp" />
+    <ClCompile Include="CMPCThemePropertySheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -945,6 +947,8 @@
     <ClInclude Include="CMPCThemePlayerBar.h" />
     <ClInclude Include="CMPCThemeComPropertyPage.h" />
     <ClInclude Include="CMPCThemeTabCtrl.h" />
+    <ClInclude Include="CMPCThemePropertyPage.h" />
+    <ClInclude Include="CMPCThemePropertySheet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">
