@@ -55,9 +55,9 @@ BEGIN_MESSAGE_MAP(CDarkPlayerListCtrl, CPlayerListCtrl)
     ON_NOTIFY_REFLECT_EX(NM_CUSTOMDRAW, OnCustomDraw)
     ON_WM_ERASEBKGND()
     ON_WM_CTLCOLOR()
-    ON_NOTIFY(HDN_ENDTRACKA, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
-    ON_NOTIFY(HDN_ENDTRACKW, 0, &CDarkPlayerListCtrl::OnHdnEndtrack)
-    ON_NOTIFY_REFLECT(LVN_ITEMCHANGED, &CDarkPlayerListCtrl::OnLvnItemchanged)
+    ON_NOTIFY(HDN_ENDTRACKA, 0, &OnHdnEndtrack)
+    ON_NOTIFY(HDN_ENDTRACKW, 0, &OnHdnEndtrack)
+    ON_NOTIFY_REFLECT_EX(LVN_ITEMCHANGED, &OnLvnItemchanged)
     ON_MESSAGE(PLAYER_PLAYLIST_LVN_ITEMCHANGED, OnDelayed_updateListCtrl)
 END_MESSAGE_MAP()
 
@@ -493,11 +493,12 @@ LRESULT CDarkPlayerListCtrl::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
     return 0;
 }
 
-void CDarkPlayerListCtrl::OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult) {
+BOOL CDarkPlayerListCtrl::OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult) {
     //LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
         ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);
     }
     *pResult = 0;
+    return FALSE;
 }
