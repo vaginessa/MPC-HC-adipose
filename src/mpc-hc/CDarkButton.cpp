@@ -26,6 +26,7 @@ BOOL CDarkButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton impl si
 
 IMPLEMENT_DYNAMIC(CDarkButton, CMFCButton)
 BEGIN_MESSAGE_MAP(CDarkButton, CMFCButton)
+    ON_WM_SETFONT()
     ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CDarkButton::OnNMCustomdraw)
 END_MESSAGE_MAP()
 
@@ -89,8 +90,6 @@ void CDarkButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool sel
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
     CDC* pDC = CDC::FromHandle(hdc);
-    CFont* oldFont, *curFont = GetFont();
-    oldFont = pDC->SelectObject(curFont);
 
     CString strText;
     GetWindowText(strText);
@@ -119,7 +118,6 @@ void CDarkButton::drawButton(HDC hdc, CRect rect, UINT state) {
         rect.DeflateRect((rect.Width() - width) / 2, max(0, (rect.Height() - height) / 2));
         images->Draw(pDC, imageIndex, rect.TopLeft(), ILD_NORMAL);
     }
-    pDC->SelectObject(oldFont);
 }
 
 void CDarkButton::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
@@ -131,4 +129,7 @@ void CDarkButton::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             *pResult = CDRF_SKIPDEFAULT;
         }
     }
+}
+void CDarkButton::OnSetFont(CFont* pFont, BOOL bRedraw) {
+    Default(); //bypass the MFCButton font impl since we don't always draw this button ourselves (classic mode)
 }
