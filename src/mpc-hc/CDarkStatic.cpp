@@ -126,11 +126,16 @@ void CDarkStatic::OnEnable(BOOL bEnable) {
 
 BOOL CDarkStatic::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
+        CRect r;
+        GetClientRect(r);
         if (isFileDialogChild) {
-            CRect r;
-            GetClientRect(r);
             HBRUSH hBrush=CDarkChildHelper::DarkCtlColorFileDialog(pDC->GetSafeHdc(), CTLCOLOR_STATIC);
             ::FillRect(pDC->GetSafeHdc(), r, hBrush);
+        } else {
+            CBrush brush;
+            CDarkTheme::getParentDialogBG(this, pDC, brush);
+            pDC->FillRect(r, &brush);
+            brush.Detach();
         }
         return TRUE;
     } else {
