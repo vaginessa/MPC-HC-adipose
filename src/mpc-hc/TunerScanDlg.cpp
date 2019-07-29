@@ -26,6 +26,7 @@
 #include "MainFrm.h"
 #include "TunerScanDlg.h"
 #include "DVBChannel.h"
+#include "CDarkTheme.h"
 
 
 enum TSC_COLUMN {
@@ -42,10 +43,10 @@ enum TSC_COLUMN {
 
 // CTunerScanDlg dialog
 
-IMPLEMENT_DYNAMIC(CTunerScanDlg, CDialog)
+IMPLEMENT_DYNAMIC(CTunerScanDlg, CDarkDialog)
 
 CTunerScanDlg::CTunerScanDlg(CMainFrame* pMainFrame)
-    : CDialog(CTunerScanDlg::IDD, pMainFrame)
+    : CDarkDialog(CTunerScanDlg::IDD, pMainFrame)
     , m_pMainFrame(pMainFrame)
     , m_bInProgress(false)
 {
@@ -65,7 +66,7 @@ CTunerScanDlg::~CTunerScanDlg()
 
 BOOL CTunerScanDlg::OnInitDialog()
 {
-    CDialog::OnInitDialog();
+    CDarkDialog::OnInitDialog();
 
     m_OffsetEditBox.EnableWindow(m_bUseOffset);
 
@@ -80,8 +81,12 @@ BOOL CTunerScanDlg::OnInitDialog()
     m_ChannelList.InsertColumn(TSCC_CHANNEL, _T("Channel"), LVCFMT_LEFT, 0);
 
     m_Progress.SetRange(0, 100);
+    CDarkTheme::fulfillThemeReqs(&m_Progress);
     m_Strength.SetRange(0, 100);
+    CDarkTheme::fulfillThemeReqs(&m_Strength);
     m_Quality.SetRange(0, 100);
+    CDarkTheme::fulfillThemeReqs(&m_Quality);
+
     m_btnSave.EnableWindow(FALSE);
 
     return TRUE;
@@ -89,7 +94,7 @@ BOOL CTunerScanDlg::OnInitDialog()
 
 void CTunerScanDlg::DoDataExchange(CDataExchange* pDX)
 {
-    CDialog::DoDataExchange(pDX);
+    CDarkDialog::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_FREQ_START, m_ulFrequencyStart);
     DDX_Text(pDX, IDC_FREQ_END, m_ulFrequencyEnd);
     DDX_Text(pDX, IDC_BANDWIDTH, m_ulBandwidth);
@@ -104,9 +109,10 @@ void CTunerScanDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, ID_SAVE, m_btnSave);
     DDX_Control(pDX, IDCANCEL, m_btnCancel);
     DDX_Control(pDX, IDC_OFFSET, m_OffsetEditBox);
+    enableDarkThemeIfActive();
 }
 
-BEGIN_MESSAGE_MAP(CTunerScanDlg, CDialog)
+BEGIN_MESSAGE_MAP(CTunerScanDlg, CDarkDialog)
     ON_MESSAGE(WM_TUNER_SCAN_PROGRESS, OnScanProgress)
     ON_MESSAGE(WM_TUNER_SCAN_END, OnScanEnd)
     ON_MESSAGE(WM_TUNER_STATS, OnStats)

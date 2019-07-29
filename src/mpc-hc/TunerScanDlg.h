@@ -22,11 +22,15 @@
 
 #include <afxcmn.h>
 #include <afxwin.h>
+#include "CDarkDialog.h"
+#include "CDarkEdit.h"
+#include "CDarkPlayerListCtrl.h"
+#include "CDarkButton.h"
 
 
 // CTunerScanDlg dialog
 
-class CTunerScanDlg : public CDialog
+class CTunerScanDlg : public CDarkDialog
 {
     CMainFrame* m_pMainFrame;
 
@@ -50,13 +54,13 @@ public:
     ULONG m_ulFrequencyEnd;
     ULONG m_ulBandwidth;
     LONG m_lOffset;
-    CEdit m_OffsetEditBox;
+    CDarkEdit m_OffsetEditBox;
     BOOL m_bUseOffset;
     BOOL m_bIgnoreEncryptedChannels;
     CProgressCtrl m_Progress;
     CProgressCtrl m_Strength;
     CProgressCtrl m_Quality;
-    CListCtrl m_ChannelList;
+    CDarkPlayerListCtrl m_ChannelList;
     bool m_bInProgress;
 
     afx_msg LRESULT OnScanProgress(WPARAM wParam, LPARAM lParam);
@@ -69,7 +73,7 @@ public:
     afx_msg void OnBnClickedStart();
     afx_msg void OnBnClickedCancel();
     virtual BOOL OnInitDialog();
-    CButton m_btnStart;
-    CButton m_btnSave;
-    CButton m_btnCancel;
+    CDarkButton m_btnStart;
+    CDarkButton m_btnSave;
+    CDarkButton m_btnCancel;
 };

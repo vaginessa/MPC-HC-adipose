@@ -66,12 +66,7 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     __super::OnInitDialog();
 
     m_progress.SetParent(&m_status);
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        SetWindowTheme(m_progress.GetSafeHwnd(), _T(""), _T(""));
-        m_progress.SetBarColor(CDarkTheme::ProgressBarColor);
-        m_progress.SetBkColor(CDarkTheme::ProgressBarBGColor);
-    }
-    m_progress.UpdateWindow();
+    CDarkTheme::fulfillThemeReqs(&m_progress);
 
     int n = 0, curPos = 0;
     CArray<int> columnWidth;

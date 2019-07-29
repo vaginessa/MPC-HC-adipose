@@ -22,11 +22,13 @@
 
 #include <atlcoll.h>
 #include "resource.h"
-#include "ResizableLib/ResizableDialog.h"
+#include "CMPCThemeResizableDialog.h"
+#include "CDarkButton.h"
+#include "CDarkListBox.h"
 
 class CMainFrame;
 
-class CNavListBox : public CListBox
+class CNavListBox : public CDarkListBox
 {
 public:
     virtual ~CNavListBox() = default;
@@ -35,12 +37,12 @@ protected:
     virtual ULONG GetGestureStatus(CPoint) override { return 0; }
 };
 
-class CPlayerNavigationDialog : public CResizableDialog
+class CPlayerNavigationDialog : public CMPCThemeResizableDialog
 {
 private:
     CNavListBox m_channelList;
-    CButton m_buttonInfo;
-    CButton m_buttonFilterStations;
+    CDarkButton m_buttonInfo;
+    CDarkButton m_buttonFilterStations;
 
     CMainFrame* m_pMainFrame;
     bool m_bChannelInfoAvailable;

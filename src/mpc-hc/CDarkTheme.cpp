@@ -515,3 +515,12 @@ void CDarkTheme::getParentDialogBG(CWnd* wnd, CDC *pDC, CBrush &brush) {
     HBRUSH bg = (HBRUSH)parent->SendMessage(WM_CTLCOLORDLG, w, (LPARAM)& ctl);
     brush.Attach(bg);
 }
+
+void CDarkTheme::fulfillThemeReqs(CProgressCtrl* ctl) {
+    if (AfxGetAppSettings().bDarkThemeLoaded) {
+        SetWindowTheme(ctl->GetSafeHwnd(), _T(""), _T(""));
+        ctl->SetBarColor(CDarkTheme::ProgressBarColor);
+        ctl->SetBkColor(CDarkTheme::ProgressBarBGColor);
+    }
+    ctl->UpdateWindow();
+}

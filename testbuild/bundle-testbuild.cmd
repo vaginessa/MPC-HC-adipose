@@ -1,4 +1,8 @@
 @echo off
+cd ..
+call build.bat x86 Release MPCHC
+
+cd testbuild
 
 copy ..\bin\mpc-hc_x86\mpc-hc.exe .
 

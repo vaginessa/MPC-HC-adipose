@@ -171,6 +171,7 @@ public:
     static bool canUseWin10DarkTheme();
     static UINT defaultLogo();
     static void getParentDialogBG(CWnd* wnd, CDC* pDC, CBrush& brush);
+	static void fulfillThemeReqs(CProgressCtrl* ctl);
 
     enum CheckBoxStyle {
         CheckBoxRegular = 0,
