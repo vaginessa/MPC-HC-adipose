@@ -14,5 +14,6 @@ public:
 	DECLARE_MESSAGE_MAP()
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnSetFont(CFont* pFont, BOOL bRedraw);
+    afx_msg HFONT OnGetFont();
 };
 

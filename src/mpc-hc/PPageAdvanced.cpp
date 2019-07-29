@@ -243,7 +243,7 @@ void CPPageAdvanced::OnBnClickedDefaultButton()
             UNREACHABLE_CODE();
         }
 
-        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
+        m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, str, !IsDefault(eSetting));
         UpdateData(FALSE);
         m_list.Update(iItem);
         SetModified();
@@ -401,7 +401,7 @@ void CPPageAdvanced::OnBnClickedRadio2()
 
         if (auto pItemBool = std::dynamic_pointer_cast<SettingsBool>(pItem)) {
             pItemBool->SetValue(false);
-            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strFalse, !IsDefault(eSetting));
             UpdateData(FALSE);
             m_list.Update(iItem);
             SetModified();
@@ -420,7 +420,7 @@ void CPPageAdvanced::OnCbnSelchangeCombobox()
         if (auto pItemCombo = std::dynamic_pointer_cast<SettingsCombo>(pItem)) {
             auto list = pItemCombo->GetList();
             pItemCombo->SetValue(iItem);
-            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, list.at(iItem), !IsDefault(eSetting));
             UpdateData(FALSE);
             m_list.Update(nItem);
             if (m_comboBox.IsWindowVisible()) {
@@ -465,7 +465,7 @@ void CPPageAdvanced::OnEnChangeEdit()
         }
 
         if (bChanged) {
-            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, m_strTrue, !IsDefault(eSetting));
+            m_list.setItemTextWithDefaultFlag(iItem, COL_VALUE, str, !IsDefault(eSetting));
             m_list.Update(iItem);
             UpdateData(FALSE);
             SetModified();
