@@ -33,6 +33,7 @@ public:
     static const COLORREF GripperPatternColor;
 
     static const COLORREF ScrollBGColor;
+    static const COLORREF ScrollChapterColor;
     static const COLORREF ScrollThumbColor;
     static const COLORREF ScrollThumbHoverColor;
     static const COLORREF ScrollThumbDragColor;

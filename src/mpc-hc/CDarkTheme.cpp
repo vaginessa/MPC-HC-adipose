@@ -33,6 +33,7 @@ const COLORREF CDarkTheme::NoBorderColor = COLORREF(RGB(0, 0, 0));
 const COLORREF CDarkTheme::GripperPatternColor = COLORREF(RGB(70, 70, 74)); //visual studio dark, since explorer has no grippers
 
 const COLORREF CDarkTheme::ScrollBGColor = COLORREF(RGB(23, 23, 23));
+const COLORREF CDarkTheme::ScrollChapterColor = COLORREF(RGB(60, 60, 60));
 const COLORREF CDarkTheme::ScrollThumbColor = COLORREF(RGB(77, 77, 77));
 const COLORREF CDarkTheme::ScrollThumbHoverColor = COLORREF(RGB(144, 144, 144));
 const COLORREF CDarkTheme::ScrollThumbDragColor = COLORREF(RGB(183, 183, 183));

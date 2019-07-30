@@ -535,7 +535,7 @@ void CPlayerSeekBar::OnPaint()
                             r.right++;
                         }
                         ASSERT(r.right <= channelRect.right);
-                        dc.FillSolidRect(&r, CDarkTheme::ScrollBGColor);
+                        dc.FillSolidRect(&r, CDarkTheme::ScrollChapterColor);
                         dc.ExcludeClipRect(&r);
                     } else {
                         ASSERT(FALSE);
