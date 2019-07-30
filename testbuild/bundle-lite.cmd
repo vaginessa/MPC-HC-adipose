@@ -6,5 +6,5 @@ cd testbuild
 
 copy ..\bin\mpc-hc_x86\mpc-hc.exe .
 
-7za u mpc-hc.7z mpc-hc.exe Shaders\* LAVFilters\* Lang\*
+7za a mpc-hc.7z mpc-hc.exe Shaders\* LAVFilters\* Lang\*
 pause
