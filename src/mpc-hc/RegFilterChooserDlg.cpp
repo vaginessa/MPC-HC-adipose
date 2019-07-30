@@ -103,7 +103,7 @@ BOOL CRegFilterChooserDlg::OnInitDialog()
     SetMinTrackSize(CSize(300, 100));
 
     m_list.setAdditionalStyles(LVS_EX_DOUBLEBUFFER);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE

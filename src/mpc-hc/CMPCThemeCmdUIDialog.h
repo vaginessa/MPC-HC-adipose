@@ -11,7 +11,7 @@ public:
     CMPCThemeCmdUIDialog(UINT nIDTemplate, CWnd* pParent = nullptr);
     CMPCThemeCmdUIDialog(LPCTSTR lpszTemplateName, CWnd* pParent = nullptr);
     virtual ~CMPCThemeCmdUIDialog();
-    void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    void fulfillThemeReqs() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemeCmdUIDialog)
     DECLARE_MESSAGE_MAP()
 public:

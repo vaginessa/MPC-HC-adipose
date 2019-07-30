@@ -38,7 +38,7 @@ void CmdLineHelpDlg::DoDataExchange(CDataExchange* pDX)
     __super::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_STATIC1, m_icon);
     DDX_Text(pDX, IDC_EDIT1, m_text);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 

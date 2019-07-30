@@ -267,7 +267,7 @@ void CWinHotkeyCtrl::OnContextMenu(CWnd*, CPoint pt)
     menu.AppendMenu(MF_STRING, 2, ResStr(IDS_CLEAR));
     menu.AppendMenu(MF_STRING, 3, ResStr(IDS_CANCEL));
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        menu.ActivateDarkTheme();
+        menu.fulfillThemeReqs();
     }
 
     UINT uMenuID = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_VERPOSANIMATION | TPM_NONOTIFY | TPM_RETURNCMD,

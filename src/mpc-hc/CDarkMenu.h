@@ -30,7 +30,7 @@ public:
     std::vector<MenuObject *> allocatedItems;
     std::vector<CDarkMenu *> allocatedMenus;
     static std::map<UINT, CDarkMenu *> subMenuIDs;
-    void ActivateDarkTheme(bool menubar = false);
+    void fulfillThemeReqs(bool menubar = false);
     void ActivateItemDarkTheme(UINT i, bool byCommand=false);
     static void ActivateItemDarkTheme(CMenu* parent, UINT i, bool byCommand=false);
     static UINT getPosFromID(CMenu* parent, UINT nID);

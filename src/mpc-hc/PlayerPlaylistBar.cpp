@@ -1505,7 +1505,7 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     m.AppendMenu(MF_SEPARATOR);
     m.AppendMenu(MF_STRING | MF_ENABLED | (s.bHidePlaylistFullScreen ? MF_CHECKED : MF_UNCHECKED), M_HIDEFULLSCREEN, ResStr(IDS_PLAYLIST_HIDEFS));
     if (s.bDarkThemeLoaded) {
-        m.ActivateDarkTheme();
+        m.fulfillThemeReqs();
     }
 
     //use mainframe as parent to take advantage of measure redirect (was 'this' but text was not printed)

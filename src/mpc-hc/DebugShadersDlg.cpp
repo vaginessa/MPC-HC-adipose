@@ -209,7 +209,7 @@ void CDebugShadersDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_COMBO1, m_Shaders);
     DDX_Control(pDX, IDC_EDIT1, m_DebugInfo);
     DDX_Radio(pDX, IDC_RADIO1, m_iVersion);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 void CDebugShadersDlg::OnTimer(UINT_PTR nIDEvent)

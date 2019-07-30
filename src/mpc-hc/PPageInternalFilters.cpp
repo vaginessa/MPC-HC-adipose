@@ -169,7 +169,7 @@ void CPPageInternalFiltersListBox::OnContextMenu(CWnd* pWnd, CPoint point)
         m.AppendMenu(MF_STRING | state, DISABLE_VIDEO, ResStr(IDS_DISABLE_VIDEO_FILTERS));
     }
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        m.ActivateDarkTheme();
+        m.fulfillThemeReqs();
     }
 
     ClientToScreen(&point);

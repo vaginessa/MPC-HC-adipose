@@ -20,13 +20,13 @@ END_MESSAGE_MAP()
 
 BOOL CMPCThemePropertySheet::OnInitDialog() {
     BOOL bResult = __super::OnInitDialog();
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return bResult;
 }
 
-void CMPCThemePropertySheet::enableDarkThemeIfActive() {
+void CMPCThemePropertySheet::fulfillThemeReqs() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this);
+        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
     }
 }
 

@@ -98,7 +98,7 @@ CPPageSheet::~CPPageSheet() {
 
 void CPPageSheet::enableDarkThemeIfActive() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this);
+        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
     }
 }
 

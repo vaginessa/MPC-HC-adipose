@@ -26,7 +26,7 @@
 
 // CSaveThumbnailsDialog
 
-class CSaveThumbnailsDialog : public CSaveImageDialog, public CDarkChildHelper
+class CSaveThumbnailsDialog : public CSaveImageDialog
 {
     DECLARE_DYNAMIC(CSaveThumbnailsDialog)
 
@@ -36,7 +36,6 @@ public:
         LPCTSTR lpszDefExt = nullptr, LPCTSTR lpszFileName = nullptr,
         LPCTSTR lpszFilter = nullptr, CWnd* pParentWnd = nullptr);
     virtual ~CSaveThumbnailsDialog();
-    virtual INT_PTR DoModal();
 
 protected:
     DECLARE_MESSAGE_MAP()

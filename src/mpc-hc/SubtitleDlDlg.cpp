@@ -101,7 +101,7 @@ void CSubtitleDlDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LIST1, m_list);
     DDX_Control(pDX, IDC_PROGRESS1, m_progress);
     DDX_Control(pDX, IDC_STATUSBAR, m_status);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 void CSubtitleDlDlg::SetStatusText(const CString& status, BOOL bPropagate/* = TRUE*/)
@@ -485,7 +485,7 @@ void CSubtitleDlDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
         m.AppendMenu(MF_STRING | (!subtitlesInfo.url.empty() ? MF_ENABLED : MF_DISABLED), OPEN_URL, ResStr(IDS_SUBMENU_OPENURL));
         m.AppendMenu(MF_STRING | (!subtitlesInfo.url.empty() ? MF_ENABLED : MF_DISABLED), COPY_URL, ResStr(IDS_SUBMENU_COPYURL));
         if (AfxGetAppSettings().bDarkThemeLoaded) {
-            m.ActivateDarkTheme();
+            m.fulfillThemeReqs();
         }
 
         CPoint pt = lpnmlv->ptAction;

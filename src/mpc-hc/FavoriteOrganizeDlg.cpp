@@ -98,7 +98,7 @@ void CFavoriteOrganizeDlg::DoDataExchange(CDataExchange* pDX)
     __super::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_TAB1, m_tab);
     DDX_Control(pDX, IDC_LIST2, m_list);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 

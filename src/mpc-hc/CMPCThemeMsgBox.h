@@ -10,7 +10,7 @@ public:
     DECLARE_DYNAMIC(CMPCThemeMsgBox)
     virtual ~CMPCThemeMsgBox();
     BOOL OnInitDialog();
-    void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    void enableDarkThemeIfActive() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
     static BOOL MessageBox(CWnd * parent, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType);
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

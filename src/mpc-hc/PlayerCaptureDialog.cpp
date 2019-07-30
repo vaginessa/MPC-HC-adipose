@@ -583,7 +583,7 @@ void CPlayerCaptureDialog::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_CHECK5, m_fSepAudio);
     DDX_CBIndex(pDX, IDC_COMBO14, m_muxtype);
     DDX_Control(pDX, IDC_COMBO14, m_muxctrl);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 BOOL CPlayerCaptureDialog::PreTranslateMessage(MSG* pMsg)

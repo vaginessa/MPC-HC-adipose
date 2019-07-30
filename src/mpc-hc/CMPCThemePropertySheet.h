@@ -15,7 +15,7 @@ public:
     virtual ~CMPCThemePropertySheet();
 
     virtual BOOL OnInitDialog();
-    void enableDarkThemeIfActive();
+    void fulfillThemeReqs();
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 

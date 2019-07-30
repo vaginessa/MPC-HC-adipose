@@ -49,7 +49,7 @@ void CFavoriteAddDlg::DoDataExchange(CDataExchange* pDX)
     DDX_CBString(pDX, IDC_COMBO1, m_name);
     DDX_Check(pDX, IDC_CHECK1, m_bRememberPos);
     DDX_Check(pDX, IDC_CHECK2, m_bRelativeDrive);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 BOOL CFavoriteAddDlg::OnInitDialog()

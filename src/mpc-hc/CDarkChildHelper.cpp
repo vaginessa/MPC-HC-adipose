@@ -65,7 +65,7 @@ CDarkChildHelper::~CDarkChildHelper() {
 }
 
 
-void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
+void CDarkChildHelper::fulfillThemeReqs(CWnd *wnd) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
 
         initHelperObjects(wnd);
@@ -142,9 +142,9 @@ void CDarkChildHelper::enableDarkThemeIfActive(CWnd *wnd) {
                         allocatedDialogs.push_back(pObject);
                         pObject->SubclassWindow(tChild->GetSafeHwnd());
                     }
-                    enableDarkThemeIfActive(tChild);
+                    fulfillThemeReqs(tChild);
                 } else if (windowTitle == _T("CInternalPropertyPageWnd")) { //internal window encompassing property pages
-                    enableDarkThemeIfActive(tChild);
+                    fulfillThemeReqs(tChild);
                 } else if (0 == _tcsicmp(windowClass, WC_COMBOBOX)) {
                     CDarkComboBox* pObject = new CDarkComboBox();
                     allocatedDialogs.push_back(pObject);

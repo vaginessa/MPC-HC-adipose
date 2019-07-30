@@ -47,7 +47,7 @@ void CMediaTypesDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_COMBO1, m_pins);
     DDX_Control(pDX, IDC_EDIT1, m_report);
 
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 void CMediaTypesDlg::AddLine(CString str)

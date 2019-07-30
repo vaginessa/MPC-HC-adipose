@@ -6,7 +6,7 @@ public:
     virtual ~CMPCThemePropertyPage();
 
 
-    void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    void enableDarkThemeIfActive() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemePropertyPage)
 
     DECLARE_MESSAGE_MAP()

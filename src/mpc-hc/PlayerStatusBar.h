@@ -23,6 +23,7 @@
 
 #include "StatusLabel.h"
 #include "CDarkToolTipCtrl.h"
+#include "CDarkMenu.h"
 
 class CMainFrame;
 
@@ -43,7 +44,7 @@ private:
     HICON m_hIcon;
 
     CRect m_time_rect;
-    CMenu m_timerMenu;
+    CDarkMenu m_timerMenu;
 
     CToolTipCtrl m_tooltip;
     CDarkToolTipCtrl darkTT;

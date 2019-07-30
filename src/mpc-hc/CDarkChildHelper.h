@@ -33,7 +33,7 @@ protected:
     std::vector<CWnd*> allocatedSliders;
     std::vector<CWnd*> allocatedTabCtrls;
 
-    void enableDarkThemeIfActive(CWnd *wnd);
+    void fulfillThemeReqs(CWnd *wnd);
     void initHelperObjects(CWnd* wnd);
 };
 

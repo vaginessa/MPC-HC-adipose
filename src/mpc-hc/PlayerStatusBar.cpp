@@ -551,6 +551,7 @@ void CPlayerStatusBar::OnContextMenu(CWnd* pWnd, CPoint point)
     }
     m_timerMenu.AppendMenu(nFlags, HIGH_PRECISION, ResStr(IDS_TIMER_HIGH_PRECISION));
 
+    m_timerMenu.fulfillThemeReqs();
     switch (m_timerMenu.TrackPopupMenu(TPM_LEFTBUTTON | TPM_RETURNCMD, point.x, point.y, this)) {
         case REMAINING_TIME:
             s.fRemainingTime = !s.fRemainingTime;

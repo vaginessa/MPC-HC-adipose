@@ -977,8 +977,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     UpdateSkypeHandler();
 
     if (s.bDarkThemeLoaded) {
-        m_popupMenu.ActivateDarkTheme();
-        m_mainPopupMenu.ActivateDarkTheme();
+        m_popupMenu.fulfillThemeReqs();
+        m_mainPopupMenu.fulfillThemeReqs();
     }
     return 0;
 }
@@ -2884,7 +2884,7 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
             VERIFY(pMenu->SetMenuItemInfo(i, &mii, TRUE));
             const CAppSettings& s = AfxGetAppSettings();
             if (s.bDarkThemeLoaded) {
-                pSubMenu->ActivateDarkTheme();
+                pSubMenu->fulfillThemeReqs();
             }
         }
     }
@@ -2992,7 +2992,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             VERIFY(pPopupMenu->SetMenuItemInfo(i, &mii, TRUE));
             const CAppSettings& s = AfxGetAppSettings();
             if (s.bDarkThemeLoaded) {
-                pSubMenu->ActivateDarkTheme();
+                pSubMenu->fulfillThemeReqs();
             }
         }
     }
@@ -16422,7 +16422,7 @@ BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwS
         }
         const CAppSettings& s = AfxGetAppSettings();
         if (s.bDarkThemeLoaded) {
-            m_DefaultDarkMenu->ActivateDarkTheme(true);
+            m_DefaultDarkMenu->fulfillThemeReqs(true);
         }
 
         return TRUE;
@@ -16733,9 +16733,9 @@ void CMainFrame::UpdateUILanguage()
 
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        m_popupMenu.ActivateDarkTheme();
-        m_mainPopupMenu.ActivateDarkTheme();
-        m_DefaultDarkMenu->ActivateDarkTheme(true);
+        m_popupMenu.fulfillThemeReqs();
+        m_mainPopupMenu.fulfillThemeReqs();
+        m_DefaultDarkMenu->fulfillThemeReqs(true);
     }
 
 

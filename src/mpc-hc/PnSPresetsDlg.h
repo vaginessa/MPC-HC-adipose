@@ -23,11 +23,11 @@
 
 #include "FloatEdit.h"
 #include "resource.h"
-#include "ResizableLib/ResizableDialog.h"
+#include "CMPCThemeCmdUIDialog.h"
 
 // CPnSPresetsDlg dialog
 
-class CPnSPresetsDlg : public CCmdUIDialog
+class CPnSPresetsDlg : public CMPCThemeCmdUIDialog
 {
     DECLARE_DYNAMIC(CPnSPresetsDlg)
 

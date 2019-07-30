@@ -9,7 +9,7 @@ class CDarkPPageBase :
 public:
     CDarkPPageBase(UINT nIDTemplate, UINT nIDCaption);
     virtual ~CDarkPPageBase();
-    void enableDarkThemeIfActive() { CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this); };
+    void enableDarkThemeIfActive() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
 
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

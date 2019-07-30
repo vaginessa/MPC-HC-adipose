@@ -64,11 +64,6 @@ CSaveThumbnailsDialog::~CSaveThumbnailsDialog()
 {
 }
 
-INT_PTR CSaveThumbnailsDialog::DoModal() {
-    enableFileDialogHook();
-    return __super::DoModal();
-}
-
 BOOL CSaveThumbnailsDialog::OnInitDialog()
 {
     __super::OnInitDialog();

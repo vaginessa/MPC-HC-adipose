@@ -41,7 +41,7 @@ CDarkMenu::~CDarkMenu() {
     }
 }
 
-void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
+void CDarkMenu::fulfillThemeReqs(bool isMenubar) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         MENUINFO MenuInfo = { 0 };
         MenuInfo.cbSize = sizeof(MENUINFO);
@@ -90,7 +90,7 @@ void CDarkMenu::ActivateDarkTheme(bool isMenubar) {
                 CDarkMenu* pSubMenu = new CDarkMenu;
                 allocatedMenus.push_back(pSubMenu);
                 pSubMenu->Attach(t->GetSafeHmenu());
-                pSubMenu->ActivateDarkTheme();
+                pSubMenu->fulfillThemeReqs();
             }
         }
     }
@@ -154,7 +154,7 @@ void CDarkMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
         CDarkMenu* pSubMenu = new CDarkMenu;
         allocatedMenus.push_back(pSubMenu);
         pSubMenu->Attach(t->GetSafeHmenu());
-        pSubMenu->ActivateDarkTheme();
+        pSubMenu->fulfillThemeReqs();
     }
 }
 

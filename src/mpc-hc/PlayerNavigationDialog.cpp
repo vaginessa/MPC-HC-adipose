@@ -55,7 +55,7 @@ void CPlayerNavigationDialog::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LISTCHANNELS, m_channelList);
     DDX_Control(pDX, IDC_NAVIGATION_INFO, m_buttonInfo);
     DDX_Control(pDX, IDC_NAVIGATION_FILTERSTATIONS, m_buttonFilterStations);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 BOOL CPlayerNavigationDialog::PreTranslateMessage(MSG* pMsg)

@@ -253,7 +253,7 @@ BOOL CComPropertySheet::OnInitDialog()
 
 void CComPropertySheet::enableDarkThemeIfActive() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::enableDarkThemeIfActive((CWnd*)this);
+        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
     }
 }
 
