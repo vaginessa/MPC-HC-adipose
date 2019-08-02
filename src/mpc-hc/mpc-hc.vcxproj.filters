@@ -89,6 +89,15 @@
     <Filter Include="Subtitles">
       <UniqueIdentifier>{20afe682-61a3-4123-9012-4c918a03f482}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MPCTheme">
+      <UniqueIdentifier>{3161f4ab-a606-4c27-9c63-d360ba1ffdc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MPCTheme\resources">
+      <UniqueIdentifier>{1cb607bd-a0b1-4e2b-b73f-54332475cb25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MPCTheme\thirdparty">
+      <UniqueIdentifier>{f0d8891c-1071-47c7-97bd-2ce27c366246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppSettings.cpp">
@@ -469,43 +478,117 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="YoutubeDL.cpp" />
-    <ClCompile Include="CMPCThemeMenu.cpp" />
-    <ClCompile Include="CMPCTheme.cpp" />
-    <ClCompile Include="CMPCThemeDockBar.cpp" />
-    <ClCompile Include="CMPCThemeScrollBar.cpp" />
-    <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp" />
-    <ClCompile Include="CMPCThemeToolTipCtrl.cpp" />
-    <ClCompile Include="CMPCThemeButton.cpp" />
-    <ClCompile Include="CMPCThemeGroupBox.cpp" />
-    <ClCompile Include="CMPCThemeLinkCtrl.cpp" />
-    <ClCompile Include="CMPCThemeDialog.cpp" />
-    <ClCompile Include="CMPCThemePPageBase.cpp" />
-    <ClCompile Include="CMPCThemeUtil.cpp" />
-    <ClCompile Include="CMPCThemeListBox.cpp" />
-    <ClCompile Include="CMPCThemePropPageFrame.cpp" />
-    <ClCompile Include="CMPCThemeComboBox.cpp" />
-    <ClCompile Include="CMPCThemeRadioOrCheck.cpp" />
-    <ClCompile Include="CMPCThemeSliderCtrl.cpp" />
-    <ClCompile Include="CMPCThemeSpinButtonCtrl.cpp" />
-    <ClCompile Include="CMPCThemeInlineEdit.cpp" />
-    <ClCompile Include="CMPCThemeTreeCtrl.cpp" />
-    <ClCompile Include="CMPCThemePlayerListCtrl.cpp" />
-    <ClCompile Include="CMPCThemeScrollBarHelper.cpp" />
-    <ClCompile Include="CMPCThemeHeaderCtrl.cpp" />
-    <ClCompile Include="CMPCThemeStatic.cpp" />
-    <ClCompile Include="CMPCThemeStaticLink.cpp" />
-    <ClCompile Include="CMPCThemeEdit.cpp" />
-    <ClCompile Include="CMPCThemeCmdUIDialog.cpp" />
-    <ClCompile Include="CMPCThemeResizableDialog.cpp" />
-    <ClCompile Include="CMPCThemeStatusBar.cpp" />
-    <ClCompile Include="CMPCThemeMsgBox.cpp" />
-    <ClCompile Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.cpp" />
-    <ClCompile Include="CMPCThemePlayerBar.cpp" />
-    <ClCompile Include="CMPCThemeComPropertyPage.cpp" />
-    <ClCompile Include="CMPCThemeTabCtrl.cpp" />
-    <ClCompile Include="CMPCThemePropertyPage.cpp" />
-    <ClCompile Include="CMPCThemePropertySheet.cpp" />
-    <ClCompile Include="CMPCThemeMaskedEdit.cpp" />
+    <ClCompile Include="CMPCTheme.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeButton.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeCmdUIDialog.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeComboBox.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeComPropertyPage.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeDialog.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeDockBar.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeEdit.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeGroupBox.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeHeaderCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeInlineEdit.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeLinkCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeListBox.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeMaskedEdit.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeMenu.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeMsgBox.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePlayerBar.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePlayerListCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePPageBase.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePropertyPage.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePropertySheet.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemePropPageFrame.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeRadioOrCheck.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeResizableDialog.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeScrollBar.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeScrollBarHelper.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeSliderCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeSpinButtonCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeStatic.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeStaticLink.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeStatusBar.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeTabCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeToolTipCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeTreeCtrl.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="CMPCThemeUtil.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\thirdparty\XeScrollBar\XeScrollBarBase.cpp">
+      <Filter>MPCTheme\thirdparty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.cpp">
+      <Filter>MPCTheme\thirdparty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h">
@@ -914,43 +997,117 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="YoutubeDL.h" />
-    <ClInclude Include="CMPCThemeMenu.h" />
-    <ClInclude Include="CMPCTheme.h" />
-    <ClInclude Include="CMPCThemeDockBar.h" />
-    <ClInclude Include="CMPCThemeScrollBar.h" />
-    <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h" />
-    <ClInclude Include="CMPCThemeToolTipCtrl.h" />
-    <ClInclude Include="CMPCThemeButton.h" />
-    <ClInclude Include="CMPCThemeGroupBox.h" />
-    <ClInclude Include="CMPCThemeLinkCtrl.h" />
-    <ClInclude Include="CMPCThemeDialog.h" />
-    <ClInclude Include="CMPCThemePPageBase.h" />
-    <ClInclude Include="CMPCThemeUtil.h" />
-    <ClInclude Include="CMPCThemeListBox.h" />
-    <ClInclude Include="CMPCThemePropPageFrame.h" />
-    <ClInclude Include="CMPCThemeComboBox.h" />
-    <ClInclude Include="CMPCThemeRadioOrCheck.h" />
-    <ClInclude Include="CMPCThemeSliderCtrl.h" />
-    <ClInclude Include="CMPCThemeSpinButtonCtrl.h" />
-    <ClInclude Include="CMPCThemeInlineEdit.h" />
-    <ClInclude Include="CMPCThemeEdit.h" />
-    <ClInclude Include="CMPCThemeTreeCtrl.h" />
-    <ClInclude Include="CMPCThemePlayerListCtrl.h" />
-    <ClInclude Include="CMPCThemeScrollBarHelper.h" />
-    <ClInclude Include="CMPCThemeHeaderCtrl.h" />
-    <ClInclude Include="CMPCThemeStatic.h" />
-    <ClInclude Include="CMPCThemeStaticLink.h" />
-    <ClInclude Include="CMPCThemeCmdUIDialog.h" />
-    <ClInclude Include="CMPCThemeResizableDialog.h" />
-    <ClInclude Include="CMPCThemeStatusBar.h" />
-    <ClInclude Include="CMPCThemeMsgBox.h" />
-    <ClInclude Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.h" />
-    <ClInclude Include="CMPCThemePlayerBar.h" />
-    <ClInclude Include="CMPCThemeComPropertyPage.h" />
-    <ClInclude Include="CMPCThemeTabCtrl.h" />
-    <ClInclude Include="CMPCThemePropertyPage.h" />
-    <ClInclude Include="CMPCThemePropertySheet.h" />
-    <ClInclude Include="CMPCThemeMaskedEdit.h" />
+    <ClInclude Include="CMPCTheme.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeButton.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeCmdUIDialog.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeComboBox.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeComPropertyPage.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeDialog.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeDockBar.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeEdit.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeGroupBox.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeHeaderCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeInlineEdit.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeLinkCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeListBox.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeMaskedEdit.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeMenu.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeMsgBox.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePlayerBar.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePlayerListCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePPageBase.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePropertyPage.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePropertySheet.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemePropPageFrame.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeRadioOrCheck.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeResizableDialog.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeScrollBar.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeScrollBarHelper.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeSliderCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeSpinButtonCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeStatic.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeStaticLink.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeStatusBar.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeTabCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeToolTipCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeTreeCtrl.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="CMPCThemeUtil.h">
+      <Filter>MPCTheme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\thirdparty\XeScrollBar\xescrollbarbase.h">
+      <Filter>MPCTheme\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\thirdparty\MessageBoxDialog\MessageBoxDialog.h">
+      <Filter>MPCTheme\thirdparty</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ani.avi">
@@ -1186,25 +1343,35 @@
     <Image Include="res\uncheck_all.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\darktheme\checkbox.png" />
-    <Image Include="res\darktheme\checkboxhover.png" />
-    <Image Include="res\darktheme\radioset.png" />
-    <Image Include="res\darktheme\radiosethover.png" />
-    <Image Include="res\darktheme\radio.png" />
-    <Image Include="res\darktheme\radiohover.png" />
-    <Image Include="res\darktheme\checkboxes-96.png" />
-    <Image Include="res\darktheme\checkboxes-120.png" />
-    <Image Include="res\darktheme\checkboxes-144.png" />
-    <Image Include="res\darktheme\checkboxes-192.png" />
-    <Image Include="res\darktheme\radios-96.png" />
-    <Image Include="res\darktheme\radios-120.png" />
-    <Image Include="res\darktheme\radios-144.png" />
-    <Image Include="res\darktheme\radios-192.png" />
     <Image Include="res\logo.4.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\logo.4_x64.png">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\darktheme\checkboxes-96.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\checkboxes-120.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\checkboxes-144.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\checkboxes-192.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\radios-96.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\radios-120.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\radios-144.png">
+      <Filter>MPCTheme\resources</Filter>
+    </Image>
+    <Image Include="res\darktheme\radios-192.png">
+      <Filter>MPCTheme\resources</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
