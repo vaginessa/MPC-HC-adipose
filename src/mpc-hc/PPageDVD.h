@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
-#include "CDarkListBox.h"
-#include "CDarkButton.h"
-#include "CDarkEdit.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeListBox.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeEdit.h"
 
 // CPPageDVD dialog
 
-class CPPageDVD : public CDarkPPageBase
+class CPPageDVD : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageDVD)
 
@@ -39,10 +39,10 @@ public:
     CPPageDVD();
     virtual ~CPPageDVD();
 
-    CDarkListBox m_lcids;
+    CMPCThemeListBox m_lcids;
     CString m_dvdpath;
-    CDarkEdit m_dvdpathctrl;
-    CDarkButton m_dvdpathselctrl;
+    CMPCThemeEdit m_dvdpathctrl;
+    CMPCThemeButton m_dvdpathselctrl;
     int m_iDVDLocation;
     int m_iDVDLangType;
 

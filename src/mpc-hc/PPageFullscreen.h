@@ -21,15 +21,15 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "PlayerListCtrl.h"
-#include "CDarkComboBox.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemeComboBox.h"
+#include "CMPCThemeSpinButtonCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 // CPPageFullscreen dialog
 
-class CPPageFullscreen : public CDarkPPageBase
+class CPPageFullscreen : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageFullscreen)
 
@@ -37,13 +37,13 @@ private:
     std::vector<CString> m_monitorDisplayNames;
     CStringW m_fullScreenMonitor;
     int m_iFullScreenMonitor;
-    CDarkComboBox m_fullScreenMonitorCtrl;
+    CMPCThemeComboBox m_fullScreenMonitorCtrl;
 
     BOOL m_bLaunchFullscreen;
     BOOL m_fExitFullScreenAtTheEnd;
 
     BOOL m_bHideFullscreenControls;
-    CDarkComboBox m_hidePolicy;
+    CMPCThemeComboBox m_hidePolicy;
     unsigned m_uHideFullscreenControlsDelay;
     BOOL m_bHideFullscreenDockedPanels;
 
@@ -58,7 +58,7 @@ private:
     BOOL m_bAutoChangeFSModeRestoreResAfterProgExit;
     unsigned m_uAutoChangeFullscrResDelay;
 
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
     enum {
         COL_N,
         COL_FRAMERATE_START,
@@ -67,7 +67,7 @@ private:
         COL_AUDIO_DELAY
     };
 
-    CDarkSpinButtonCtrl m_delaySpinner;
+    CMPCThemeSpinButtonCtrl m_delaySpinner;
 
     void ModesUpdate();
 

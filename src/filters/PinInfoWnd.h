@@ -24,14 +24,14 @@
 #include "InternalPropertyPage.h"
 #include "stdafx.h"
 #include "../mpc-hc/DpiHelper.h"
-#include "../mpc-hc/CDarkStatic.h"
-#include "../mpc-hc/CDarkComboBox.h"
-#include "../mpc-hc/CDarkEdit.h"
-#include "../mpc-hc/CDarkChildHelper.h"
+#include "../mpc-hc/CMPCThemeStatic.h"
+#include "../mpc-hc/CMPCThemeComboBox.h"
+#include "../mpc-hc/CMPCThemeEdit.h"
+#include "../mpc-hc/CMPCThemeUtil.h"
 #include <atlcoll.h>
 
 class __declspec(uuid("A1EB391C-6089-4A87-9988-BE50872317D4"))
-    CPinInfoWnd : public CInternalPropertyPageWnd, CDarkChildHelper
+    CPinInfoWnd : public CInternalPropertyPageWnd, CMPCThemeUtil
 {
     CComQIPtr<IBaseFilter> m_pBF;
 
@@ -40,9 +40,9 @@ class __declspec(uuid("A1EB391C-6089-4A87-9988-BE50872317D4"))
         IDC_PP_EDIT1
     };
 
-    CDarkStatic m_pin_static;
-    CDarkComboBox m_pin_combo;
-    CDarkEdit m_info_edit;
+    CMPCThemeStatic m_pin_static;
+    CMPCThemeComboBox m_pin_combo;
+    CMPCThemeEdit m_info_edit;
 
     DpiHelper m_dpi;
 

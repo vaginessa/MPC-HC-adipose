@@ -26,8 +26,8 @@
 #include "PixelShaderCompiler.h"
 #include "Shaders.h"
 #include "TimerWrappers.h"
-#include "CDarkComboBox.h"
-#include "CDarkEdit.h"
+#include "CMPCThemeComboBox.h"
+#include "CMPCThemeEdit.h"
 
 class CModelessDialog : public CMPCThemeResizableDialog
 {
@@ -63,8 +63,8 @@ private:
 
 protected:
     int m_iVersion;
-    CDarkComboBox m_Shaders;
-    CDarkEdit m_DebugInfo;
+    CMPCThemeComboBox m_Shaders;
+    CMPCThemeEdit m_DebugInfo;
     CPixelShaderCompiler m_Compiler;
 
     EventClient m_eventc;

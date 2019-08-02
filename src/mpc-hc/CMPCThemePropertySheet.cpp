@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CMPCThemePropertySheet.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 CMPCThemePropertySheet::CMPCThemePropertySheet(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPage)
     : CPropertySheet(nIDCaption, pParentWnd, iSelectPage) {
@@ -26,7 +26,7 @@ BOOL CMPCThemePropertySheet::OnInitDialog() {
 
 void CMPCThemePropertySheet::fulfillThemeReqs() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
+        CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
 
@@ -36,8 +36,8 @@ HBRUSH CMPCThemePropertySheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
-        pDC->SetTextColor(CDarkTheme::TextFGColor);
-        pDC->SetBkColor(CDarkTheme::ControlAreaBGColor);
+        pDC->SetTextColor(CMPCTheme::TextFGColor);
+        pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
         return darkControlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);

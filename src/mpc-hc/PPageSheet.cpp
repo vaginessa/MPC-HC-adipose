@@ -23,7 +23,7 @@
 #include "mplayerc.h"
 #include "PPageSheet.h"
 #include "SettingsDefines.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 #include <prsht.h>
 
 // CPPageSheet
@@ -84,11 +84,11 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
     }
 
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST2, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST3, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageDVD), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
-        CDarkChildHelper::ModifyTemplates(this, RUNTIME_CLASS(CPPageExternalFilters), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST2, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST3, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageDVD), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
+        CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageExternalFilters), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
     }
 
 }
@@ -98,7 +98,7 @@ CPPageSheet::~CPPageSheet() {
 
 void CPPageSheet::enableDarkThemeIfActive() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
+        CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
 
@@ -113,14 +113,14 @@ void CPPageSheet::EventCallback(MpcEvent ev)
     }
 }
 
-CDarkTreeCtrl* CPPageSheet::CreatePageTreeObject()
+CMPCThemeTreeCtrl* CPPageSheet::CreatePageTreeObject()
 {
-    return DEBUG_NEW CDarkTreeCtrl();
+    return DEBUG_NEW CMPCThemeTreeCtrl();
 }
 
 void CPPageSheet::SetTreeCtrlTheme(CTreeCtrl * ctrl) {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        ((CDarkTreeCtrl*)ctrl)->setDarkTheme();
+        ((CMPCThemeTreeCtrl*)ctrl)->setDarkTheme();
     } else {
         __super::SetTreeCtrlTheme(ctrl);
     }
@@ -171,7 +171,7 @@ void CPPageSheet::OnApply()
 
 TreePropSheet::CPropPageFrame* CPPageSheet::CreatePageFrame() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        return DEBUG_NEW CDarkPropPageFrame;
+        return DEBUG_NEW CMPCThemePropPageFrame;
     } else {
         return __super::CreatePageFrame();
     }
@@ -184,8 +184,8 @@ HBRUSH CPPageSheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
-        pDC->SetTextColor(CDarkTheme::TextFGColor);
-        pDC->SetBkColor(CDarkTheme::ControlAreaBGColor);
+        pDC->SetTextColor(CMPCTheme::TextFGColor);
+        pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
         return darkControlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);

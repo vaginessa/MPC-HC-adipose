@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CMPCThemeStatusBar.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 CMPCThemeStatusBar::CMPCThemeStatusBar() {
 }
@@ -57,17 +57,17 @@ void CMPCThemeStatusBar::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     CRect rect(&lpDrawItemStruct->rcItem);
     int item = lpDrawItemStruct->itemID;
     rect.left += 4;
-    dc.SetBkColor(CDarkTheme::StatusBarBGColor);
-    dc.SetTextColor(CDarkTheme::TextFGColor);
+    dc.SetBkColor(CMPCTheme::StatusBarBGColor);
+    dc.SetTextColor(CMPCTheme::TextFGColor);
     CFont font;
-    CDarkTheme::getFontByType(font, &dc, CDarkTheme::CDMessageFont);
+    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDMessageFont);
     dc.SelectObject(&font);
-    dc.FillSolidRect(rect, CDarkTheme::StatusBarBGColor);
+    dc.FillSolidRect(rect, CMPCTheme::StatusBarBGColor);
     dc.DrawText(texts[item], rect, 0);
     if (item < numParts - 1) { //draw a separator
         CRect separator(rect.right, rect.top, rect.right + 1, rect.bottom);
         dc.OffsetClipRgn(1, 0); //separator is 1 pixel beyond our rect
-        dc.FillSolidRect(separator, CDarkTheme::StatusBarSeparatorColor);
+        dc.FillSolidRect(separator, CMPCTheme::StatusBarSeparatorColor);
     }
     dc.Detach();
 }
@@ -83,7 +83,7 @@ void CMPCThemeStatusBar::OnNcPaint() {
         GetWindowRect(rcWindow);
         ScreenToClient(rcWindow);
         rcWindow.OffsetRect(-rcWindow.TopLeft());
-        dc.FillSolidRect(rcWindow, CDarkTheme::StatusBarBGColor);
+        dc.FillSolidRect(rcWindow, CMPCTheme::StatusBarBGColor);
     }
 }
 

@@ -21,17 +21,17 @@
 #pragma once
 
 #include <afxcmn.h>
-#include "CDarkPPageBase.h"
-#include "CDarkButton.h"
-#include "CDarkRadioOrCheck.h"
-#include "CDarkEdit.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkSliderCtrl.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeRadioOrCheck.h"
+#include "CMPCThemeEdit.h"
+#include "CMPCThemeSpinButtonCtrl.h"
+#include "CMPCThemeSliderCtrl.h"
 
 
 // CPPageMisc dialog
 
-class CPPageMisc : public CDarkPPageBase
+class CPPageMisc : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageMisc)
 
@@ -45,9 +45,9 @@ private:
     CString m_sHue;
     CString m_sSaturation;
 
-    CDarkRadioOrCheck m_updaterAutoCheckCtrl;
-    CDarkEdit m_updaterDelayCtrl;
-    CDarkSpinButtonCtrl m_updaterDelaySpin;
+    CMPCThemeRadioOrCheck m_updaterAutoCheckCtrl;
+    CMPCThemeEdit m_updaterDelayCtrl;
+    CMPCThemeSpinButtonCtrl m_updaterDelaySpin;
 
     int m_nUpdaterAutoCheck;
     int m_nUpdaterDelay;
@@ -67,11 +67,11 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 public:
-    CDarkSliderCtrl m_SliContrast;
-    CDarkSliderCtrl m_SliBrightness;
-    CDarkSliderCtrl m_SliHue;
-    CDarkSliderCtrl m_SliSaturation;
-    CDarkButton m_ExportKeys;
+    CMPCThemeSliderCtrl m_SliContrast;
+    CMPCThemeSliderCtrl m_SliBrightness;
+    CMPCThemeSliderCtrl m_SliHue;
+    CMPCThemeSliderCtrl m_SliSaturation;
+    CMPCThemeButton m_ExportKeys;
     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg void OnBnClickedReset();
 

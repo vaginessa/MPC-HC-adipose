@@ -20,7 +20,7 @@
 
 #include "stdafx.h"
 #include "ImageGrayer.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 struct HLS {
     double H, L, S;
@@ -162,9 +162,9 @@ bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool dis
     RGBQUAD newColor;
     COLORREF themeColor;
     if (disabled) {
-        themeColor = CDarkTheme::ImageDisabledColor;
+        themeColor = CMPCTheme::ImageDisabledColor;
     } else {
-        themeColor = CDarkTheme::TextFGColor;
+        themeColor = CMPCTheme::TextFGColor;
     }
     newColor.rgbRed = GetRValue(themeColor);
     newColor.rgbGreen = GetGValue(themeColor);

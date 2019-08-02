@@ -24,7 +24,7 @@
 #include "EventDispatcher.h"
 #include "DSMPropertyBag.h"
 #include <memory>
-#include "CDarkToolTipCtrl.h"
+#include "CMPCThemeToolTipCtrl.h"
 
 class CMainFrame;
 
@@ -52,7 +52,7 @@ private:
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);
 
-    CDarkToolTipCtrl m_tooltip;
+    CMPCThemeToolTipCtrl m_tooltip;
     enum { TOOLTIP_HIDDEN, TOOLTIP_TRIGGERED, TOOLTIP_VISIBLE } m_tooltipState;
     TOOLINFO m_ti;
     CPoint m_tooltipPoint;

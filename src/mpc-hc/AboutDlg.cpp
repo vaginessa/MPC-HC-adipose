@@ -34,7 +34,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
 
-CAboutDlg::CAboutDlg() : CDarkDialog(CAboutDlg::IDD)
+CAboutDlg::CAboutDlg() : CMPCThemeDialog(CAboutDlg::IDD)
 {
     //{{AFX_DATA_INIT(CAboutDlg)
     //}}AFX_DATA_INIT
@@ -206,7 +206,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_STATIC4, m_OSVersion);
 }
 
-BEGIN_MESSAGE_MAP(CAboutDlg, CDarkDialog)
+BEGIN_MESSAGE_MAP(CAboutDlg, CMPCThemeDialog)
     //{{AFX_MSG_MAP(CAboutDlg)
     // No message handlers
     //}}AFX_MSG_MAP

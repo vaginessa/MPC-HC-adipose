@@ -25,7 +25,7 @@
 #include <afxwin.h>
 #include "CMPCThemeResizableDialog.h"
 #include "CMPCThemeTabCtrl.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 // CFavoriteOrganizeDlg dialog
 
@@ -46,7 +46,7 @@ public:
     enum { IDD = IDD_FAVORGANIZE };
 
     CMPCThemeTabCtrl m_tab;
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

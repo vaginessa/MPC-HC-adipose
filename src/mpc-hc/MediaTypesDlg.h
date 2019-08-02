@@ -25,8 +25,8 @@
 #include <atlcoll.h>
 #include "IGraphBuilder2.h"
 #include "CMPCThemeResizableDialog.h"
-#include "CDarkEdit.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemeEdit.h"
+#include "CMPCThemeComboBox.h"
 
 
 // CMediaTypesDlg dialog
@@ -48,8 +48,8 @@ public:
 
     // Dialog Data
     enum { IDD = IDD_MEDIATYPES_DLG };
-    CDarkComboBox m_pins;
-    CDarkEdit m_report;
+    CMPCThemeComboBox m_pins;
+    CMPCThemeEdit m_report;
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

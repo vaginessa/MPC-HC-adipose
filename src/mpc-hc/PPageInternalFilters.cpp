@@ -25,9 +25,9 @@
 #include "PPageInternalFilters.h"
 #include "../filters/Filters.h"
 #include "InternalFiltersConfig.h"
-#include "CDarkMenu.h"
+#include "CMPCThemeMenu.h"
 
-IMPLEMENT_DYNAMIC(CPPageInternalFiltersListBox, CDarkPlayerListCtrl)
+IMPLEMENT_DYNAMIC(CPPageInternalFiltersListBox, CMPCThemePlayerListCtrl)
 CPPageInternalFiltersListBox::CPPageInternalFiltersListBox(int n, const CArray<filter_t>& filters)
     : m_filters(filters)
     , m_n(n)
@@ -62,7 +62,7 @@ INT_PTR CPPageInternalFiltersListBox::OnToolHitTest(CPoint point, TOOLINFO* pTI)
     return pTI->uId;
 }
 
-BEGIN_MESSAGE_MAP(CPPageInternalFiltersListBox, CDarkPlayerListCtrl)
+BEGIN_MESSAGE_MAP(CPPageInternalFiltersListBox, CMPCThemePlayerListCtrl)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolTipNotify)
     ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
@@ -132,7 +132,7 @@ void CPPageInternalFiltersListBox::OnContextMenu(CWnd* pWnd, CPoint point)
         ScreenToClient(&point);
     }
 
-    CDarkMenu m;
+    CMPCThemeMenu m;
     m.CreatePopupMenu();
 
     enum {
@@ -233,9 +233,9 @@ void CPPageInternalFiltersListBox::OnContextMenu(CWnd* pWnd, CPoint point)
 
 // CPPageInternalFilters dialog
 
-IMPLEMENT_DYNAMIC(CPPageInternalFilters, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageInternalFilters, CMPCThemePPageBase)
 CPPageInternalFilters::CPPageInternalFilters()
-    : CDarkPPageBase(CPPageInternalFilters::IDD, CPPageInternalFilters::IDD)
+    : CMPCThemePPageBase(CPPageInternalFilters::IDD, CPPageInternalFilters::IDD)
     , m_listSrc(0, m_filters)
     , m_listTra(1, m_filters)
 {
@@ -252,7 +252,7 @@ void CPPageInternalFilters::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LIST2, m_listTra);
 }
 
-BEGIN_MESSAGE_MAP(CPPageInternalFilters, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageInternalFilters, CMPCThemePPageBase)
     ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST1, OnItemChanged)
     ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST2, OnItemChanged)
     ON_BN_CLICKED(IDC_SPLITTER_CONF, OnBnClickedSplitterConf)

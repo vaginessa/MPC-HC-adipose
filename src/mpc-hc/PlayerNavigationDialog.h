@@ -23,12 +23,12 @@
 #include <atlcoll.h>
 #include "resource.h"
 #include "CMPCThemeResizableDialog.h"
-#include "CDarkButton.h"
-#include "CDarkListBox.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeListBox.h"
 
 class CMainFrame;
 
-class CNavListBox : public CDarkListBox
+class CNavListBox : public CMPCThemeListBox
 {
 public:
     virtual ~CNavListBox() = default;
@@ -41,8 +41,8 @@ class CPlayerNavigationDialog : public CMPCThemeResizableDialog
 {
 private:
     CNavListBox m_channelList;
-    CDarkButton m_buttonInfo;
-    CDarkButton m_buttonFilterStations;
+    CMPCThemeButton m_buttonInfo;
+    CMPCThemeButton m_buttonFilterStations;
 
     CMainFrame* m_pMainFrame;
     bool m_bChannelInfoAvailable;

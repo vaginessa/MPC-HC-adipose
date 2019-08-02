@@ -31,7 +31,7 @@
 #include "InternalFiltersConfig.h"
 #include "PathUtils.h"
 #include "WinAPIUtils.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 #undef SubclassWindow
 
 
@@ -1142,14 +1142,14 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
         if (s.bDarkThemeLoaded) {
-            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::ContentSelectedColor));
+            FillRect(pDC->m_hDC, rcItem, CBrush(CMPCTheme::ContentSelectedColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(0xf1dacc));
             FrameRect(pDC->m_hDC, rcItem, CBrush(0xc56a31));
         }
     } else {
         if (s.bDarkThemeLoaded) {
-            FillRect(pDC->m_hDC, rcItem, CBrush(CDarkTheme::ContentBGColor));
+            FillRect(pDC->m_hDC, rcItem, CBrush(CMPCTheme::ContentBGColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(GetSysColor(COLOR_WINDOW)));
         }
@@ -1158,9 +1158,9 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
     COLORREF textcolor;
 
     if (s.bDarkThemeLoaded) {
-        textcolor = CDarkTheme::TextFGColor;
+        textcolor = CMPCTheme::TextFGColor;
         if (pli.m_fInvalid) {
-            textcolor = CDarkTheme::ContentTextDisabledFGColorWarn;
+            textcolor = CMPCTheme::ContentTextDisabledFGColorWarn;
         }
     } else {
         textcolor = fSelected ? 0xff : 0;
@@ -1458,7 +1458,7 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     POSITION pos = FindPos(lvhti.iItem);
     bool bIsLocalFile = bOnItem ? PathUtils::Exists(m_pl.GetAt(pos).m_fns.GetHead()) : false;
 
-    CDarkMenu m;
+    CMPCThemeMenu m;
     m.CreatePopupMenu();
 
     enum {

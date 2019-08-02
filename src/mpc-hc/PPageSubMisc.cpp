@@ -27,10 +27,10 @@
 
 // CPPageSubMisc dialog
 
-IMPLEMENT_DYNAMIC(CPPageSubMisc, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageSubMisc, CMPCThemePPageBase)
 
 CPPageSubMisc::CPPageSubMisc()
-    : CDarkPPageBase(CPPageSubMisc::IDD, CPPageSubMisc::IDD)
+    : CMPCThemePPageBase(CPPageSubMisc::IDD, CPPageSubMisc::IDD)
     , m_pSubtitlesProviders(nullptr)
     , m_fPreferDefaultForcedSubtitles(TRUE)
     , m_fPrioritizeExternalSubtitles(TRUE)
@@ -51,7 +51,7 @@ CPPageSubMisc::~CPPageSubMisc()
 
 void CPPageSubMisc::DoDataExchange(CDataExchange* pDX)
 {
-    CDarkPPageBase::DoDataExchange(pDX);
+    CMPCThemePPageBase::DoDataExchange(pDX);
     DDX_Check(pDX, IDC_CHECK1, m_fPreferDefaultForcedSubtitles);
     DDX_Check(pDX, IDC_CHECK2, m_fPrioritizeExternalSubtitles);
     DDX_Check(pDX, IDC_CHECK3, m_fDisableInternalSubtitles);
@@ -175,7 +175,7 @@ BOOL CPPageSubMisc::OnApply()
 }
 
 
-BEGIN_MESSAGE_MAP(CPPageSubMisc, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageSubMisc, CMPCThemePPageBase)
     ON_MESSAGE_VOID(WM_SUPPORTED_LANGUAGES_READY, OnSupportedLanguagesReady)
     ON_WM_DESTROY()
     ON_BN_CLICKED(IDC_BUTTON1, OnBnClickedResetSubsPath)

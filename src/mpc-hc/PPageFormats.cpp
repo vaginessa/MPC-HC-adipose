@@ -34,9 +34,9 @@
 // CPPageFormats dialog
 
 
-IMPLEMENT_DYNAMIC(CPPageFormats, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageFormats, CMPCThemePPageBase)
 CPPageFormats::CPPageFormats()
-    : CDarkPPageBase(CPPageFormats::IDD, CPPageFormats::IDD)
+    : CMPCThemePPageBase(CPPageFormats::IDD, CPPageFormats::IDD)
     , m_list(0)
     , m_bInsufficientPrivileges(false)
     , m_bFileExtChanged(false)
@@ -111,7 +111,7 @@ bool CPPageFormats::IsNeededIconsLib()
     return false;
 }
 
-BEGIN_MESSAGE_MAP(CPPageFormats, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageFormats, CMPCThemePPageBase)
     ON_NOTIFY(NM_CLICK, IDC_LIST1, OnMediaCategoryClicked)
     ON_NOTIFY(LVN_KEYDOWN, IDC_LIST1, OnMediaCategoryKeyDown)
     ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST1, OnMediaCategorySelected)

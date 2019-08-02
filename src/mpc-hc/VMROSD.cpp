@@ -24,7 +24,7 @@
 #include "DSMPropertyBag.h"
 #include "MainFrm.h"
 #include <mvrInterfaces.h>
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 #define SEEKBAR_HEIGHT       60
 #define SLIDER_BAR_MARGIN    10
@@ -56,12 +56,12 @@ CVMROSD::CVMROSD(CMainFrame* pMainFrame)
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
         m_colors[OSD_TRANSPARENT] = RGB(0, 0, 0);
-        m_colors[OSD_BACKGROUND] = CDarkTheme::ContentBGColor;
-        m_colors[OSD_BORDER] = CDarkTheme::WindowBorderColorDim;
-        m_colors[OSD_TEXT] = CDarkTheme::TextFGColor;
-        m_colors[OSD_BAR] = CDarkTheme::ContentBGColor;
-        m_colors[OSD_CURSOR] = CDarkTheme::TextFGColor;
-        m_colors[OSD_DEBUGCLR] = CDarkTheme::DebugColorRed;
+        m_colors[OSD_BACKGROUND] = CMPCTheme::ContentBGColor;
+        m_colors[OSD_BORDER] = CMPCTheme::WindowBorderColorDim;
+        m_colors[OSD_TEXT] = CMPCTheme::TextFGColor;
+        m_colors[OSD_BAR] = CMPCTheme::ContentBGColor;
+        m_colors[OSD_CURSOR] = CMPCTheme::TextFGColor;
+        m_colors[OSD_DEBUGCLR] = CMPCTheme::DebugColorRed;
     } else {
         m_colors[OSD_TRANSPARENT] = RGB(0, 0, 0);
         m_colors[OSD_BACKGROUND] = RGB(32, 40, 48);

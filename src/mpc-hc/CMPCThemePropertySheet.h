@@ -1,11 +1,11 @@
 #pragma once
 #include <afxdlgs.h>
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
 
 class CMPCThemePropertySheet :
 	public CPropertySheet
-    , public CDarkChildHelper
+    , public CMPCThemeUtil
 {
     DECLARE_DYNAMIC(CMPCThemePropertySheet)
 

@@ -43,7 +43,7 @@
 #include "SubtitleUpDlg.h"
 #include "TimerWrappers.h"
 #include "VMROSD.h"
-#include "CDarkMenu.h"
+#include "CMPCThemeMenu.h"
 
 #define AfxGetMainFrame() dynamic_cast<CMainFrame*>(AfxGetMainWnd())
 
@@ -298,13 +298,13 @@ private:
     void OnStreamSelect(bool forward, DWORD dwSelGroup);
     static CString GetStreamOSDString(CString name, LCID lcid, DWORD dwSelGroup);
 
-    CDarkMenu m_mainPopupMenu, m_popupMenu;
-    CDarkMenu m_openCDsMenu;
-    CDarkMenu m_filtersMenu, m_subtitlesMenu, m_audiosMenu, m_videoStreamsMenu;
-    CDarkMenu m_chaptersMenu, m_titlesMenu, m_playlistMenu, m_BDPlaylistMenu, m_channelsMenu;
-    CDarkMenu m_favoritesMenu;
-    CDarkMenu m_shadersMenu;
-    CDarkMenu m_recentFilesMenu;
+    CMPCThemeMenu m_mainPopupMenu, m_popupMenu;
+    CMPCThemeMenu m_openCDsMenu;
+    CMPCThemeMenu m_filtersMenu, m_subtitlesMenu, m_audiosMenu, m_videoStreamsMenu;
+    CMPCThemeMenu m_chaptersMenu, m_titlesMenu, m_playlistMenu, m_BDPlaylistMenu, m_channelsMenu;
+    CMPCThemeMenu m_favoritesMenu;
+    CMPCThemeMenu m_shadersMenu;
+    CMPCThemeMenu m_recentFilesMenu;
 
     UINT m_nJumpToSubMenusCount;
 
@@ -1049,8 +1049,8 @@ public:
         LPCTSTR lpszMenuName = NULL,
         DWORD dwExStyle = 0,
         CCreateContext* pContext = NULL);
-    CDarkMenu *m_DefaultDarkMenu = nullptr;
-    void enableFileDialogHook(CDarkChildHelper* helper);
+    CMPCThemeMenu *m_DefaultDarkMenu = nullptr;
+    void enableFileDialogHook(CMPCThemeUtil* helper);
 
 protected:
     afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
@@ -1127,5 +1127,5 @@ private:
 
     bool watchingFileDialog;
     HWND fileDialogHandle;
-    CDarkChildHelper* fileDialogHookHelper;
+    CMPCThemeUtil* fileDialogHookHelper;
 };

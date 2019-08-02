@@ -23,8 +23,8 @@
 #include "WinHotkeyCtrl.h"
 #include "vkCodes.h"
 #include "mplayerc.h"
-#include "CDarkButton.h"
-#include "CDarkMenu.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeMenu.h"
 
 #define WM_KEY (WM_USER + 444)
 
@@ -143,7 +143,7 @@ void CWinHotkeyCtrl::DrawButton(CRect rectButton) {
         bool disabled = 0 != (GetStyle() & (ES_READONLY | WS_DISABLED));
         bool selected = GetButtonThemeState() == PBS_PRESSED;
         bool highlighted = GetButtonThemeState() == PBS_HOT;
-        CDarkButton::drawButtonBase(&dc, rectButton, GetButtonText(), selected, highlighted, false, disabled, true);
+        CMPCThemeButton::drawButtonBase(&dc, rectButton, GetButtonText(), selected, highlighted, false, disabled, true);
     } else {
         __super::DrawButton(rectButton);
     }
@@ -260,7 +260,7 @@ void CWinHotkeyCtrl::OnKillFocus(CWnd* pNewWnd)
 
 void CWinHotkeyCtrl::OnContextMenu(CWnd*, CPoint pt)
 {
-    CDarkMenu menu;
+    CMPCThemeMenu menu;
     menu.CreatePopupMenu();
     UINT cod = 0, mod = 0;
     menu.AppendMenu(MF_STRING, 1, ResStr(IDS_APPLY));

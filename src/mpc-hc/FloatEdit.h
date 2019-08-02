@@ -20,10 +20,10 @@
  */
 
 #pragma once
-#include "CDarkEdit.h"
+#include "CMPCThemeEdit.h"
 // CFloatEdit
 
-class CMPCThemeFloatEdit : public CDarkEdit
+class CMPCThemeFloatEdit : public CMPCThemeEdit
 {
 public:
     bool GetFloat(float& f);
@@ -39,7 +39,7 @@ public:
 
 // CIntEdit
 
-class CMPCThemeIntEdit : public CDarkEdit
+class CMPCThemeIntEdit : public CMPCThemeEdit
 {
 public:
     DECLARE_DYNAMIC(CMPCThemeIntEdit)
@@ -51,7 +51,7 @@ public:
 
 // CHexEdit
 
-class CMPCThemeHexEdit : public CDarkEdit
+class CMPCThemeHexEdit : public CMPCThemeEdit
 {
 public:
     bool GetDWORD(DWORD& dw);

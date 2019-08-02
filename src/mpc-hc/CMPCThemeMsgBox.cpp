@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CMPCThemeMsgBox.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 #include "mplayerc.h"
 
 
@@ -47,8 +47,8 @@ BOOL CMPCThemeMsgBox::OnEraseBkgnd(CDC* pDC) {
         buttonArea = rect;
         messageArea.bottom = buttonAreaY;
         buttonArea.top = buttonAreaY;
-        pDC->FillSolidRect(messageArea, CDarkTheme::WindowBGColor);
-        pDC->FillSolidRect(buttonArea, CDarkTheme::StatusBarBGColor);
+        pDC->FillSolidRect(messageArea, CMPCTheme::WindowBGColor);
+        pDC->FillSolidRect(buttonArea, CMPCTheme::StatusBarBGColor);
         return TRUE;
     } else {
         return __super::OnEraseBkgnd(pDC);

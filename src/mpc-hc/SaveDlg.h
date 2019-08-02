@@ -24,7 +24,7 @@
 #include <afxcmn.h>
 #include <afxwin.h>
 #include "CMPCThemeCmdUIDialog.h"
-#include "CDarkStatic.h"
+#include "CMPCThemeStatic.h"
 
 // CSaveDlg dialog
 
@@ -48,8 +48,8 @@ public:
     enum { IDD = IDD_SAVE_DLG };
     CAnimateCtrl m_anim;
     CProgressCtrl m_progress;
-    CDarkStatic m_report;
-    CDarkStatic m_fromto;
+    CMPCThemeStatic m_report;
+    CMPCThemeStatic m_fromto;
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

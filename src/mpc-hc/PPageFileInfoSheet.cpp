@@ -24,7 +24,7 @@
 #include "MainFrm.h"
 #include "PPageFileInfoSheet.h"
 #include "PPageFileMediaInfo.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 
 // CPPageFileInfoSheet

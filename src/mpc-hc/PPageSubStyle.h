@@ -22,13 +22,13 @@
 #pragma once
 
 #include "ColorButton.h"
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "../Subtitles/STS.h"
-#include "CDarkSliderCtrl.h"
+#include "CMPCThemeSliderCtrl.h"
 
 // CPPageSubStyle dialog
 
-class CPPageSubStyle : public CDarkPPageBase
+class CPPageSubStyle : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageSubStyle)
 
@@ -37,31 +37,31 @@ private:
     STSStyle m_stss;
     bool m_bDefaultStyle;
 
-    CDarkButton m_font;
+    CMPCThemeButton m_font;
     int m_iCharset;
-    CDarkComboBox m_cbCharset;
+    CMPCThemeComboBox m_cbCharset;
     int m_spacing;
-    CDarkSpinButtonCtrl m_spacingSpin;
+    CMPCThemeSpinButtonCtrl m_spacingSpin;
     int m_angle;
-    CDarkSpinButtonCtrl m_angleSpin;
+    CMPCThemeSpinButtonCtrl m_angleSpin;
     int m_scalex;
-    CDarkSpinButtonCtrl m_scalexSpin;
+    CMPCThemeSpinButtonCtrl m_scalexSpin;
     int m_scaley;
-    CDarkSpinButtonCtrl m_scaleySpin;
+    CMPCThemeSpinButtonCtrl m_scaleySpin;
     int m_borderStyle;
     int m_borderWidth;
-    CDarkSpinButtonCtrl m_borderWidthSpin;
+    CMPCThemeSpinButtonCtrl m_borderWidthSpin;
     int m_shadowDepth;
-    CDarkSpinButtonCtrl m_shadowDepthSpin;
+    CMPCThemeSpinButtonCtrl m_shadowDepthSpin;
     int m_screenAlignment;
     CRect m_margin;
-    CDarkSpinButtonCtrl m_marginLeftSpin;
-    CDarkSpinButtonCtrl m_marginRightSpin;
-    CDarkSpinButtonCtrl m_marginTopSpin;
-    CDarkSpinButtonCtrl m_marginBottomSpin;
+    CMPCThemeSpinButtonCtrl m_marginLeftSpin;
+    CMPCThemeSpinButtonCtrl m_marginRightSpin;
+    CMPCThemeSpinButtonCtrl m_marginTopSpin;
+    CMPCThemeSpinButtonCtrl m_marginBottomSpin;
     std::array<CColorButton, 4> m_color;
     std::array<int, 4> m_alpha;
-    std::array<CDarkSliderCtrl, 4> m_alphaSliders;
+    std::array<CMPCThemeSliderCtrl, 4> m_alphaSliders;
     BOOL m_bLinkAlphaSliders;
     int m_iRelativeTo;
 

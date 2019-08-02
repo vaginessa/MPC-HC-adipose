@@ -24,10 +24,10 @@
 #include "UpdateCheckerDlg.h"
 #include "mpc-hc_config.h"
 
-IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CDarkDialog)
+IMPLEMENT_DYNAMIC(UpdateCheckerDlg, CMPCThemeDialog)
 
 UpdateCheckerDlg::UpdateCheckerDlg(Update_Status updateStatus, const Version& latestVersion, CWnd* pParent /*=nullptr*/)
-    : CDarkDialog(UpdateCheckerDlg::IDD, pParent)
+    : CMPCThemeDialog(UpdateCheckerDlg::IDD, pParent)
     , m_updateStatus(updateStatus)
 {
     switch (updateStatus) {
@@ -59,7 +59,7 @@ UpdateCheckerDlg::~UpdateCheckerDlg()
 
 void UpdateCheckerDlg::DoDataExchange(CDataExchange* pDX)
 {
-    CDarkDialog::DoDataExchange(pDX);
+    CMPCThemeDialog::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_UPDATE_DLG_TEXT, m_text);
     DDX_Control(pDX, IDC_UPDATE_ICON, m_icon);
     DDX_Control(pDX, IDC_UPDATE_DL_BUTTON, m_dlButton);
@@ -69,7 +69,7 @@ void UpdateCheckerDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(UpdateCheckerDlg, CDarkDialog)
+BEGIN_MESSAGE_MAP(UpdateCheckerDlg, CMPCThemeDialog)
     ON_BN_CLICKED(IDC_UPDATE_DL_BUTTON, OnOpenDownloadPage)
     ON_BN_CLICKED(IDC_UPDATE_LATER_BUTTON, OnUpdateLater)
     ON_BN_CLICKED(IDC_UPDATE_IGNORE_BUTTON, OnIgnoreUpdate)

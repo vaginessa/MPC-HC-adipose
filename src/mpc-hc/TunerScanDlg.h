@@ -22,15 +22,15 @@
 
 #include <afxcmn.h>
 #include <afxwin.h>
-#include "CDarkDialog.h"
-#include "CDarkEdit.h"
-#include "CDarkPlayerListCtrl.h"
-#include "CDarkButton.h"
+#include "CMPCThemeDialog.h"
+#include "CMPCThemeEdit.h"
+#include "CMPCThemePlayerListCtrl.h"
+#include "CMPCThemeButton.h"
 
 
 // CTunerScanDlg dialog
 
-class CTunerScanDlg : public CDarkDialog
+class CTunerScanDlg : public CMPCThemeDialog
 {
     CMainFrame* m_pMainFrame;
 
@@ -54,13 +54,13 @@ public:
     ULONG m_ulFrequencyEnd;
     ULONG m_ulBandwidth;
     LONG m_lOffset;
-    CDarkEdit m_OffsetEditBox;
+    CMPCThemeEdit m_OffsetEditBox;
     BOOL m_bUseOffset;
     BOOL m_bIgnoreEncryptedChannels;
     CProgressCtrl m_Progress;
     CProgressCtrl m_Strength;
     CProgressCtrl m_Quality;
-    CDarkPlayerListCtrl m_ChannelList;
+    CMPCThemePlayerListCtrl m_ChannelList;
     bool m_bInProgress;
 
     afx_msg LRESULT OnScanProgress(WPARAM wParam, LPARAM lParam);
@@ -73,7 +73,7 @@ public:
     afx_msg void OnBnClickedStart();
     afx_msg void OnBnClickedCancel();
     virtual BOOL OnInitDialog();
-    CDarkButton m_btnStart;
-    CDarkButton m_btnSave;
-    CDarkButton m_btnCancel;
+    CMPCThemeButton m_btnStart;
+    CMPCThemeButton m_btnSave;
+    CMPCThemeButton m_btnCancel;
 };

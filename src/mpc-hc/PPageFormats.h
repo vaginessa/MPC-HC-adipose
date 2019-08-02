@@ -22,32 +22,32 @@
 #pragma once
 
 #include <afxwin.h>
-#include "CDarkPPageBase.h"
-#include "CDarkPlayerListCtrl.h"
-#include "CDarkButton.h"
-#include "CDarkGroupBox.h"
-#include "CDarkRadioOrCheck.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemePlayerListCtrl.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeGroupBox.h"
+#include "CMPCThemeRadioOrCheck.h"
 
 
 
 // CPPageFormats dialog
 
-class CPPageFormats : public CDarkPPageBase
+class CPPageFormats : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageFormats)
 
 private:
 
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
     CImageList m_onoff;
-    CDarkRadioOrCheck m_fContextDir;
-    CDarkRadioOrCheck m_fContextFiles;
-    CDarkRadioOrCheck m_fAssociatedWithIcons;
-    CDarkGroupBox m_autoplay;
-    CDarkRadioOrCheck m_apvideo;
-    CDarkRadioOrCheck m_apmusic;
-    CDarkRadioOrCheck m_apaudiocd;
-    CDarkRadioOrCheck m_apdvd;
+    CMPCThemeRadioOrCheck m_fContextDir;
+    CMPCThemeRadioOrCheck m_fContextFiles;
+    CMPCThemeRadioOrCheck m_fAssociatedWithIcons;
+    CMPCThemeGroupBox m_autoplay;
+    CMPCThemeRadioOrCheck m_apvideo;
+    CMPCThemeRadioOrCheck m_apmusic;
+    CMPCThemeRadioOrCheck m_apaudiocd;
+    CMPCThemeRadioOrCheck m_apdvd;
 
     CString m_exts;
     bool m_bInsufficientPrivileges;

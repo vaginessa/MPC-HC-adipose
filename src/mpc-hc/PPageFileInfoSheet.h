@@ -27,7 +27,7 @@
 #include "PPageFileMediaInfo.h"
 #include <afxdlgs.h>
 #include "CMPCThemePropertySheet.h"
-#include "CDarkButton.h"
+#include "CMPCThemeButton.h"
 
 class CMainFrame;
 
@@ -42,7 +42,7 @@ private:
     CPPageFileInfoDetails m_details;
     CPPageFileInfoRes m_res;
     CPPageFileMediaInfo m_mi;
-    CDarkButton m_Button_MI;
+    CMPCThemeButton m_Button_MI;
 
 public:
     CPPageFileInfoSheet(CString path, CMainFrame* pMainFrame, CWnd* pParentWnd);

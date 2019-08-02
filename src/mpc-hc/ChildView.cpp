@@ -23,7 +23,7 @@
 #include "mplayerc.h"
 #include "ChildView.h"
 #include "MainFrm.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 CChildView::CChildView(CMainFrame* pMainFrame)
     : m_vrect(0, 0, 0, 0)
@@ -156,7 +156,7 @@ void CChildView::LoadImgInternal(HGDIOBJ hImg)
         UINT useLogoId = s.nLogoId;
         if ((UINT)-1 == useLogoId) { //if the user has never chosen a logo, we can try loading a theme default logo
             if (s.bDarkThemeLoaded) {
-                useLogoId = CDarkTheme::defaultLogo();
+                useLogoId = CMPCTheme::defaultLogo();
             } else {
                 useLogoId = DEF_LOGO;
             }

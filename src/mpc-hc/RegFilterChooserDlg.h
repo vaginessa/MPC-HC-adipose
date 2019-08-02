@@ -23,7 +23,7 @@
 
 #include <afxwin.h>
 #include "CMPCThemeResizableDialog.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 class FilterOverride;
 
@@ -44,7 +44,7 @@ public:
 
     // Dialog Data
     enum { IDD = IDD_ADDREGFILTER };
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

@@ -23,7 +23,7 @@
 
 #include <afxwin.h>
 #include "CMPCThemeCmdUIDialog.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemeComboBox.h"
 
 // CSelectMediaType dialog
 
@@ -43,7 +43,7 @@ public:
     // Dialog Data
     enum { IDD = IDD_SELECTMEDIATYPE };
     CString m_guidstr;
-    CDarkComboBox m_guidsctrl;
+    CMPCThemeComboBox m_guidsctrl;
 
 protected:
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

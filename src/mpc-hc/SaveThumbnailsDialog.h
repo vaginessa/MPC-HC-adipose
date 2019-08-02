@@ -22,7 +22,7 @@
 #pragma once
 
 #include "SaveImageDialog.h"
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
 // CSaveThumbnailsDialog
 

@@ -24,20 +24,20 @@
 #include "mplayerc.h"
 #include "MainFrm.h"
 #include "PPageAudioSwitcher.h"
-#include "CDarkTheme.h"
-#include "CDarkHeaderCtrl.h"
+#include "CMPCTheme.h"
+#include "CMPCThemeHeaderCtrl.h"
 
 
 // CPPageAudioSwitcher dialog
 
 #pragma warning(push)
 #pragma warning(disable: 4351) // new behavior: elements of array 'array' will be default initialized
-IMPLEMENT_DYNAMIC(CPPageAudioSwitcher, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageAudioSwitcher, CMPCThemePPageBase)
 CPPageAudioSwitcher::CPPageAudioSwitcher(IFilterGraph* pFG)
 #ifdef MPCHC_LITE
-    : CDarkPPageBase(CPPageAudioSwitcher::IDD, IDS_AUDIOSWITCHER)
+    : CMPCThemePPageBase(CPPageAudioSwitcher::IDD, IDS_AUDIOSWITCHER)
 #else
-    : CDarkPPageBase(CPPageAudioSwitcher::IDD, CPPageAudioSwitcher::IDD)
+    : CMPCThemePPageBase(CPPageAudioSwitcher::IDD, CPPageAudioSwitcher::IDD)
 #endif
     , m_pSpeakerToChannelMap()
     , m_dwChannelMask(0)
@@ -90,7 +90,7 @@ void CPPageAudioSwitcher::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_CHECK4, m_fAudioTimeShiftCtrl);
 }
 
-BEGIN_MESSAGE_MAP(CPPageAudioSwitcher, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageAudioSwitcher, CMPCThemePPageBase)
     ON_NOTIFY(NM_CLICK, IDC_LIST1, OnNMClickList1)
     ON_WM_DRAWITEM()
     ON_EN_CHANGE(IDC_EDIT1, OnEnChangeEdit1)
@@ -272,13 +272,13 @@ void CPPageAudioSwitcher::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStru
     COLORREF frameClr, textClr, textDisabledClr, textNAClr;
     COLORREF oldBkColor = pDC->GetBkColor();
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        frameClr = CDarkTheme::ListCtrlGridColor;
-        textClr = CDarkTheme::TextFGColor;
-        textDisabledClr = CDarkTheme::ContentTextDisabledFGColorFade;
-        textNAClr = CDarkTheme::ContentTextDisabledFGColorFade2;
-        pDC->SetBkColor(CDarkTheme::ContentBGColor);
+        frameClr = CMPCTheme::ListCtrlGridColor;
+        textClr = CMPCTheme::TextFGColor;
+        textDisabledClr = CMPCTheme::ContentTextDisabledFGColorFade;
+        textNAClr = CMPCTheme::ContentTextDisabledFGColorFade2;
+        pDC->SetBkColor(CMPCTheme::ContentBGColor);
         CRect bgRect = lpDrawItemStruct->rcItem;
-        pDC->FillSolidRect(bgRect, CDarkTheme::ContentBGColor);
+        pDC->FillSolidRect(bgRect, CMPCTheme::ContentBGColor);
     } else {
         frameClr = 0xe0e0e0;
         textClr = 0;

@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "resource.h"
 #include "EventDispatcher.h"
 #include <utility>
 #include <memory>
 #include <map>
 #include <deque>
-#include "CDarkComboBox.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemeComboBox.h"
+#include "CMPCThemeSpinButtonCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 class SettingsBase
 {
@@ -170,7 +170,7 @@ public:
     }
 };
 
-class CPPageAdvanced : public CDarkPPageBase
+class CPPageAdvanced : public CMPCThemePPageBase
 {
 public:
     CPPageAdvanced();
@@ -210,8 +210,8 @@ private:
     EventClient m_eventc;
 
     CFont m_fontBold;
-    CDarkComboBox m_comboBox;
-    CDarkSpinButtonCtrl m_spinButtonCtrl;
+    CMPCThemeComboBox m_comboBox;
+    CMPCThemeSpinButtonCtrl m_spinButtonCtrl;
 
     std::map<ADVANCED_SETTINGS, std::shared_ptr<SettingsBase>> m_hiddenOptions;
 
@@ -231,7 +231,7 @@ private:
     };
 
 protected:
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
 
     virtual void DoDataExchange(CDataExchange* pDX) override;
     virtual BOOL OnInitDialog() override;

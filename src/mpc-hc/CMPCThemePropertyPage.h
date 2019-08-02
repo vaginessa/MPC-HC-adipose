@@ -1,12 +1,12 @@
 #pragma once
-#include "CDarkChildHelper.h"
-class CMPCThemePropertyPage : public CPropertyPage, public CDarkChildHelper {
+#include "CMPCThemeUtil.h"
+class CMPCThemePropertyPage : public CPropertyPage, public CMPCThemeUtil {
 public:
     CMPCThemePropertyPage(UINT nIDTemplate, UINT nIDCaption);
     virtual ~CMPCThemePropertyPage();
 
 
-    void enableDarkThemeIfActive() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
+    void enableDarkThemeIfActive() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemePropertyPage)
 
     DECLARE_MESSAGE_MAP()

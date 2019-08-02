@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 class SubtitlesProviders;
 
 // CPPageSubMisc dialog
 
-class CPPageSubMisc : public CDarkPPageBase
+class CPPageSubMisc : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageSubMisc)
 
@@ -65,8 +65,8 @@ protected:
     CString m_strSubtitlesProviders;
     CString m_strSubtitlesLanguageOrder;
     CString m_strAutoloadPaths;
-    CDarkPlayerListCtrl m_list;
-    CDarkToolTipCtrl darkTT;
+    CMPCThemePlayerListCtrl m_list;
+    CMPCThemeToolTipCtrl darkTT;
 
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
     virtual BOOL OnInitDialog();

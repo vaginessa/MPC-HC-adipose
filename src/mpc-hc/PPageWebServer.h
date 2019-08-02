@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
-#include "CDarkStaticLink.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeStaticLink.h"
 #include "FloatEdit.h"
 
 // CPPageWebServer dialog
 
-class CPPageWebServer : public CDarkPPageBase
+class CPPageWebServer : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageWebServer)
 
@@ -45,7 +45,7 @@ public:
     BOOL m_fEnableWebServer;
     int m_nWebServerPort;
     CMPCThemeIntEdit m_nWebServerPortCtrl;
-    CDarkStaticLink m_launch;
+    CMPCThemeStaticLink m_launch;
     BOOL m_fWebServerUseCompression;
     BOOL m_fWebServerLocalhostOnly;
     BOOL m_fWebServerPrintDebugInfo;

@@ -23,8 +23,8 @@
 
 #include "resource.h"
 #include "CMPCThemeResizableDialog.h"
-#include "CDarkStatic.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemeStatic.h"
+#include "CMPCThemeComboBox.h"
 
 // COpenDlg dialog
 
@@ -33,11 +33,11 @@ class COpenDlg : public CMPCThemeResizableDialog
     //  DECLARE_DYNAMIC(COpenDlg)
 private:
     CStatic m_icon;
-    CDarkComboBox m_cbMRU;
+    CMPCThemeComboBox m_cbMRU;
     CString m_path;
-    CDarkComboBox m_cbMRUDub;
+    CMPCThemeComboBox m_cbMRUDub;
     CString m_pathDub;
-    CDarkStatic m_labelDub;
+    CMPCThemeStatic m_labelDub;
     BOOL m_bAppendToPlaylist;
 
     bool m_bMultipleFiles;

@@ -19,10 +19,10 @@
  */
 
 #pragma once
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
 class CSaveImageDialog : public CFileDialog
-    , public CDarkChildHelper
+    , public CMPCThemeUtil
 {
     DECLARE_DYNAMIC(CSaveImageDialog)
 

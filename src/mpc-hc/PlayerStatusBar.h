@@ -22,8 +22,8 @@
 #pragma once
 
 #include "StatusLabel.h"
-#include "CDarkToolTipCtrl.h"
-#include "CDarkMenu.h"
+#include "CMPCThemeToolTipCtrl.h"
+#include "CMPCThemeMenu.h"
 
 class CMainFrame;
 
@@ -44,10 +44,10 @@ private:
     HICON m_hIcon;
 
     CRect m_time_rect;
-    CDarkMenu m_timerMenu;
+    CMPCThemeMenu m_timerMenu;
 
     CToolTipCtrl m_tooltip;
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

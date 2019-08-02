@@ -30,7 +30,7 @@
 #include "PathUtils.h"
 #include "SVGImage.h"
 #include "ImageGrayer.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CPlayerToolBar
 
@@ -299,7 +299,7 @@ void drawButtonBG(NMCUSTOMDRAW nmcd, COLORREF c) {
     dc.FillSolidRect(br, c);
 
     CBrush fb;
-    fb.CreateSolidBrush(CDarkTheme::PlayerButtonBorderColor);
+    fb.CreateSolidBrush(CMPCTheme::PlayerButtonBorderColor);
     dc.FrameRect(br, &fb);
 
     dc.Detach();
@@ -324,7 +324,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
                 RECT r;
                 GetClientRect(&r);
                 if (s.bDarkThemeLoaded) {
-                    dc.FillSolidRect(&r, CDarkTheme::PlayerBGColor);
+                    dc.FillSolidRect(&r, CMPCTheme::PlayerBGColor);
                 } else {
                     dc.FillSolidRect(&r, ::GetSysColor(COLOR_BTNFACE));
                 }
@@ -338,9 +338,9 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
                 if (s.bDarkThemeLoaded) {
                     lr |= TBCDRF_NOBACKGROUND | TBCDRF_NOOFFSET;
                     if (pTBCD->nmcd.uItemState & CDIS_CHECKED) {
-                        drawButtonBG(pTBCD->nmcd, CDarkTheme::PlayerButtonCheckedColor);
+                        drawButtonBG(pTBCD->nmcd, CMPCTheme::PlayerButtonCheckedColor);
                     } else if (pTBCD->nmcd.uItemState & CDIS_HOT) {
-                        drawButtonBG(pTBCD->nmcd, mouseDown ? CDarkTheme::PlayerButtonClickedColor : CDarkTheme::PlayerButtonHotColor);
+                        drawButtonBG(pTBCD->nmcd, mouseDown ? CMPCTheme::PlayerButtonClickedColor : CMPCTheme::PlayerButtonHotColor);
                     }
                 }
             }
@@ -352,7 +352,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             RECT r;
             GetItemRect(11, &r);
             if (s.bDarkThemeLoaded) {
-                dc.FillSolidRect(&r, CDarkTheme::PlayerBGColor);
+                dc.FillSolidRect(&r, CMPCTheme::PlayerBGColor);
             } else {
                 dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
             }
@@ -413,7 +413,7 @@ void CPlayerToolBar::OnNcPaint() // when using XP styles the NC area isn't drawn
     dc.ExcludeClipRect(&cr);
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        dc.FillSolidRect(wr, CDarkTheme::PlayerBGColor);
+        dc.FillSolidRect(wr, CMPCTheme::PlayerBGColor);
     } else {
         dc.FillSolidRect(wr, ::GetSysColor(COLOR_BTNFACE));
     }

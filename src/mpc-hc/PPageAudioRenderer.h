@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
-#include "CDarkSliderCtrl.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeSliderCtrl.h"
+#include "CMPCThemeComboBox.h"
 
 
-class CPPageAudioRenderer : public CDarkPPageBase
+class CPPageAudioRenderer : public CMPCThemePPageBase
 {
 public:
 
@@ -59,7 +59,7 @@ protected:
     BOOL m_bCrossfeedEnabled;
     BOOL m_bIgnoreSystemChannelMixer;
 
-    CDarkComboBox m_combo1;
-    CDarkSliderCtrl m_slider1;
-    CDarkSliderCtrl m_slider2;
+    CMPCThemeComboBox m_combo1;
+    CMPCThemeSliderCtrl m_slider1;
+    CMPCThemeSliderCtrl m_slider2;
 };

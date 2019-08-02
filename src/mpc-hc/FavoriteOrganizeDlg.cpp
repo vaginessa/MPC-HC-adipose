@@ -24,7 +24,7 @@
 #include "mplayerc.h"
 #include "MainFrm.h"
 #include <strsafe.h>
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CFavoriteOrganizeDlg dialog
 
@@ -194,7 +194,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
         if (AfxGetAppSettings().bDarkThemeLoaded) {
-            CBrush b(CDarkTheme::ContentSelectedColor);
+            CBrush b(CMPCTheme::ContentSelectedColor);
             pDC->FillRect(rcItem, &b);
         } else {
             CBrush b1, b2;
@@ -205,7 +205,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
         }
     } else {
         if (AfxGetAppSettings().bDarkThemeLoaded) {
-            CBrush b(CDarkTheme::ContentBGColor);
+            CBrush b(CMPCTheme::ContentBGColor);
             pDC->FillRect(rcItem, &b);
         } else {
             CBrush b;
@@ -216,7 +216,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
 
     COLORREF textcolor;
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        textcolor = CDarkTheme::TextFGColor;
+        textcolor = CMPCTheme::TextFGColor;
     } else {
         textcolor = 0;
     }

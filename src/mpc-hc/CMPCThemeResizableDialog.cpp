@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CMPCThemeResizableDialog.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 #include "mplayerc.h"
 
 

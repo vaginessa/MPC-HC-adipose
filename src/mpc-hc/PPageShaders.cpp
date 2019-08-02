@@ -26,7 +26,7 @@
 #undef SubclassWindow
 
 CShaderListBox::CShaderListBox()
-    : CDarkListBox()
+    : CMPCThemeListBox()
 {
 }
 
@@ -166,7 +166,7 @@ CString CShaderListBox::GetTitle(const Shader& shader)
 
 void CShaderListBox::PreSubclassWindow()
 {
-    CDarkListBox::PreSubclassWindow();
+    CMPCThemeListBox::PreSubclassWindow();
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         EnableToolTips(FALSE);
     } else {
@@ -207,14 +207,14 @@ BOOL CShaderListBox::OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult)
     return TRUE;
 }
 
-BEGIN_MESSAGE_MAP(CShaderListBox, CDarkListBox)
+BEGIN_MESSAGE_MAP(CShaderListBox, CMPCThemeListBox)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolTipNotify)
 END_MESSAGE_MAP()
 
-IMPLEMENT_DYNAMIC(CPPageShaders, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageShaders, CMPCThemePPageBase)
 
 CPPageShaders::CPPageShaders()
-    : CDarkPPageBase(IDD, IDD)
+    : CMPCThemePPageBase(IDD, IDD)
     , m_bCurrentPresetChanged(false)
 {
     EventRouter::EventSelection fires;
@@ -542,7 +542,7 @@ void CPPageShaders::OnUpdateRemoveShader(CCmdUI* pCmdUI)
     pCmdUI->Enable(bEnable);
 }
 
-BEGIN_MESSAGE_MAP(CPPageShaders, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageShaders, CMPCThemePPageBase)
     ON_BN_CLICKED(IDC_BUTTON1, OnAddToPreResize)
     ON_BN_CLICKED(IDC_BUTTON2, OnAddToPostResize)
     ON_BN_CLICKED(IDC_BUTTON3, OnLoadShaderPreset)

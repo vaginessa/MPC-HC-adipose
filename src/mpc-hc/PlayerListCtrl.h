@@ -22,7 +22,7 @@
 #pragma once
 
 #include "WinHotkeyCtrl.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemeComboBox.h"
 
 #define LVN_DOLABELEDIT (LVN_FIRST+1)
 
@@ -88,7 +88,7 @@ public:
     afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
-class CInPlaceComboBox : public CDarkComboBox
+class CInPlaceComboBox : public CMPCThemeComboBox
 {
 private:
     int m_iItem;

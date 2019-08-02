@@ -23,7 +23,7 @@
 #include "mplayerc.h"
 #include "VolumeCtrl.h"
 #include "AppSettings.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 #undef SubclassWindow
 
 
@@ -122,7 +122,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     if (s.bDarkThemeLoaded) {
                         CRect rect;
                         GetClientRect(rect);
-                        dc.FillSolidRect(&rect, CDarkTheme::PlayerBGColor);
+                        dc.FillSolidRect(&rect, CMPCTheme::PlayerBGColor);
                     }
 
                     CRect channelRect;
@@ -135,13 +135,13 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     CPen shadow;
                     CPen light;
                     if (s.bDarkThemeLoaded) {
-                        shadow.CreatePen(PS_SOLID, 1, CDarkTheme::ShadowColor);
-                        light.CreatePen(PS_SOLID, 1, CDarkTheme::LightColor);
+                        shadow.CreatePen(PS_SOLID, 1, CMPCTheme::ShadowColor);
+                        light.CreatePen(PS_SOLID, 1, CMPCTheme::LightColor);
                         CRect r(pNMCD->rc);
                         r.DeflateRect(0, 6, 0, 6);
-                        dc.FillSolidRect(r, CDarkTheme::ScrollBGColor);
+                        dc.FillSolidRect(r, CMPCTheme::ScrollBGColor);
                         CBrush fb;
-                        fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+                        fb.CreateSolidBrush(CMPCTheme::NoBorderColor);
                         dc.FrameRect(r, &fb);
                     } else {
                         shadow.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
@@ -169,13 +169,13 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     if (s.bDarkThemeLoaded) {
                         CBrush fb;
                         if (m_bDrag) {
-                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbDragColor);
+                            dc.FillSolidRect(r, CMPCTheme::ScrollThumbDragColor);
                         } else if(m_bHover) {
-                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbHoverColor);
+                            dc.FillSolidRect(r, CMPCTheme::ScrollThumbHoverColor);
                         } else {
-                            dc.FillSolidRect(r, CDarkTheme::ScrollThumbColor);
+                            dc.FillSolidRect(r, CMPCTheme::ScrollThumbColor);
                         }
-                        fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+                        fb.CreateSolidBrush(CMPCTheme::NoBorderColor);
                         dc.FrameRect(r, &fb);
                     } else {
 

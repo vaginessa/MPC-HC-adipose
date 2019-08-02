@@ -26,9 +26,9 @@
 
 // CPPageFileInfoRes dialog
 
-IMPLEMENT_DYNAMIC(CPPageFileInfoRes, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageFileInfoRes, CMPCThemePPageBase)
 CPPageFileInfoRes::CPPageFileInfoRes(CString path, IFilterGraph* pFG, IFileSourceFilter* pFSF)
-    : CDarkPPageBase(CPPageFileInfoRes::IDD, CPPageFileInfoRes::IDD)
+    : CMPCThemePPageBase(CPPageFileInfoRes::IDD, CPPageFileInfoRes::IDD)
     , m_hIcon(nullptr)
     , m_fn(path)
 {
@@ -77,7 +77,7 @@ void CPPageFileInfoRes::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LIST1, m_list);
 }
 
-BEGIN_MESSAGE_MAP(CPPageFileInfoRes, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageFileInfoRes, CMPCThemePPageBase)
     ON_BN_CLICKED(IDC_BUTTON1, OnSaveAs)
     ON_UPDATE_COMMAND_UI(IDC_BUTTON1, OnUpdateSaveAs)
     ON_NOTIFY(NM_DBLCLK, IDC_LIST1, OnOpenEmbeddedResInBrowser)

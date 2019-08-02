@@ -23,13 +23,13 @@
 #include "mplayerc.h"
 #include "MainFrm.h"
 #include "PPageLogo.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CPPageLogo dialog
 
-IMPLEMENT_DYNAMIC(CPPageLogo, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageLogo, CMPCThemePPageBase)
 CPPageLogo::CPPageLogo()
-    : CDarkPPageBase(CPPageLogo::IDD, CPPageLogo::IDD)
+    : CMPCThemePPageBase(CPPageLogo::IDD, CPPageLogo::IDD)
     , m_intext(0)
 {
     m_logoids.AddTail(IDF_LOGO0);
@@ -54,7 +54,7 @@ void CPPageLogo::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPPageLogo, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageLogo, CMPCThemePPageBase)
     ON_BN_CLICKED(IDC_RADIO1, OnBnClickedInternalRadio)
     ON_BN_CLICKED(IDC_RADIO2, OnBnClickedExternalRadio)
     ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN1, OnDeltaposSpin1)
@@ -79,7 +79,7 @@ BOOL CPPageLogo::OnInitDialog()
     UINT useLogoId = s.nLogoId;
     if ((UINT)-1 == useLogoId) { //if the user has never chosen a logo, we can try loading a theme default logo
         if (s.bDarkThemeLoaded) {
-            useLogoId = CDarkTheme::defaultLogo();
+            useLogoId = CMPCTheme::defaultLogo();
         } else {
             useLogoId = DEF_LOGO;
         }

@@ -1,8 +1,8 @@
 #pragma once
 #include "stdafx.h"
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
-class CMPCThemeTabCtrl : public CTabCtrl, public CDarkChildHelper {
+class CMPCThemeTabCtrl : public CTabCtrl, public CMPCThemeUtil {
 public:
     CMPCThemeTabCtrl();
     virtual ~CMPCThemeTabCtrl();

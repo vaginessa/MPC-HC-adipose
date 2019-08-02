@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeMaskedEdit.h"
 #include "mplayerc.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 CMPCThemeMaskedEdit::CMPCThemeMaskedEdit() {
 }
@@ -37,7 +37,7 @@ void CMPCThemeMaskedEdit::OnNcPaint() {
         rect.OffsetRect(-rect.left, -rect.top);
 
         CBrush brush;
-        brush.CreateSolidBrush(CDarkTheme::EditBorderColor);
+        brush.CreateSolidBrush(CMPCTheme::EditBorderColor);
 
         dc.FrameRect(&rect, &brush);
     } else {

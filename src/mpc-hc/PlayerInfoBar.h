@@ -23,7 +23,7 @@
 
 #include <atlcoll.h>
 #include "StatusLabel.h"
-#include "CDarkToolTipCtrl.h"
+#include "CMPCThemeToolTipCtrl.h"
 
 class CMainFrame;
 
@@ -40,7 +40,7 @@ private:
     CAutoPtrArray<CStatusLabel> m_info;
 
     CToolTipCtrl m_tooltip;
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

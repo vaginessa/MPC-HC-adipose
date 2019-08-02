@@ -22,7 +22,7 @@
 #pragma once
 
 #include "VolumeCtrl.h"
-#include "CDarkToolTipCtrl.h"
+#include "CMPCThemeToolTipCtrl.h"
 
 #include <atlimage.h>
 
@@ -41,7 +41,7 @@ private:
     bool LoadExternalToolBar(CImage& image);
     void LoadToolbarImage();
     bool mouseDown;
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 
     int m_nButtonHeight;
     std::unique_ptr<CImageList> m_pButtonsImages;

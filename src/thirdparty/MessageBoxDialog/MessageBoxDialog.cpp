@@ -37,7 +37,7 @@ modified to use Theme Font
 #include "stdafx.h"
 
 #include "MessageBoxDialog.h"
-#include "../mpc-hc/CDarkTheme.h"
+#include "../mpc-hc/CMPCTheme.h"
 #include <uxtheme.h>
 
 #ifdef _DEBUG
@@ -821,7 +821,7 @@ void CMessageBoxDialog::CreateMessageControl ( )
     //mpc-hc use theme font for metrics
     //CFont* pOldFont = dcDisplay.SelectObject(GetFont());
     CFont font;
-    CDarkTheme::getFontByType(font, &dcDisplay, CDarkTheme::CDMessageFont);
+    CMPCTheme::getFontByType(font, &dcDisplay, CMPCTheme::CDMessageFont);
 	CFont* pOldFont = dcDisplay.SelectObject(&font);
 
 	// Define the maximum width of the message.

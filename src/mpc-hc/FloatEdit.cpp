@@ -25,7 +25,7 @@
 
 // CFloatEdit
 
-IMPLEMENT_DYNAMIC(CMPCThemeFloatEdit, CDarkEdit)
+IMPLEMENT_DYNAMIC(CMPCThemeFloatEdit, CMPCThemeEdit)
 
 bool CMPCThemeFloatEdit::GetFloat(float& f)
 {
@@ -50,7 +50,7 @@ CMPCThemeFloatEdit::operator double()
     return (_stscanf_s(s, _T("%f"), &f) == 1 ? f : 0);
 }
 
-BEGIN_MESSAGE_MAP(CMPCThemeFloatEdit, CDarkEdit)
+BEGIN_MESSAGE_MAP(CMPCThemeFloatEdit, CMPCThemeEdit)
     ON_WM_CHAR()
 END_MESSAGE_MAP()
 
@@ -74,14 +74,14 @@ void CMPCThemeFloatEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         return;
     }
 
-    CDarkEdit::OnChar(nChar, nRepCnt, nFlags);
+    CMPCThemeEdit::OnChar(nChar, nRepCnt, nFlags);
 }
 
 // CIntEdit
 
-IMPLEMENT_DYNAMIC(CMPCThemeIntEdit, CDarkEdit)
+IMPLEMENT_DYNAMIC(CMPCThemeIntEdit, CMPCThemeEdit)
 
-BEGIN_MESSAGE_MAP(CMPCThemeIntEdit, CDarkEdit)
+BEGIN_MESSAGE_MAP(CMPCThemeIntEdit, CMPCThemeEdit)
     ON_WM_CHAR()
 END_MESSAGE_MAP()
 
@@ -106,12 +106,12 @@ void CMPCThemeIntEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         return;
     }
 
-    CDarkEdit::OnChar(nChar, nRepCnt, nFlags);
+    CMPCThemeEdit::OnChar(nChar, nRepCnt, nFlags);
 }
 
 // CHexEdit
 
-IMPLEMENT_DYNAMIC(CMPCThemeHexEdit, CDarkEdit)
+IMPLEMENT_DYNAMIC(CMPCThemeHexEdit, CMPCThemeEdit)
 
 bool CMPCThemeHexEdit::GetDWORD(DWORD& dw)
 {
@@ -136,7 +136,7 @@ CMPCThemeHexEdit::operator DWORD()
     return (_stscanf_s(s, _T("%lx"), &dw) == 1 ? dw : 0);
 }
 
-BEGIN_MESSAGE_MAP(CMPCThemeHexEdit, CDarkEdit)
+BEGIN_MESSAGE_MAP(CMPCThemeHexEdit, CMPCThemeEdit)
     ON_WM_CHAR()
 END_MESSAGE_MAP()
 
@@ -161,5 +161,5 @@ void CMPCThemeHexEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         return;
     }
 
-    CDarkEdit::OnChar(nChar, nRepCnt, nFlags);
+    CMPCThemeEdit::OnChar(nChar, nRepCnt, nFlags);
 }

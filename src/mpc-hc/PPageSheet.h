@@ -46,9 +46,9 @@
 #include "PPageAdvanced.h"
 #include "TreePropSheet/TreePropSheet.h"
 #include "DpiHelper.h"
-#include "CDarkChildHelper.h"
-#include "CDarkPropPageFrame.h"
-#include "CDarkTreeCtrl.h"
+#include "CMPCThemeUtil.h"
+#include "CMPCThemePropPageFrame.h"
+#include "CMPCThemeTreeCtrl.h"
 
 // CTreePropSheetTreeCtrl
 
@@ -67,7 +67,7 @@ protected:
 
 // CPPageSheet
 
-class CPPageSheet : public TreePropSheet::CTreePropSheet, public CDarkChildHelper
+class CPPageSheet : public TreePropSheet::CTreePropSheet, public CMPCThemeUtil
 {
     DECLARE_DYNAMIC(CPPageSheet)
 
@@ -109,7 +109,7 @@ private:
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);
 
-    CDarkTreeCtrl* CreatePageTreeObject();
+    CMPCThemeTreeCtrl* CreatePageTreeObject();
     virtual void SetTreeCtrlTheme(CTreeCtrl * ctrl);
 public:
     CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd, UINT idPage = 0);

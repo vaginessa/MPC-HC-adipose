@@ -23,7 +23,7 @@
 #include "MainFrm.h"
 #include "mplayerc.h"
 #include "PPageFullscreen.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 #include "Monitors.h"
 #include "MultiMonitor.h"
@@ -32,9 +32,9 @@
 
 // CPPagePlayer dialog
 
-IMPLEMENT_DYNAMIC(CPPageFullscreen, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageFullscreen, CMPCThemePPageBase)
 CPPageFullscreen::CPPageFullscreen()
-    : CDarkPPageBase(CPPageFullscreen::IDD, CPPageFullscreen::IDD)
+    : CMPCThemePPageBase(CPPageFullscreen::IDD, CPPageFullscreen::IDD)
     , m_iFullScreenMonitor(0)
     , m_bLaunchFullscreen(FALSE)
     , m_fExitFullScreenAtTheEnd(FALSE)
@@ -198,7 +198,7 @@ void CPPageFullscreen::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_SPIN1, m_delaySpinner);
 }
 
-BEGIN_MESSAGE_MAP(CPPageFullscreen, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageFullscreen, CMPCThemePPageBase)
     ON_CBN_SELCHANGE(IDC_COMBO1, OnUpdateFullScreenMonitor)
     ON_UPDATE_COMMAND_UI(IDC_COMBO2, OnUpdateHideControls)
     ON_UPDATE_COMMAND_UI(IDC_CHECK6, OnUpdateHideControls)
@@ -297,7 +297,7 @@ BOOL CPPageFullscreen::OnInitDialog()
     m_list.InsertColumn(COL_FRAMERATE_STOP, ResStr(IDS_PPAGE_FS_CLN_TO_FPS), LVCFMT_RIGHT, 60);
     m_list.InsertColumn(COL_DISPLAY_MODE, ResStr(IDS_PPAGE_FS_CLN_DISPLAY_MODE), LVCFMT_LEFT, 135);
     m_list.InsertColumn(COL_AUDIO_DELAY, ResStr(IDS_PPAGE_FS_CLN_AUDIO_DELAY), LVCFMT_LEFT, 52);
-    m_list.setCheckedColors((COLORREF)-1, (COLORREF)-1, CDarkTheme::ContentTextDisabledFGColorFade); //for dark theme highlighting since nmcustdraw will be ignored on cdarklistctrl
+    m_list.setCheckedColors((COLORREF)-1, (COLORREF)-1, CMPCTheme::ContentTextDisabledFGColorFade); //for dark theme highlighting since nmcustdraw will be ignored on CMPCThemelistctrl
 
     m_bHideFullscreenControls = s.bHideFullscreenControls;
     m_uHideFullscreenControlsDelay = s.uHideFullscreenControlsDelay;

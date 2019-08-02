@@ -21,21 +21,21 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "FloatEdit.h"
 #include "../filters/switcher/AudioSwitcher/AudioSwitcher.h"
-#include "CDarkButton.h"
-#include "CDarkSliderCtrl.h"
-#include "CDarkEdit.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemeButton.h"
+#include "CMPCThemeSliderCtrl.h"
+#include "CMPCThemeEdit.h"
+#include "CMPCThemeSpinButtonCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 
 
 
 // CPPageAudioSwitcher dialog
 
-class CPPageAudioSwitcher : public CDarkPPageBase
+class CPPageAudioSwitcher : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageAudioSwitcher)
 
@@ -46,29 +46,29 @@ private:
     BOOL m_fEnableAudioSwitcher;
     BOOL m_fAudioNormalize;
     UINT m_nAudioMaxNormFactor;
-    CDarkSpinButtonCtrl m_AudioMaxNormFactorSpin;
+    CMPCThemeSpinButtonCtrl m_AudioMaxNormFactorSpin;
     BOOL m_fAudioNormalizeRecover;
     int m_AudioBoostPos;
-    CDarkSliderCtrl m_AudioBoostCtrl;
+    CMPCThemeSliderCtrl m_AudioBoostCtrl;
     BOOL m_fDownSampleTo441;
-    CDarkRadioOrCheck m_fDownSampleTo441Ctrl;
+    CMPCThemeRadioOrCheck m_fDownSampleTo441Ctrl;
     BOOL m_fCustomChannelMapping;
-    CDarkRadioOrCheck m_fCustomChannelMappingCtrl;
-    CDarkEdit m_nChannelsCtrl;
+    CMPCThemeRadioOrCheck m_fCustomChannelMappingCtrl;
+    CMPCThemeEdit m_nChannelsCtrl;
     int m_nChannels;
-    CDarkSpinButtonCtrl m_nChannelsSpinCtrl;
-    CDarkPlayerListCtrl m_list;
+    CMPCThemeSpinButtonCtrl m_nChannelsSpinCtrl;
+    CMPCThemePlayerListCtrl m_list;
     int m_tAudioTimeShift;
-    CDarkRadioOrCheck m_fAudioTimeShiftCtrl;
+    CMPCThemeRadioOrCheck m_fAudioTimeShiftCtrl;
     CMPCThemeIntEdit m_tAudioTimeShiftCtrl;
-    CDarkSpinButtonCtrl m_tAudioTimeShiftSpin;
+    CMPCThemeSpinButtonCtrl m_tAudioTimeShiftSpin;
     BOOL m_fAudioTimeShift;
 
     // tooltip for slidercontrol
     CToolTipCtrl m_tooltip;
 
     //replaces tooltip from EnableTooltips()
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 
 public:
     CPPageAudioSwitcher(IFilterGraph* pFG);

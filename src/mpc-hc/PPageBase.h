@@ -22,7 +22,7 @@
 #pragma once
 
 #include "ResizableLib/ResizableDialog.h"
-#include "CDarkToolTipCtrl.h"
+#include "CMPCThemeToolTipCtrl.h"
 
 // CPPageBase dialog
 
@@ -31,7 +31,7 @@ class CPPageBase : public CCmdUIPropertyPage
     DECLARE_DYNAMIC(CPPageBase)
 
 protected:
-    CDarkToolTipCtrl m_wndToolTip;
+    CMPCThemeToolTipCtrl m_wndToolTip;
     std::map<UINT, CImageList> m_buttonIcons;
 
     static bool FillComboToolTip(CComboBox& comboBox, TOOLTIPTEXT* pTTT);

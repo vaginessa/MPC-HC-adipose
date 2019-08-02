@@ -29,9 +29,9 @@
 
 // CPPagePlayback dialog
 
-IMPLEMENT_DYNAMIC(CPPagePlayback, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPagePlayback, CMPCThemePPageBase)
 CPPagePlayback::CPPagePlayback()
-    : CDarkPPageBase(CPPagePlayback::IDD, CPPagePlayback::IDD)
+    : CMPCThemePPageBase(CPPagePlayback::IDD, CPPagePlayback::IDD)
     , m_oldVolume(0)
     , m_nVolume(0)
     , m_nBalance(0)
@@ -85,7 +85,7 @@ void CPPagePlayback::DoDataExchange(CDataExchange* pDX)
     DDX_CBIndex(pDX, IDC_COMBO3, m_iLoopMode);
 }
 
-BEGIN_MESSAGE_MAP(CPPagePlayback, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPagePlayback, CMPCThemePPageBase)
     ON_WM_HSCROLL()
     ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO1, IDC_RADIO2, OnBnClickedRadio12)
     ON_UPDATE_COMMAND_UI(IDC_EDIT1, OnUpdateLoopNum)

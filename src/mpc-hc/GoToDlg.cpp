@@ -27,9 +27,9 @@
 
 // CGoToDlg dialog
 
-IMPLEMENT_DYNAMIC(CGoToDlg, CDarkDialog)
+IMPLEMENT_DYNAMIC(CGoToDlg, CMPCThemeDialog)
 CGoToDlg::CGoToDlg(REFERENCE_TIME time, REFERENCE_TIME maxTime, double fps, CWnd* pParent /*=nullptr*/)
-    : CDarkDialog(CGoToDlg::IDD, pParent)
+    : CMPCThemeDialog(CGoToDlg::IDD, pParent)
     , m_time(time)
     , m_maxTime(maxTime)
     , m_fps(fps)
@@ -112,7 +112,7 @@ BOOL CGoToDlg::OnInitDialog()
 }
 
 
-BEGIN_MESSAGE_MAP(CGoToDlg, CDarkDialog)
+BEGIN_MESSAGE_MAP(CGoToDlg, CMPCThemeDialog)
     ON_BN_CLICKED(IDC_OK1, OnParseTimeCode)
     ON_BN_CLICKED(IDC_OK2, OnParseFrameCode)
 END_MESSAGE_MAP()

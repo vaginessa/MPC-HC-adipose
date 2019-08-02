@@ -23,13 +23,13 @@
 
 #include "PPageBase.h"
 #include "EventDispatcher.h"
-#include "CDarkPPageBase.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeComboBox.h"
 
 
 // CPPagePlayer dialog
 
-class CPPagePlayer : public CDarkPPageBase
+class CPPagePlayer : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPagePlayer)
 
@@ -66,7 +66,7 @@ public:
 protected:
     CStatic m_iconSingle;
     CStatic m_iconMulti;
-    CDarkComboBox m_langsComboBox;
+    CMPCThemeComboBox m_langsComboBox;
     int m_nPosLangEnglish;
 
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

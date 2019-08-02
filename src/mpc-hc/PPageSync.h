@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "resource.h"
 
 
-class CPPageSync: public CDarkPPageBase
+class CPPageSync: public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageSync)
 

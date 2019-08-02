@@ -22,9 +22,9 @@
 
 #include <afxwin.h>
 #include "resource.h"
-#include "CDarkDialog.h"
+#include "CMPCThemeDialog.h"
 
-class CAboutDlg : public CDarkDialog
+class CAboutDlg : public CMPCThemeDialog
 {
     CStatic m_icon;
 

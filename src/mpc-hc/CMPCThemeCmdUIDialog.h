@@ -1,17 +1,17 @@
 #pragma once
 #include "..\CmdUI\CmdUI.h"
-#include "CDarkButton.h"
-#include "CDarkGroupBox.h"
-#include "CDarkLinkCtrl.h"
-#include "CDarkChildHelper.h"
-class CMPCThemeCmdUIDialog : public CCmdUIDialog, public CDarkChildHelper
+#include "CMPCThemeButton.h"
+#include "CMPCThemeGroupBox.h"
+#include "CMPCThemeLinkCtrl.h"
+#include "CMPCThemeUtil.h"
+class CMPCThemeCmdUIDialog : public CCmdUIDialog, public CMPCThemeUtil
 {
 public:
 	CMPCThemeCmdUIDialog();
     CMPCThemeCmdUIDialog(UINT nIDTemplate, CWnd* pParent = nullptr);
     CMPCThemeCmdUIDialog(LPCTSTR lpszTemplateName, CWnd* pParent = nullptr);
     virtual ~CMPCThemeCmdUIDialog();
-    void fulfillThemeReqs() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
+    void fulfillThemeReqs() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemeCmdUIDialog)
     DECLARE_MESSAGE_MAP()
 public:

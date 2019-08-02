@@ -33,7 +33,7 @@
 #include "FakeFilterMapper2.h"
 
 
-IMPLEMENT_DYNAMIC(CPPageExternalFiltersListBox, CDarkPlayerListCtrl)
+IMPLEMENT_DYNAMIC(CPPageExternalFiltersListBox, CMPCThemePlayerListCtrl)
 CPPageExternalFiltersListBox::CPPageExternalFiltersListBox()
 {
 }
@@ -61,7 +61,7 @@ INT_PTR CPPageExternalFiltersListBox::OnToolHitTest(CPoint point, TOOLINFO* pTI)
     return pTI->uId;
 }
 
-BEGIN_MESSAGE_MAP(CPPageExternalFiltersListBox, CDarkPlayerListCtrl)
+BEGIN_MESSAGE_MAP(CPPageExternalFiltersListBox, CMPCThemePlayerListCtrl)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolTipNotify)
 END_MESSAGE_MAP()
 
@@ -78,9 +78,9 @@ BOOL CPPageExternalFiltersListBox::OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESU
 
 // CPPageExternalFilters dialog
 
-IMPLEMENT_DYNAMIC(CPPageExternalFilters, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageExternalFilters, CMPCThemePPageBase)
 CPPageExternalFilters::CPPageExternalFilters()
-    : CDarkPPageBase(CPPageExternalFilters::IDD, CPPageExternalFilters::IDD)
+    : CMPCThemePPageBase(CPPageExternalFilters::IDD, CPPageExternalFilters::IDD)
     , m_pLastSelFilter(nullptr)
     , m_iLoadType(FilterOverride::PREFERRED)
 {
@@ -318,7 +318,7 @@ void CPPageExternalFilters::SetupSubTypes(CAtlArray<GUID>& guids)
     guids.Add(MEDIASUBTYPE_WAVE_DTS);
 }
 
-BEGIN_MESSAGE_MAP(CPPageExternalFilters, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageExternalFilters, CMPCThemePPageBase)
     ON_UPDATE_COMMAND_UI(IDC_BUTTON2, OnUpdateFilter)
     ON_UPDATE_COMMAND_UI(IDC_RADIO1, OnUpdateFilter)
     ON_UPDATE_COMMAND_UI(IDC_RADIO2, OnUpdateFilter)

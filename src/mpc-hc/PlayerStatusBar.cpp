@@ -24,7 +24,7 @@
 #include "PlayerStatusBar.h"
 #include "MainFrm.h"
 #include "DSUtil.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CPlayerStatusBar
 
@@ -404,10 +404,10 @@ void CPlayerStatusBar::OnPaint()
 
     const CAppSettings& s = AfxGetAppSettings();
     if (s.bDarkThemeLoaded) {
-        //dc.Draw3dRect(&r, CDarkTheme::DarkShadowColor, CDarkTheme::DarkLightColor);
-        dc.FillSolidRect(&r, CDarkTheme::NoBorderColor);
+        //dc.Draw3dRect(&r, CMPCTheme::DarkShadowColor, CMPCTheme::DarkLightColor);
+        dc.FillSolidRect(&r, CMPCTheme::NoBorderColor);
         CRect top(r.left, r.top, r.right, r.top+1);
-        dc.FillSolidRect(&top, CDarkTheme::WindowBGColor);
+        dc.FillSolidRect(&top, CMPCTheme::WindowBGColor);
     } else {
         dc.Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
     }

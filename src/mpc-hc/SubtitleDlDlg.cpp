@@ -26,10 +26,10 @@
 #include "MainFrm.h"
 #include "ISOLang.h"
 #include "PPageSubMisc.h"
-#include "CDarkTheme.h"
-#include "CDarkMenu.h"
+#include "CMPCTheme.h"
+#include "CMPCThemeMenu.h"
 
-BEGIN_MESSAGE_MAP(CSubtitleDlDlgListCtrl, CDarkPlayerListCtrl)
+BEGIN_MESSAGE_MAP(CSubtitleDlDlgListCtrl, CMPCThemePlayerListCtrl)
     ON_NOTIFY_EX(TTN_NEEDTEXT, 0, OnToolNeedText)
 END_MESSAGE_MAP()
 
@@ -186,8 +186,8 @@ BOOL CSubtitleDlDlg::OnInitDialog()
     m_progress.SetParent(&m_status);
     if (AfxGetAppSettings().bDarkThemeLoaded) {
         SetWindowTheme(m_progress.GetSafeHwnd(), _T(""), _T(""));
-        m_progress.SetBarColor(CDarkTheme::ProgressBarColor);
-        m_progress.SetBkColor(CDarkTheme::ProgressBarBGColor);
+        m_progress.SetBarColor(CMPCTheme::ProgressBarColor);
+        m_progress.SetBkColor(CMPCTheme::ProgressBarBGColor);
     }
     m_progress.UpdateWindow();
 
@@ -478,7 +478,7 @@ void CSubtitleDlDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
             COPY_URL
         };
 
-        CDarkMenu m;
+        CMPCThemeMenu m;
         m.CreatePopupMenu();
         m.AppendMenu(MF_STRING | (m_list.GetCheck(lpnmlv->iItem) != -1 ? MF_ENABLED : MF_DISABLED), DOWNLOAD, ResStr(IDS_SUBMENU_DOWNLOAD));
         m.AppendMenu(MF_SEPARATOR);

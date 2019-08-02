@@ -23,7 +23,7 @@
 #include "PlayerSeekBar.h"
 #include "MainFrm.h"
 #include "mplayerc.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 
 #define TOOLTIP_SHOW_DELAY 100
@@ -501,16 +501,16 @@ void CPlayerSeekBar::OnPaint()
         {
             CRect r(GetThumbRect());
             if (DraggingThumb()) {
-                dc.FillSolidRect(r, CDarkTheme::ScrollThumbDragColor);
+                dc.FillSolidRect(r, CMPCTheme::ScrollThumbDragColor);
             } else if (m_bHoverThumb) {
-                dc.FillSolidRect(r, CDarkTheme::ScrollThumbHoverColor);
+                dc.FillSolidRect(r, CMPCTheme::ScrollThumbHoverColor);
             } else if (m_bEnabled) {
-                dc.FillSolidRect(r, CDarkTheme::ScrollThumbColor);
+                dc.FillSolidRect(r, CMPCTheme::ScrollThumbColor);
             } else {
-                dc.FillSolidRect(r, CDarkTheme::ScrollBGColor);
+                dc.FillSolidRect(r, CMPCTheme::ScrollBGColor);
             }
             CBrush fb;
-            fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+            fb.CreateSolidBrush(CMPCTheme::NoBorderColor);
             dc.FrameRect(r, &fb);
 
             CRgn rg;
@@ -535,7 +535,7 @@ void CPlayerSeekBar::OnPaint()
                             r.right++;
                         }
                         ASSERT(r.right <= channelRect.right);
-                        dc.FillSolidRect(&r, CDarkTheme::ScrollChapterColor);
+                        dc.FillSolidRect(&r, CMPCTheme::ScrollChapterColor);
                         dc.ExcludeClipRect(&r);
                     } else {
                         ASSERT(FALSE);
@@ -546,10 +546,10 @@ void CPlayerSeekBar::OnPaint()
 
         // Channel
         {
-            dc.FillSolidRect(&channelRect, m_bEnabled ? CDarkTheme::ScrollBGColor: CDarkTheme::ScrollBGColor);
+            dc.FillSolidRect(&channelRect, m_bEnabled ? CMPCTheme::ScrollBGColor: CMPCTheme::ScrollBGColor);
             CRect r(channelRect);
             CBrush fb;
-            fb.CreateSolidBrush(CDarkTheme::NoBorderColor);
+            fb.CreateSolidBrush(CMPCTheme::NoBorderColor);
             dc.FrameRect(&r, &fb);
             dc.ExcludeClipRect(&r);
         }
@@ -558,7 +558,7 @@ void CPlayerSeekBar::OnPaint()
         {
             CRect r;
             GetClientRect(&r);
-            dc.FillSolidRect(&r, CDarkTheme::ContentBGColor);
+            dc.FillSolidRect(&r, CMPCTheme::ContentBGColor);
         }
     } else {
         // Thumb

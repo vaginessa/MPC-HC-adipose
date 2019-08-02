@@ -26,7 +26,7 @@
 #include <strsafe.h>
 
 CPPageAdvanced::CPPageAdvanced()
-    : CDarkPPageBase(IDD, IDD)
+    : CMPCThemePPageBase(IDD, IDD)
 {
     EventRouter::EventSelection fires;
     fires.insert(MpcEvent::DEFAULT_TOOLBAR_SIZE_CHANGED);
@@ -197,7 +197,7 @@ bool CPPageAdvanced::IsDefault(ADVANCED_SETTINGS eSetting) const
     return m_hiddenOptions.at(eSetting)->IsDefault();
 }
 
-BEGIN_MESSAGE_MAP(CPPageAdvanced, CDarkPPageBase)
+BEGIN_MESSAGE_MAP(CPPageAdvanced, CMPCThemePPageBase)
     ON_BN_CLICKED(IDC_BUTTON1, OnBnClickedDefaultButton)
     ON_UPDATE_COMMAND_UI(IDC_BUTTON1, OnUpdateDefaultButton)
     ON_NOTIFY(NM_DBLCLK, IDC_LIST1, OnNMDblclk)

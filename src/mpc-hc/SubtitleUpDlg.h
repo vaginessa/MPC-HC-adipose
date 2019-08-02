@@ -23,7 +23,7 @@
 #include "resource.h"
 #include "CMPCThemeResizableDialog.h"
 #include "CMPCThemeStatusBar.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 
 class CMainFrame;
 class SubtitlesProvider;
@@ -38,7 +38,7 @@ class CSubtitleUpDlg : public CMPCThemeResizableDialog
         COL_TOTAL_COLUMNS
     };
 
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
     CProgressCtrl m_progress;
     CMPCThemeStatusBar m_status;
     CMainFrame* m_pMainFrame;

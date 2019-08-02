@@ -23,7 +23,7 @@
 #include "mplayerc.h"
 #include "SaveDlg.h"
 #include "../filters/Filters.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CSaveDlg dialog
 
@@ -79,7 +79,7 @@ BOOL CSaveDlg::OnInitDialog()
     m_fromto.SetWindowText(str);
 
     m_progress.SetRange(0, 100);
-    CDarkTheme::fulfillThemeReqs(&m_progress);
+    CMPCTheme::fulfillThemeReqs(&m_progress);
 
     if (FAILED(pGB.CoCreateInstance(CLSID_FilterGraph)) || !(pMC = pGB) || !(pME = pGB) || !(pMS = pGB)
             || FAILED(pME->SetNotifyWindow((OAHWND)m_hWnd, WM_GRAPHNOTIFY, 0))) {

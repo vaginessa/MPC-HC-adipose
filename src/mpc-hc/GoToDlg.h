@@ -24,14 +24,14 @@
 #include <afxwin.h>
 #include <afxmaskededit.h>
 #include "resource.h"
-#include "CDarkDialog.h"
-#include "CDarkEdit.h"
+#include "CMPCThemeDialog.h"
+#include "CMPCThemeEdit.h"
 #include "CMPCThemeMaskedEdit.h"
 
 
 // CGoToDlg dialog
 
-class CGoToDlg : public CDarkDialog
+class CGoToDlg : public CMPCThemeDialog
 {
     DECLARE_DYNAMIC(CGoToDlg)
 
@@ -44,7 +44,7 @@ public:
     CString m_timestr;
     CString m_framestr;
     CMPCThemeMaskedEdit m_timeedit;
-    CDarkEdit m_frameedit;
+    CMPCThemeEdit m_frameedit;
 
     REFERENCE_TIME m_time;
     REFERENCE_TIME m_maxTime;

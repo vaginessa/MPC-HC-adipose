@@ -22,7 +22,7 @@
 #pragma once
 
 #include "CMPCThemeCmdUIDialog.h"
-#include "CDarkComboBox.h" 
+#include "CMPCThemeComboBox.h" 
 
 
 // CFavoriteAddDlg dialog
@@ -41,7 +41,7 @@ public:
     // Dialog Data
     enum { IDD = IDD_FAVADD };
 
-    CDarkComboBox m_namectrl;
+    CMPCThemeComboBox m_namectrl;
     CString m_name;
     BOOL m_bRememberPos;
     BOOL m_bRelativeDrive;

@@ -22,7 +22,7 @@
 #pragma once
 
 #include "CMPCThemeComPropertyPage.h"
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
 interface IComPropertyPageDirty
 {
@@ -33,7 +33,7 @@ interface IComPropertyPageDirty
 
 class CComPropertySheet : public CPropertySheet
     , public IComPropertyPageDirty
-    , public CDarkChildHelper
+    , public CMPCThemeUtil
 {
     DECLARE_DYNAMIC(CComPropertySheet)
 

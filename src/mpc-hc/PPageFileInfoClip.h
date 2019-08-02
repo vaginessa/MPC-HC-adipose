@@ -23,8 +23,8 @@
 
 #include <afxwin.h>
 #include "CMPCThemePropertyPage.h"
-#include "CDarkToolTipCtrl.h"
-#include "CDarkEdit.h"
+#include "CMPCThemeToolTipCtrl.h"
+#include "CMPCThemeEdit.h"
 
 // CPPageFileInfoClip dialog
 
@@ -34,8 +34,8 @@ class CPPageFileInfoClip : public CMPCThemePropertyPage
 
 private:
     HICON m_hIcon;
-    CDarkToolTipCtrl m_tooltip;
-    CDarkEdit m_locationCtrl;
+    CMPCThemeToolTipCtrl m_tooltip;
+    CMPCThemeEdit m_locationCtrl;
 
     CStatic m_icon;
     CString m_fn, m_path;

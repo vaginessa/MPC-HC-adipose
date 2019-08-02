@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeTabCtrl.h"
 #include "mplayerc.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 
 CMPCThemeTabCtrl::CMPCThemeTabCtrl():CTabCtrl() {
@@ -44,7 +44,7 @@ void CMPCThemeTabCtrl::doDrawItem(int nItem, CRect rText, bool isSelected, CDC* 
         COLORREF oldTextColor = pDC->GetTextColor();
         COLORREF oldBkColor = pDC->GetBkColor();
 
-        COLORREF textColor = CDarkTheme::TextFGColor;
+        COLORREF textColor = CMPCTheme::TextFGColor;
         COLORREF bgColor;
 
         CRect rBorder;
@@ -52,10 +52,10 @@ void CMPCThemeTabCtrl::doDrawItem(int nItem, CRect rText, bool isSelected, CDC* 
 
         int leftY, rightY;
         if (!isSelected) {
-            bgColor = CDarkTheme::TabCtrlInactiveColor;
+            bgColor = CMPCTheme::TabCtrlInactiveColor;
             rightY = rBorder.bottom;
         } else {
-            bgColor = CDarkTheme::WindowBGColor;
+            bgColor = CMPCTheme::WindowBGColor;
             rightY = rBorder.bottom - 1;
         }
 
@@ -68,7 +68,7 @@ void CMPCThemeTabCtrl::doDrawItem(int nItem, CRect rText, bool isSelected, CDC* 
         pDC->FillSolidRect(rBorder, bgColor);
 
         CPen borderPen, *oldPen;
-        borderPen.CreatePen(PS_SOLID, 1, CDarkTheme::TabCtrlBorderColor);
+        borderPen.CreatePen(PS_SOLID, 1, CMPCTheme::TabCtrlBorderColor);
         oldPen = pDC->SelectObject(&borderPen);
         pDC->MoveTo(rBorder.left, leftY);
         pDC->LineTo(rBorder.left, rBorder.top);
@@ -89,7 +89,7 @@ void CMPCThemeTabCtrl::doDrawItem(int nItem, CRect rText, bool isSelected, CDC* 
         pDC->SetTextColor(textColor);
         pDC->SetBkColor(bgColor);
 
-        CDarkTheme::DrawBufferedText(pDC, text, rText, textFormat);
+        CMPCTheme::DrawBufferedText(pDC, text, rText, textFormat);
 
         pDC->SetTextColor(oldTextColor);
         pDC->SetBkColor(oldBkColor);
@@ -109,7 +109,7 @@ BOOL CMPCThemeTabCtrl::OnEraseBkgnd(CDC* pDC) {
         CRect r;
         GetClientRect(r);
         CBrush cbg;
-        CDarkTheme::getParentDialogBG(this, pDC, cbg);
+        CMPCTheme::getParentDialogBG(this, pDC, cbg);
         pDC->FillRect(r, &cbg);
         cbg.Detach();
     }
@@ -142,9 +142,9 @@ void CMPCThemeTabCtrl::OnPaint() {
         COLORREF oldBkColor = dc.GetBkColor();
 
         CBrush contentFrameBrush;
-        contentFrameBrush.CreateSolidBrush(CDarkTheme::TabCtrlBorderColor);
+        contentFrameBrush.CreateSolidBrush(CMPCTheme::TabCtrlBorderColor);
         rContent.InflateRect(1, 1);
-        dc.FrameRect(rContent, &CDarkChildHelper::darkWindowBrush);
+        dc.FrameRect(rContent, &CMPCThemeUtil::darkWindowBrush);
         rContent.InflateRect(1, 1);
         dc.FrameRect(rContent, &contentFrameBrush);
 

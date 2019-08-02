@@ -20,7 +20,7 @@
  */
 
 #pragma once
-#include "CDarkToolTipCtrl.h"
+#include "CMPCThemeToolTipCtrl.h"
 
 // CVolumeCtrl
 
@@ -42,7 +42,7 @@ public:
 protected:
     afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
     bool m_bDrag, m_bHover;
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 
     DECLARE_MESSAGE_MAP()
 

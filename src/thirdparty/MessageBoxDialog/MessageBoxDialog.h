@@ -29,7 +29,7 @@
  */
 
 #pragma once
-#include "../mpc-hc/CDarkStatic.h"
+#include "../mpc-hc/CMPCThemeStatic.h"
 /* mpc-hc modified to use CMPCThemeStatic*/
 
 //////////////////////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ private:
 
     CStatic	m_stcIcon;			// Static control for the icon.
     //mpc-hc use themed static instead (for message only--themed static has no impl for icons)
-    CDarkStatic	m_stcMessage;		// Static control for the message.
+    CMPCThemeStatic	m_stcMessage;		// Static control for the message.
 
 	CWnd*		m_pParent;
 

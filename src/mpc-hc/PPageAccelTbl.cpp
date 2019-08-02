@@ -111,9 +111,9 @@ static constexpr APP_COMMAND g_CommandList[] = {
 
 // CPPageAccelTbl dialog
 
-IMPLEMENT_DYNAMIC(CPPageAccelTbl, CDarkPPageBase)
+IMPLEMENT_DYNAMIC(CPPageAccelTbl, CMPCThemePPageBase)
 CPPageAccelTbl::CPPageAccelTbl()
-    : CDarkPPageBase(CPPageAccelTbl::IDD, CPPageAccelTbl::IDD)
+    : CMPCThemePPageBase(CPPageAccelTbl::IDD, CPPageAccelTbl::IDD)
     , m_counter(0)
     , m_list(0)
     , m_fWinLirc(FALSE)

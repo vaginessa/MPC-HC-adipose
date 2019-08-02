@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
+#include "CMPCThemePPageBase.h"
 #include "FloatEdit.h"
 #include "DropTarget.h"
-#include "CDarkPlayerListCtrl.h"
-#include "CDarkTreeCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
+#include "CMPCThemeTreeCtrl.h"
 
 
-class CPPageExternalFiltersListBox : public CDarkPlayerListCtrl
+class CPPageExternalFiltersListBox : public CMPCThemePlayerListCtrl
 {
     DECLARE_DYNAMIC(CPPageExternalFiltersListBox)
 
@@ -47,7 +47,7 @@ protected:
 
 // CPPageExternalFilters dialog
 
-class CPPageExternalFilters : public CDarkPPageBase, public CDropClient
+class CPPageExternalFilters : public CMPCThemePPageBase, public CDropClient
 {
     DECLARE_DYNAMIC(CPPageExternalFilters)
 
@@ -65,7 +65,7 @@ private:
     CPPageExternalFiltersListBox m_filters;
     int m_iLoadType;
     CMPCThemeHexEdit m_dwMerit;
-    CDarkTreeCtrl m_tree;
+    CMPCThemeTreeCtrl m_tree;
 
     CDropTarget m_dropTarget;
     void OnDropFiles(CAtlList<CString>& slFiles, DROPEFFECT) override;

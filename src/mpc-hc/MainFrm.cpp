@@ -106,8 +106,8 @@
 #include <qnetwork.h>
 
 #include "YoutubeDL.h"
-#include "CDarkMenu.h"
-#include "CDarkDockBar.h"
+#include "CMPCThemeMenu.h"
+#include "CMPCThemeDockBar.h"
 #undef SubclassWindow
 
 // IID_IAMLine21Decoder
@@ -985,7 +985,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CMainFrame::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
     if (lpMeasureItemStruct->CtlType == ODT_MENU)  {
-        if (CDarkMenu* cm = CDarkMenu::getParentMenu(lpMeasureItemStruct->itemID)) {
+        if (CMPCThemeMenu* cm = CMPCThemeMenu::getParentMenu(lpMeasureItemStruct->itemID)) {
             cm->MeasureItem(lpMeasureItemStruct);
             return;
         }
@@ -1251,9 +1251,9 @@ void CMainFrame::EnableDocking(DWORD dwDockStyle) {
     m_pFloatingFrameClass = RUNTIME_CLASS(CMiniDockFrameWnd);
     for (int i = 0; i < 4; i++) {
         if (dwDockBarMap[i][1] & dwDockStyle & CBRS_ALIGN_ANY) {
-            CDarkDockBar* pDock = (CDarkDockBar*)GetControlBar(dwDockBarMap[i][0]);
+            CMPCThemeDockBar* pDock = (CMPCThemeDockBar*)GetControlBar(dwDockBarMap[i][0]);
             if (pDock == NULL) {
-                pDock = new CDarkDockBar;
+                pDock = new CMPCThemeDockBar;
                 if (!pDock->Create(this,
                     WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE |
                     dwDockBarMap[i][1], dwDockBarMap[i][0])) {
@@ -2864,7 +2864,7 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
             itemID = mii.wID;
         }
 
-        CDarkMenu* pSubMenu = nullptr;
+        CMPCThemeMenu* pSubMenu = nullptr;
 
         if (itemID == ID_FAVORITES) {
             SetupFavoritesSubMenu();
@@ -2945,7 +2945,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             VERIFY(pPopupMenu->GetMenuItemInfo(i, &mii, TRUE));
             itemID = mii.wID;
         }
-        CDarkMenu* pSubMenu = nullptr;
+        CMPCThemeMenu* pSubMenu = nullptr;
 
         if (itemID == ID_FILE_OPENDISC) {
             SetupOpenCDSubMenu();
@@ -3067,7 +3067,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
             if (s.bDarkThemeLoaded) {
-                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
             }
         }
         //if (j > 0)
@@ -3075,9 +3075,9 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, ResStr(IDS_PANSCAN_EDIT)));
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND | MF_SEPARATOR));
             if (s.bDarkThemeLoaded) {
-                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
-                UINT pos = CDarkMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
-                CDarkMenu::ActivateItemDarkTheme(pPopupMenu, pos-1);
+                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                UINT pos = CMPCThemeMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
+                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, pos-1);
             }
         }
     }
@@ -5446,7 +5446,7 @@ void CMainFrame::OnUpdateViewVSyncOffset(CCmdUI* pCmdUI)
     CString Temp;
     Temp.Format(L"%d", r.m_AdvRendSets.iVMR9VSyncOffset);
     pCmdUI->SetText(Temp);
-    CDarkMenu::updateItem(pCmdUI);
+    CMPCThemeMenu::updateItem(pCmdUI);
 }
 
 void CMainFrame::OnUpdateViewVSyncAccurate(CCmdUI* pCmdUI)
@@ -6297,7 +6297,7 @@ void CMainFrame::OnUpdateViewCaptionmenu(CCmdUI* pCmdUI)
     const auto& s = AfxGetAppSettings();
     const UINT next[] = { IDS_VIEW_HIDEMENU, IDS_VIEW_FRAMEONLY, IDS_VIEW_BORDERLESS, IDS_VIEW_CAPTIONMENU };
     pCmdUI->SetText(ResStr(next[s.eCaptionMenuMode % MpcCaptionState::MODE_COUNT]));
-    CDarkMenu::updateItem(pCmdUI);
+    CMPCThemeMenu::updateItem(pCmdUI);
 }
 
 void CMainFrame::OnViewControlBar(UINT nID)
@@ -13181,7 +13181,7 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
                 if (s.bDarkThemeLoaded) {
-                    CDarkMenu::ActivateItemDarkTheme(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
+                    CMPCThemeMenu::ActivateItemDarkTheme(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
                 }
                 m_nJumpToSubMenusCount++;
             } else {
@@ -16412,7 +16412,7 @@ HRESULT CMainFrame::UpdateThumbnailClip()
 
 BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT & rect, CWnd * pParentWnd, LPCTSTR lpszMenuName, DWORD dwExStyle, CCreateContext * pContext)
 {
-    if (m_DefaultDarkMenu == nullptr) m_DefaultDarkMenu = new CDarkMenu();
+    if (m_DefaultDarkMenu == nullptr) m_DefaultDarkMenu = new CMPCThemeMenu();
     if (lpszMenuName != NULL) {
         m_DefaultDarkMenu->LoadMenu(lpszMenuName);
 
@@ -16430,7 +16430,7 @@ BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwS
     return FALSE;
 }
 
-void CMainFrame::enableFileDialogHook(CDarkChildHelper* helper) {
+void CMainFrame::enableFileDialogHook(CMPCThemeUtil* helper) {
     if (AfxGetAppSettings().bWindows10DarkThemeActive) { //hard coded behavior for windows 10 dark theme file dialogs, irrespsective of theme loaded by user (fixing windows bugs)
         watchingFileDialog = true;
         fileDialogHookHelper = helper;
@@ -16719,7 +16719,7 @@ void CMainFrame::UpdateUILanguage()
     m_mainPopupMenu.LoadMenu(IDR_POPUPMAIN);
 
     oldMenu = GetMenu();
-    m_DefaultDarkMenu = new CDarkMenu(); //will have been destroyed
+    m_DefaultDarkMenu = new CMPCThemeMenu(); //will have been destroyed
     m_DefaultDarkMenu->LoadMenu(IDR_MAINFRAME);
     if (oldMenu) {
         // Attach the new menu to the window only if there was a menu before

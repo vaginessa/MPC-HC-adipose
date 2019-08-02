@@ -23,11 +23,11 @@
 
 #include <afxcoll.h>
 #include "CMPCThemePlayerBar.h"
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 #include "Playlist.h"
 #include "DropTarget.h"
 #include "../Subtitles/TextFile.h"
-#include "CDarkInlineEdit.h"
+#include "CMPCThemeInlineEdit.h"
 
 
 class OpenMediaData;
@@ -42,13 +42,13 @@ private:
     enum { COL_NAME, COL_TIME };
 
     CMainFrame* m_pMainFrame;
-    CDarkInlineEdit m_edit;
+    CMPCThemeInlineEdit m_edit;
 
     CFont m_font;
     void ScaleFont();
 
     CImageList m_fakeImageList;
-    CDarkPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
 
     int m_itemHeight = 0;
     EventClient m_eventc;

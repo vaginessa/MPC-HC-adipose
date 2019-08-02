@@ -1,8 +1,8 @@
 #pragma once
 #include "MessageBoxDialog/MessageBoxDialog.h"
-#include "CDarkChildHelper.h"
+#include "CMPCThemeUtil.h"
 
-class CMPCThemeMsgBox : public CMessageBoxDialog, public CDarkChildHelper
+class CMPCThemeMsgBox : public CMessageBoxDialog, public CMPCThemeUtil
 {
 public:
     CMPCThemeMsgBox(CWnd* pParent, CString strMessage, CString strTitle = _T(""), UINT nStyle = MB_OK, UINT nHelp = 0);
@@ -10,7 +10,7 @@ public:
     DECLARE_DYNAMIC(CMPCThemeMsgBox)
     virtual ~CMPCThemeMsgBox();
     BOOL OnInitDialog();
-    void enableDarkThemeIfActive() { CDarkChildHelper::fulfillThemeReqs((CWnd*)this); };
+    void enableDarkThemeIfActive() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
     static BOOL MessageBox(CWnd * parent, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType);
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);

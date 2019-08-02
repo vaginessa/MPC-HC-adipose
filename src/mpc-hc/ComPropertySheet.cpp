@@ -24,7 +24,7 @@
 #include "ComPropertySheet.h"
 #include "DSUtil.h"
 #include "../filters/InternalPropertyPage.h"
-#include "CDarkTheme.h"
+#include "CMPCTheme.h"
 
 // CComPropertyPageSite
 
@@ -253,7 +253,7 @@ BOOL CComPropertySheet::OnInitDialog()
 
 void CComPropertySheet::enableDarkThemeIfActive() {
     if (AfxGetAppSettings().bDarkThemeLoaded) {
-        CDarkChildHelper::fulfillThemeReqs((CWnd*)this);
+        CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
 
@@ -263,8 +263,8 @@ HBRUSH CComPropertySheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
-        pDC->SetTextColor(CDarkTheme::TextFGColor);
-        pDC->SetBkColor(CDarkTheme::ControlAreaBGColor);
+        pDC->SetTextColor(CMPCTheme::TextFGColor);
+        pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
         return darkControlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);

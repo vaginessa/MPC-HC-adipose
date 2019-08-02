@@ -25,8 +25,8 @@
 #include "AuthDlg.h"
 #include "PPageSubMisc.h"
 #include "mplayerc.h"
-#include "CDarkTheme.h"
-#include "CDarkMenu.h"
+#include "CMPCTheme.h"
+#include "CMPCThemeMenu.h"
 
 // User Defined Window Messages
 enum {
@@ -66,7 +66,7 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     __super::OnInitDialog();
 
     m_progress.SetParent(&m_status);
-    CDarkTheme::fulfillThemeReqs(&m_progress);
+    CMPCTheme::fulfillThemeReqs(&m_progress);
 
     int n = 0, curPos = 0;
     CArray<int> columnWidth;
@@ -292,7 +292,7 @@ void CSubtitleUpDlg::OnRightClick(NMHDR* pNMHDR, LRESULT* pResult)
             COPY_URL
         };
 
-        CDarkMenu m;
+        CMPCThemeMenu m;
         m.CreatePopupMenu();
         m.AppendMenu(MF_STRING | (provider.Flags(SPF_LOGIN) ? MF_ENABLED : MF_DISABLED), SET_CREDENTIALS,
                      ResStr(IDS_SUBMENU_SETUP));

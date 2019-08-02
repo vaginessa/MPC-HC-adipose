@@ -273,7 +273,7 @@ void CInPlaceFloatEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 // CInPlaceComboBox
 
-CInPlaceComboBox::CInPlaceComboBox(int iItem, int iSubItem, CAtlList<CString>& lstItems, int nSel) : CDarkComboBox()
+CInPlaceComboBox::CInPlaceComboBox(int iItem, int iSubItem, CAtlList<CString>& lstItems, int nSel) : CMPCThemeComboBox()
     , m_iItem(iItem)
     , m_iSubItem(iSubItem)
 {
@@ -286,7 +286,7 @@ CInPlaceComboBox::~CInPlaceComboBox()
 {
 }
 
-BEGIN_MESSAGE_MAP(CInPlaceComboBox, CDarkComboBox)
+BEGIN_MESSAGE_MAP(CInPlaceComboBox, CMPCThemeComboBox)
     //{{AFX_MSG_MAP(CInPlaceComboBox)
     ON_WM_CREATE()
     ON_WM_KILLFOCUS()
@@ -997,7 +997,7 @@ void CPlayerListCtrl::OnEnChangeEdit1()
 
 void CPlayerListCtrl::OnCbnDropdownCombo1()
 {
-    CDarkComboBox* pCombo = (CDarkComboBox*)GetDlgItem(IDC_COMBO1);
+    CMPCThemeComboBox* pCombo = (CMPCThemeComboBox*)GetDlgItem(IDC_COMBO1);
 
     CRect ir;
     GetItemRect(m_nItemClicked, &ir, LVIR_BOUNDS);

@@ -24,7 +24,7 @@
 #include "ResizableLib/ResizableDialog.h"
 #include "SubtitlesProviders.h" // Forward declaration doesn't work on VS2013. Remove this once VS2013 support is dropped.
 #include <list>
-#include "CDarkPlayerListCtrl.h"
+#include "CMPCThemePlayerListCtrl.h"
 #include "CMPCThemeResizableDialog.h"
 #include "CMPCThemeStatusBar.h"
 
@@ -33,7 +33,7 @@ struct SubtitlesInfo;
 using SubtitlesList = std::list<SubtitlesInfo>;
 enum SRESULT;
 
-class CSubtitleDlDlgListCtrl final : public CDarkPlayerListCtrl
+class CSubtitleDlDlgListCtrl final : public CMPCThemePlayerListCtrl
 {
     void PreSubclassWindow() override;
 

@@ -23,13 +23,13 @@
 
 #include "PPageBase.h"
 #include "resource.h"
-#include "CDarkPPageBase.h"
-#include "CDarkComboBox.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeComboBox.h"
 
 
 // CPPageOutput dialog
 
-class CPPageOutput : public CDarkPPageBase
+class CPPageOutput : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPageOutput)
 
@@ -39,15 +39,15 @@ private:
     CImageList m_tickcross;
     HICON m_tick, m_cross;
 
-    CDarkComboBox m_iDSVideoRendererTypeCtrl;
-    CDarkComboBox m_iAudioRendererTypeCtrl;
-    CDarkComboBox m_SubtitleRendererCtrl;
-    CDarkComboBox m_iRMVideoRendererTypeCtrl;
-    CDarkComboBox m_iQTVideoRendererTypeCtrl;
-    CDarkComboBox m_iD3D9RenderDeviceCtrl;
-    CDarkComboBox m_APSurfaceUsageCtrl;
-    CDarkComboBox m_DX9ResizerCtrl;
-    CDarkComboBox m_EVRBuffersCtrl;
+    CMPCThemeComboBox m_iDSVideoRendererTypeCtrl;
+    CMPCThemeComboBox m_iAudioRendererTypeCtrl;
+    CMPCThemeComboBox m_SubtitleRendererCtrl;
+    CMPCThemeComboBox m_iRMVideoRendererTypeCtrl;
+    CMPCThemeComboBox m_iQTVideoRendererTypeCtrl;
+    CMPCThemeComboBox m_iD3D9RenderDeviceCtrl;
+    CMPCThemeComboBox m_APSurfaceUsageCtrl;
+    CMPCThemeComboBox m_DX9ResizerCtrl;
+    CMPCThemeComboBox m_EVRBuffersCtrl;
 
     CStatic m_iDSDXVASupport;
     CStatic m_iDSSubtitleSupport;

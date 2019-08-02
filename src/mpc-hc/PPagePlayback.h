@@ -21,15 +21,15 @@
 
 #pragma once
 
-#include "CDarkPPageBase.h"
-#include "CDarkComboBox.h"
-#include "CDarkSliderCtrl.h"
-#include "CDarkSpinButtonCtrl.h"
-#include "CDarkEdit.h"
+#include "CMPCThemePPageBase.h"
+#include "CMPCThemeComboBox.h"
+#include "CMPCThemeSliderCtrl.h"
+#include "CMPCThemeSpinButtonCtrl.h"
+#include "CMPCThemeEdit.h"
 
 // CPPagePlayback dialog
 
-class CPPagePlayback : public CDarkPPageBase
+class CPPagePlayback : public CMPCThemePPageBase
 {
     DECLARE_DYNAMIC(CPPagePlayback)
 
@@ -40,24 +40,24 @@ public:
     CPPagePlayback();
     virtual ~CPPagePlayback();
 
-    CDarkSliderCtrl m_volumectrl;
-    CDarkSliderCtrl m_balancectrl;
+    CMPCThemeSliderCtrl m_volumectrl;
+    CMPCThemeSliderCtrl m_balancectrl;
     int m_nVolume;
     int m_nBalance;
     int m_nVolumeStep;
-    CDarkSpinButtonCtrl m_VolumeStepCtrl;
+    CMPCThemeSpinButtonCtrl m_VolumeStepCtrl;
     int m_nSpeedStep;
-    CDarkSpinButtonCtrl m_SpeedStepCtrl;
+    CMPCThemeSpinButtonCtrl m_SpeedStepCtrl;
     int m_iLoopForever;
     int m_iLoopMode;
-    CDarkComboBox m_LoopMode;
-    CDarkEdit m_loopnumctrl;
+    CMPCThemeComboBox m_LoopMode;
+    CMPCThemeEdit m_loopnumctrl;
     int m_nLoops;
     int m_iAfterPlayback;
     int m_iZoomLevel;
     BOOL m_iRememberZoomLevel;
     int m_nAutoFitFactor;
-    CDarkSpinButtonCtrl m_AutoFitFactorCtrl;
+    CMPCThemeSpinButtonCtrl m_AutoFitFactorCtrl;
     BOOL m_fAutoloadAudio;
     BOOL m_fEnableWorkerThreadForOpening;
     BOOL m_fReportFailedPins;
@@ -65,8 +65,8 @@ public:
     CString m_audiosLanguageOrder;
     BOOL m_fAllowOverridingExternalSplitterChoice;
 
-    CDarkComboBox m_zoomlevelctrl;
-    CDarkComboBox m_afterPlayback;
+    CMPCThemeComboBox m_zoomlevelctrl;
+    CMPCThemeComboBox m_afterPlayback;
 
     // Dialog Data
     enum { IDD = IDD_PPAGEPLAYBACK };
@@ -77,7 +77,7 @@ protected:
     virtual BOOL OnApply();
 
     DECLARE_MESSAGE_MAP()
-    CDarkToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl darkTT;
 public:
     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg void OnBnClickedRadio12(UINT nID);
