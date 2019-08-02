@@ -58,13 +58,13 @@ BOOL CPlayerStatusBar::Create(CWnd* pParentWnd)
 
     // Should never be RTLed
     ModifyStyleEx(WS_EX_LAYOUTRTL, WS_EX_NOINHERITLAYOUT);
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkTT.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
-        darkTT.SetDelayTime(TTDT_INITIAL, 0);
-        darkTT.SetDelayTime(TTDT_AUTOPOP, 2500);
-        darkTT.SetDelayTime(TTDT_RESHOW, 0);
-        darkTT.AddTool(&m_time, IDS_TOOLTIP_REMAINING_TIME);
-        darkTT.AddTool(&m_status);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        themedToolTip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
+        themedToolTip.SetDelayTime(TTDT_INITIAL, 0);
+        themedToolTip.SetDelayTime(TTDT_AUTOPOP, 2500);
+        themedToolTip.SetDelayTime(TTDT_RESHOW, 0);
+        themedToolTip.AddTool(&m_time, IDS_TOOLTIP_REMAINING_TIME);
+        themedToolTip.AddTool(&m_status);
     } else {
         m_tooltip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
         m_tooltip.SetDelayTime(TTDT_INITIAL, 0);
@@ -403,8 +403,7 @@ void CPlayerStatusBar::OnPaint()
     }
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        //dc.Draw3dRect(&r, CMPCTheme::DarkShadowColor, CMPCTheme::DarkLightColor);
+    if (s.bMPCThemeLoaded) {
         dc.FillSolidRect(&r, CMPCTheme::NoBorderColor);
         CRect top(r.left, r.top, r.right, r.top+1);
         dc.FillSolidRect(&top, CMPCTheme::WindowBGColor);
@@ -509,8 +508,8 @@ HBRUSH CPlayerStatusBar::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 BOOL CPlayerStatusBar::PreTranslateMessage(MSG* pMsg)
 {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        themedToolTip.RelayEvent(pMsg);
     } else {
         m_tooltip.RelayEvent(pMsg);
     }

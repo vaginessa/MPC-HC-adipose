@@ -181,7 +181,7 @@ BOOL CAboutDlg::OnInitDialog()
     UpdateData(FALSE);
 
     GetDlgItem(IDOK)->SetFocus();
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 
     return FALSE;
 }

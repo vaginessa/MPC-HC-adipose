@@ -167,7 +167,7 @@ CString CShaderListBox::GetTitle(const Shader& shader)
 void CShaderListBox::PreSubclassWindow()
 {
     CMPCThemeListBox::PreSubclassWindow();
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         EnableToolTips(FALSE);
     } else {
         EnableToolTips(TRUE);
@@ -257,16 +257,16 @@ BOOL CPPageShaders::OnInitDialog()
         VERIFY(m_PresetsBox.SelectString(-1, preset) != CB_ERR);
     }
 
-    SetDarkButtonIcon(IDC_BUTTON6, IDB_SHADER_UP);
-    SetDarkButtonIcon(IDC_BUTTON7, IDB_SHADER_DOWN);
-    SetDarkButtonIcon(IDC_BUTTON8, IDB_SHADER_DEL);
-    SetDarkButtonIcon(IDC_BUTTON9, IDB_SHADER_UP);
-    SetDarkButtonIcon(IDC_BUTTON10, IDB_SHADER_DOWN);
-    SetDarkButtonIcon(IDC_BUTTON11, IDB_SHADER_DEL);
+    SetButtonIcon(IDC_BUTTON6, IDB_SHADER_UP);
+    SetButtonIcon(IDC_BUTTON7, IDB_SHADER_DOWN);
+    SetButtonIcon(IDC_BUTTON8, IDB_SHADER_DEL);
+    SetButtonIcon(IDC_BUTTON9, IDB_SHADER_UP);
+    SetButtonIcon(IDC_BUTTON10, IDB_SHADER_DOWN);
+    SetButtonIcon(IDC_BUTTON11, IDB_SHADER_DEL);
 
     m_bCurrentPresetChanged = false;
 
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return TRUE;
 }
 

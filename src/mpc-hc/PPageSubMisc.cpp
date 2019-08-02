@@ -338,9 +338,9 @@ int CALLBACK CPPageSubMisc::SortCompare(LPARAM lParam1, LPARAM lParam2, LPARAM l
 }
 
 BOOL CPPageSubMisc::PreTranslateMessage(MSG* pMsg) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (IsWindow(darkTT)) {
-            darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (IsWindow(themedToolTip)) {
+            themedToolTip.RelayEvent(pMsg);
         }
     }
     return __super::PreTranslateMessage(pMsg);

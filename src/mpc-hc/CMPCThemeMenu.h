@@ -31,8 +31,8 @@ public:
     std::vector<CMPCThemeMenu *> allocatedMenus;
     static std::map<UINT, CMPCThemeMenu *> subMenuIDs;
     void fulfillThemeReqs(bool menubar = false);
-    void ActivateItemDarkTheme(UINT i, bool byCommand=false);
-    static void ActivateItemDarkTheme(CMenu* parent, UINT i, bool byCommand=false);
+    void fullfillThemeReqsItem(UINT i, bool byCommand=false);
+    static void fullfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand=false);
     static UINT getPosFromID(CMenu* parent, UINT nID);
     static CMPCThemeMenu* getParentMenu(UINT itemID);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);

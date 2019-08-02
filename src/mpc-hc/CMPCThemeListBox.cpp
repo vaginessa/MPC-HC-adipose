@@ -6,17 +6,17 @@
 IMPLEMENT_DYNAMIC(CMPCThemeListBox, CListBox)
 
 CMPCThemeListBox::CMPCThemeListBox() {
-    darkTTcid = (UINT_PTR)-1;
-    darkSBHelper = nullptr;
+    themedToolTipCid = (UINT_PTR)-1;
+    themedSBHelper = nullptr;
     if (!CMPCTheme::canUseWin10DarkTheme()) {
-        darkSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
+        themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
 
 
 CMPCThemeListBox::~CMPCThemeListBox() {
-    if (nullptr != darkSBHelper) {
-        delete darkSBHelper;
+    if (nullptr != themedSBHelper) {
+        delete themedSBHelper;
     }
 }
 
@@ -69,11 +69,11 @@ void CMPCThemeListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 void CMPCThemeListBox::OnNcPaint() {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->darkNcPaintWithSB();
+    if (s.bMPCThemeLoaded) {
+        if (nullptr != themedSBHelper) {
+            themedSBHelper->themedNcPaintWithSB();
         } else {
-            CMPCThemeScrollBarHelper::darkNcPaint(this, this);
+            CMPCThemeScrollBarHelper::themedNcPaint(this, this);
         }
     } else {
         __super::OnNcPaint();
@@ -81,22 +81,22 @@ void CMPCThemeListBox::OnNcPaint() {
 }
 
 BOOL CMPCThemeListBox::PreTranslateMessage(MSG* pMsg) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        themedToolTip.RelayEvent(pMsg);
     }
     return CListBox::PreTranslateMessage(pMsg);
 }
 
 void CMPCThemeListBox::PreSubclassWindow() {
     CListBox::PreSubclassWindow();
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (CMPCTheme::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
-        darkTT.Create(this, TTS_ALWAYSTIP);
-        darkTT.enableFlickerHelper();
+        themedToolTip.Create(this, TTS_ALWAYSTIP);
+        themedToolTip.enableFlickerHelper();
         setIntegralHeight();
     }
 }
@@ -104,8 +104,8 @@ void CMPCThemeListBox::PreSubclassWindow() {
 
 BOOL CMPCThemeListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     CListBox::OnMouseWheel(nFlags, zDelta, pt);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
     ScreenToClient(&pt);
     updateToolTip(pt);
@@ -114,36 +114,36 @@ BOOL CMPCThemeListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
 
 void CMPCThemeListBox::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     CListBox::OnVScroll(nSBCode, nPos, pScrollBar);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }
 
 void CMPCThemeListBox::OnLbnSelchange() {
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }
 
 
 void CMPCThemeListBox::updateToolTip(CPoint point) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
-        if (tid != -1 && darkTTcid != ti.uId && 0 != ti.uId) {
-            if (darkTT.GetToolCount() > 0) {
-                darkTT.DelTool(this);
-                darkTT.Activate(FALSE);
+        if (tid != -1 && themedToolTipCid != ti.uId && 0 != ti.uId) {
+            if (themedToolTip.GetToolCount() > 0) {
+                themedToolTip.DelTool(this);
+                themedToolTip.Activate(FALSE);
             }
 
-            darkTTcid = ti.uId;
+            themedToolTipCid = ti.uId;
 
             CRect cr;
             GetClientRect(&cr); //we reset the tooltip every time we move anyway, so this rect is adequate
 
-            darkTT.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
-            darkTT.Activate(TRUE);
+            themedToolTip.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
+            themedToolTip.Activate(TRUE);
         }
     }
 }

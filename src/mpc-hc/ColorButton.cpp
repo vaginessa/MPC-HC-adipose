@@ -46,7 +46,7 @@ void CColorButton::Initialize()
         m_bInitialized = true;
     }
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         VERIFY(m_penInside.CreatePen(PS_INSIDEFRAME, 1, CMPCTheme::NoBorderColor));
         VERIFY(m_penBorder.CreatePen(PS_INSIDEFRAME, 1, CMPCTheme::ButtonBorderOuterColor));
         VERIFY(m_penBorderFocus.CreatePen(PS_INSIDEFRAME, 1, CMPCTheme::ButtonBorderInnerFocusedColor));

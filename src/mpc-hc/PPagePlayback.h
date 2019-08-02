@@ -77,7 +77,7 @@ protected:
     virtual BOOL OnApply();
 
     DECLARE_MESSAGE_MAP()
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 public:
     afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
     afx_msg void OnBnClickedRadio12(UINT nID);

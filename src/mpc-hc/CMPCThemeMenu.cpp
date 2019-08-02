@@ -42,7 +42,7 @@ CMPCThemeMenu::~CMPCThemeMenu() {
 }
 
 void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         MENUINFO MenuInfo = { 0 };
         MenuInfo.cbSize = sizeof(MENUINFO);
         MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
@@ -96,7 +96,7 @@ void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
     }
 }
 
-void CMPCThemeMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
+void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
 
     int iMaxItems = GetMenuItemCount();
 
@@ -158,10 +158,10 @@ void CMPCThemeMenu::ActivateItemDarkTheme(UINT i, bool byCommand) {
     }
 }
 
-void CMPCThemeMenu::ActivateItemDarkTheme(CMenu* parent, UINT i, bool byCommand) {
+void CMPCThemeMenu::fullfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand) {
     CMPCThemeMenu* t;
     if ((t = DYNAMIC_DOWNCAST(CMPCThemeMenu, parent)) != nullptr) {
-        t->ActivateItemDarkTheme(i, byCommand);
+        t->fullfillThemeReqsItem(i, byCommand);
     }
 }
 

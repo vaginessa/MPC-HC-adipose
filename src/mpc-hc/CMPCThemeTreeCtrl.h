@@ -10,7 +10,7 @@ public:
 	virtual ~CMPCThemeTreeCtrl();
     void PreSubclassWindow();
     BOOL PreCreateWindow(CREATESTRUCT & cs);
-    void setDarkTheme();
+    void fulfillThemeReqs();
     DECLARE_DYNAMIC(CMPCThemeTreeCtrl)
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
@@ -19,7 +19,7 @@ public:
 protected:
     CBrush m_brBkgnd;
     CFont font;
-    CMPCThemeScrollBarHelper *darkSBHelper;
+    CMPCThemeScrollBarHelper *themedSBHelper;
 public:
     void doDefault() { Default(); }
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);

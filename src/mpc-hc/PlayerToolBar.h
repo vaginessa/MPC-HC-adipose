@@ -41,7 +41,7 @@ private:
     bool LoadExternalToolBar(CImage& image);
     void LoadToolbarImage();
     bool mouseDown;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
     int m_nButtonHeight;
     std::unique_ptr<CImageList> m_pButtonsImages;

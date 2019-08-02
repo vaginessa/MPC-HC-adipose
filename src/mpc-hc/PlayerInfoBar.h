@@ -40,7 +40,7 @@ private:
     CAutoPtrArray<CStatusLabel> m_info;
 
     CToolTipCtrl m_tooltip;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

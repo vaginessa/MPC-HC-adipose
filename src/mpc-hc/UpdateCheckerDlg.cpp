@@ -65,7 +65,7 @@ void UpdateCheckerDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_UPDATE_DL_BUTTON, m_dlButton);
     DDX_Control(pDX, IDC_UPDATE_LATER_BUTTON, m_laterButton);
     DDX_Control(pDX, IDC_UPDATE_IGNORE_BUTTON, m_ignoreButton);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 

@@ -18,7 +18,6 @@ const COLORREF CMPCTheme::MenuItemDisabledColor = COLORREF(RGB(109, 109, 109));
 
 const COLORREF CMPCTheme::ShadowColor = COLORREF(RGB(25, 25, 25));
 const COLORREF CMPCTheme::TextFGColor = COLORREF(RGB(255, 255, 255));
-const COLORREF CMPCTheme::ContentTextDisabledFGColorWarn = COLORREF(RGB(200, 0, 0));
 const COLORREF CMPCTheme::ContentTextDisabledFGColorFade = COLORREF(RGB(109, 109, 109));
 const COLORREF CMPCTheme::ContentTextDisabledFGColorFade2 = COLORREF(RGB(60, 60, 60)); //even more faded, used for NA text on CListCtrl/audio switcher
 
@@ -486,7 +485,7 @@ void CMPCTheme::drawCheckBox(UINT checkState, bool isHover, bool useSystemSize, 
 }
 
 bool CMPCTheme::canUseWin10DarkTheme() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         //return false; //FIXME.  return false to test behavior for OS < Win10
         return IsWindows10OrGreater();
     }
@@ -503,7 +502,8 @@ struct AFX_CTLCOLOR {
     UINT nCtlType;
 };
 
-void CMPCTheme::getParentDialogBG(CWnd* wnd, CDC *pDC, CBrush &brush) {
+void CMPCTheme::fillParentDialogBGClr(CWnd* wnd, CDC *pDC, CRect r) {
+    CBrush brush;
     WPARAM w = (WPARAM)pDC;
     AFX_CTLCOLOR ctl;
     ctl.hWnd = wnd->GetSafeHwnd();
@@ -515,10 +515,12 @@ void CMPCTheme::getParentDialogBG(CWnd* wnd, CDC *pDC, CBrush &brush) {
     }
     HBRUSH bg = (HBRUSH)parent->SendMessage(WM_CTLCOLORDLG, w, (LPARAM)& ctl);
     brush.Attach(bg);
+    pDC->FillRect(r, &brush);
+    brush.Detach();
 }
 
 void CMPCTheme::fulfillThemeReqs(CProgressCtrl* ctl) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         SetWindowTheme(ctl->GetSafeHwnd(), _T(""), _T(""));
         ctl->SetBarColor(CMPCTheme::ProgressBarColor);
         ctl->SetBkColor(CMPCTheme::ProgressBarBGColor);

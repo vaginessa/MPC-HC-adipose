@@ -14,7 +14,7 @@ class CMPCThemeScrollBarHelper
 {
 protected:
     CWnd *window, *pParent;
-    CMPCThemeScrollBar darkVSB, darkHSB;
+    CMPCThemeScrollBar vertSB, horzSB;
     bool hasVSB;
     bool hasHSB;
     static void doNcPaint(CWnd *window);
@@ -22,12 +22,12 @@ public:
 	CMPCThemeScrollBarHelper(CWnd* scrollWindow);
 	~CMPCThemeScrollBarHelper();
     void createSB();
-    void setDarkDrawingArea(CRect & cr, CRect & wr, bool clipping);
+    void setDrawingArea(CRect & cr, CRect & wr, bool clipping);
     void hideSB();
-    void updateDarkScrollInfo();
+    void updateScrollInfo();
     bool WindowProc(CListCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
     bool WindowProc(CTreeCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
-    void darkNcPaintWithSB();
-    static void darkNcPaint(CWnd *window, CMPCThemeScrollable *swindow);
+    void themedNcPaintWithSB();
+    static void themedNcPaint(CWnd *window, CMPCThemeScrollable *swindow);
 };
 

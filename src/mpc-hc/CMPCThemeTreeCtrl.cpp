@@ -5,16 +5,16 @@
 
 CMPCThemeTreeCtrl::CMPCThemeTreeCtrl() {
     m_brBkgnd.CreateSolidBrush(CMPCTheme::InlineEditBorderColor);
-    darkSBHelper = nullptr;
+    themedSBHelper = nullptr;
     if (!CMPCTheme::canUseWin10DarkTheme()) {
-        darkSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
+        themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
 
 
 CMPCThemeTreeCtrl::~CMPCThemeTreeCtrl() {
-    if (nullptr != darkSBHelper) {
-        delete darkSBHelper;
+    if (nullptr != themedSBHelper) {
+        delete themedSBHelper;
     }
 }
 
@@ -27,7 +27,7 @@ BOOL CMPCThemeTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
     return __super::PreCreateWindow(cs);
 }
 
-void CMPCThemeTreeCtrl::setDarkTheme() {
+void CMPCThemeTreeCtrl::fulfillThemeReqs() {
     if (CMPCTheme::canUseWin10DarkTheme()) {
         SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
     } else {
@@ -52,7 +52,7 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     NMTVCUSTOMDRAW* pstCD = reinterpret_cast<NMTVCUSTOMDRAW*>(pNMHDR);
     *pResult = CDRF_DODEFAULT;
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
 
         bool isFocus, isHot;
         switch (pNMCD->dwDrawStage) {
@@ -90,7 +90,7 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
 
 
 BOOL CMPCThemeTreeCtrl::OnEraseBkgnd(CDC* pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CRect r;
         GetWindowRect(r);
         r.OffsetRect(-r.left, -r.top);
@@ -103,11 +103,11 @@ BOOL CMPCThemeTreeCtrl::OnEraseBkgnd(CDC* pDC) {
 
 
 void CMPCThemeTreeCtrl::OnNcPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->darkNcPaintWithSB();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (nullptr != themedSBHelper) {
+            themedSBHelper->themedNcPaintWithSB();
         } else {
-            CMPCThemeScrollBarHelper::darkNcPaint(this, this);
+            CMPCThemeScrollBarHelper::themedNcPaint(this, this);
         }
     } else {
         __super::OnNcPaint();
@@ -117,8 +117,8 @@ void CMPCThemeTreeCtrl::OnNcPaint() {
 //no end scroll notification for treectrl, so handle mousewheel, v an h scrolls :-/
 BOOL CMPCThemeTreeCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     BOOL ret = __super::OnMouseWheel(nFlags, zDelta, pt);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
     return ret;
 }
@@ -127,15 +127,15 @@ BOOL CMPCThemeTreeCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
 
 void CMPCThemeTreeCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     __super::OnVScroll(nSBCode, nPos, pScrollBar);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }
 
 
 void CMPCThemeTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     __super::OnHScroll(nSBCode, nPos, pScrollBar);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }

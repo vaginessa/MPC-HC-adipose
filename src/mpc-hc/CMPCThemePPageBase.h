@@ -9,12 +9,12 @@ class CMPCThemePPageBase :
 public:
     CMPCThemePPageBase(UINT nIDTemplate, UINT nIDCaption);
     virtual ~CMPCThemePPageBase();
-    void enableDarkThemeIfActive() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
+    void fulfillThemeReqs() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
 
     DECLARE_MESSAGE_MAP()
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
     virtual BOOL OnInitDialog();
-    void SetDarkButtonIcon(UINT nIDButton, UINT nIDIcon);
+    void SetButtonIcon(UINT nIDButton, UINT nIDIcon); //non-virtual override, only used internally
 };
 

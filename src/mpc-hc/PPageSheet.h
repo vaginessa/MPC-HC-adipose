@@ -114,7 +114,7 @@ private:
 public:
     CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd, UINT idPage = 0);
     virtual ~CPPageSheet();
-    void enableDarkThemeIfActive();
+    void fulfillThemeReqs();
 
     void LockPage() { m_bLockPage = true; };
 

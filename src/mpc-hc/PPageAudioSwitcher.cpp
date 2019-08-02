@@ -144,7 +144,7 @@ BOOL CPPageAudioSwitcher::OnInitDialog()
     m_nChannels = s.nSpeakerChannels;
     m_nChannelsSpinCtrl.SetRange(1, AS_MAX_CHANNELS);
 
-    m_list.setAdditionalStyles(0); //cleans up styles if necessary for dark theme
+    m_list.setAdditionalStyles(0); //cleans up styles if necessary for mpc theme
     m_list.InsertColumn(0, _T(""), LVCFMT_LEFT, 100);
     m_list.InsertItem(0, _T(""));
     m_list.InsertItem(1, ResStr(IDS_FRONT_LEFT));
@@ -176,14 +176,14 @@ BOOL CPPageAudioSwitcher::OnInitDialog()
         //      m_list.SetColumnWidth(i, m_list.GetColumnWidth(i)*8/10);
     }
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkTT.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
-        darkTT.Activate(TRUE);
-        darkTT.SetDelayTime(TTDT_AUTOPOP, 10000);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        themedToolTip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
+        themedToolTip.Activate(TRUE);
+        themedToolTip.SetDelayTime(TTDT_AUTOPOP, 10000);
         //must add manually the ones we support.
-        darkTT.AddTool(GetDlgItem(IDC_SLIDER1), LPSTR_TEXTCALLBACK);
-        darkTT.AddTool(GetDlgItem(IDC_EDIT2), LPSTR_TEXTCALLBACK);
-        darkTT.AddTool(GetDlgItem(IDC_SPIN2), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_SLIDER1), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_EDIT2), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_SPIN2), LPSTR_TEXTCALLBACK);
     } else {
         EnableToolTips(TRUE);
     }
@@ -271,7 +271,7 @@ void CPPageAudioSwitcher::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStru
 
     COLORREF frameClr, textClr, textDisabledClr, textNAClr;
     COLORREF oldBkColor = pDC->GetBkColor();
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         frameClr = CMPCTheme::ListCtrlGridColor;
         textClr = CMPCTheme::TextFGColor;
         textDisabledClr = CMPCTheme::ContentTextDisabledFGColorFade;
@@ -444,9 +444,9 @@ void CPPageAudioSwitcher::OnCancel()
 }
 
 BOOL CPPageAudioSwitcher::PreTranslateMessage(MSG* pMsg) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (IsWindow(darkTT)) {
-            darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (IsWindow(themedToolTip)) {
+            themedToolTip.RelayEvent(pMsg);
         }
     }
     return __super::PreTranslateMessage(pMsg);

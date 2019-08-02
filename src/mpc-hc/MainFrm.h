@@ -791,8 +791,8 @@ public:
     afx_msg void OnUpdateViewCapture(CCmdUI* pCmdUI);
     afx_msg void OnViewDebugShaders();
     afx_msg void OnUpdateViewDebugShaders(CCmdUI* pCmdUI);
-    afx_msg void OnViewDarkTheme();
-    afx_msg void OnUpdateViewDarkTheme(CCmdUI* pCmdUI);
+    afx_msg void OnViewMPCTheme();
+    afx_msg void OnUpdateViewMPCTheme(CCmdUI* pCmdUI);
     afx_msg void OnViewMinimal();
     afx_msg void OnUpdateViewMinimal(CCmdUI* pCmdUI);
     afx_msg void OnViewCompact();
@@ -1049,7 +1049,7 @@ public:
         LPCTSTR lpszMenuName = NULL,
         DWORD dwExStyle = 0,
         CCreateContext* pContext = NULL);
-    CMPCThemeMenu *m_DefaultDarkMenu = nullptr;
+    CMPCThemeMenu *defaultMPCThemeMenu = nullptr;
     void enableFileDialogHook(CMPCThemeUtil* helper);
 
 protected:

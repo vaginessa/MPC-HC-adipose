@@ -285,7 +285,7 @@ protected:
     */
     virtual CTreeCtrl* CreatePageTreeObject();
 
-    //added for mpc-hc dark theme
+    //added for mpc-hc theming
 	virtual void SetTreeCtrlTheme(CTreeCtrl * ctrl);
 
     /**

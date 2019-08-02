@@ -54,7 +54,7 @@ CVMROSD::CVMROSD(CMainFrame* pMainFrame)
 {
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         m_colors[OSD_TRANSPARENT] = RGB(0, 0, 0);
         m_colors[OSD_BACKGROUND] = CMPCTheme::ContentBGColor;
         m_colors[OSD_BORDER] = CMPCTheme::WindowBorderColorDim;

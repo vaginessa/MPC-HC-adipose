@@ -12,7 +12,7 @@ public:
 	CMPCThemeDialog();
     explicit CMPCThemeDialog(UINT nIDTemplate, CWnd* pParentWnd = NULL);
     virtual ~CMPCThemeDialog();
-    void enableDarkThemeIfActive() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
+    void fulfillThemeReqs() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemeDialog)
     DECLARE_MESSAGE_MAP()
 public:

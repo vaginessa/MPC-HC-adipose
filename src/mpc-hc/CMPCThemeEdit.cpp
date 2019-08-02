@@ -5,18 +5,18 @@
 
 CMPCThemeEdit::CMPCThemeEdit() {
     buddy = nullptr;
-    darkSBHelper = nullptr;
+    themedSBHelper = nullptr;
     isFileDialogChild = false;
 //horizontal scrollbar broken for CEdit, we must theme ourselves
 //    if (!CMPCTheme::canUseWin10DarkTheme()) {
-        darkSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
+        themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
 //    }
 }
 
 
 CMPCThemeEdit::~CMPCThemeEdit() {
-    if (nullptr != darkSBHelper) {
-        delete darkSBHelper;
+    if (nullptr != themedSBHelper) {
+        delete themedSBHelper;
     }
 }
 
@@ -30,7 +30,7 @@ END_MESSAGE_MAP()
 
 
 void CMPCThemeEdit::PreSubclassWindow() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
         CRect r;
         GetClientRect(r);
@@ -47,12 +47,12 @@ void CMPCThemeEdit::PreSubclassWindow() {
 }
 
 void CMPCThemeEdit::OnNcPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (0 != (GetStyle() & (WS_VSCROLL | WS_HSCROLL) )) { //scrollable edit will be treated like a window, not a field
-            if (nullptr != darkSBHelper) {
-                darkSBHelper->darkNcPaintWithSB();
+            if (nullptr != themedSBHelper) {
+                themedSBHelper->themedNcPaintWithSB();
             } else {
-                CMPCThemeScrollBarHelper::darkNcPaint(this, this);
+                CMPCThemeScrollBarHelper::themedNcPaint(this, this);
             }
         } else {
             CWindowDC dc(this);
@@ -78,7 +78,7 @@ void CMPCThemeEdit::OnNcPaint() {
 }
 
 void CMPCThemeEdit::SetFixedWidthFont(CFont& f) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CWindowDC dc(this);
         CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDFixedFont);
         SetFont(&font);
@@ -89,8 +89,8 @@ void CMPCThemeEdit::SetFixedWidthFont(CFont& f) {
 
 BOOL CMPCThemeEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     __super::OnMouseWheel(nFlags, zDelta, pt);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
     ScreenToClient(&pt);
     return TRUE;
@@ -98,14 +98,14 @@ BOOL CMPCThemeEdit::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
 
 void CMPCThemeEdit::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     __super::OnVScroll(nSBCode, nPos, pScrollBar);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }
 
 void CMPCThemeEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
     __super::OnHScroll(nSBCode, nPos, pScrollBar);
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     } 
 }

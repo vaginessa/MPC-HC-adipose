@@ -66,7 +66,7 @@ protected:
     CString m_strSubtitlesLanguageOrder;
     CString m_strAutoloadPaths;
     CMPCThemePlayerListCtrl m_list;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
     virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
     virtual BOOL OnInitDialog();

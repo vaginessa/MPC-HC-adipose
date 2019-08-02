@@ -289,8 +289,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_UPDATE_COMMAND_UI(ID_VIEW_CAPTURE, OnUpdateViewCapture)
     ON_COMMAND(ID_VIEW_DEBUGSHADERS, OnViewDebugShaders)
     ON_UPDATE_COMMAND_UI(ID_VIEW_DEBUGSHADERS, OnUpdateViewDebugShaders)
-    ON_COMMAND(ID_VIEW_DARKTHEME, OnViewDarkTheme)
-    ON_UPDATE_COMMAND_UI(ID_VIEW_DARKTHEME, OnUpdateViewDarkTheme)
+    ON_COMMAND(ID_VIEW_MPCTHEME, OnViewMPCTheme)
+    ON_UPDATE_COMMAND_UI(ID_VIEW_MPCTHEME, OnUpdateViewMPCTheme)
     ON_COMMAND(ID_VIEW_PRESETS_MINIMAL, OnViewMinimal)
     ON_UPDATE_COMMAND_UI(ID_VIEW_PRESETS_MINIMAL, OnUpdateViewMinimal)
     ON_COMMAND(ID_VIEW_PRESETS_COMPACT, OnViewCompact)
@@ -819,7 +819,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-    if (m_DefaultDarkMenu != nullptr) delete m_DefaultDarkMenu;
+    if (defaultMPCThemeMenu != nullptr) delete defaultMPCThemeMenu;
 }
 
 int CMainFrame::OnNcCreate(LPCREATESTRUCT lpCreateStruct)
@@ -976,7 +976,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     UpdateSkypeHandler();
 
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         m_popupMenu.fulfillThemeReqs();
         m_mainPopupMenu.fulfillThemeReqs();
     }
@@ -2883,7 +2883,7 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
             mii.hSubMenu = *pSubMenu;
             VERIFY(pMenu->SetMenuItemInfo(i, &mii, TRUE));
             const CAppSettings& s = AfxGetAppSettings();
-            if (s.bDarkThemeLoaded) {
+            if (s.bMPCThemeLoaded) {
                 pSubMenu->fulfillThemeReqs();
             }
         }
@@ -2991,7 +2991,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             mii.hSubMenu = *pSubMenu;
             VERIFY(pPopupMenu->SetMenuItemInfo(i, &mii, TRUE));
             const CAppSettings& s = AfxGetAppSettings();
-            if (s.bDarkThemeLoaded) {
+            if (s.bMPCThemeLoaded) {
                 pSubMenu->fulfillThemeReqs();
             }
         }
@@ -3066,18 +3066,18 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             int k = 0;
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
-            if (s.bDarkThemeLoaded) {
-                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+            if (s.bMPCThemeLoaded) {
+                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
             }
         }
         //if (j > 0)
         {
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, ResStr(IDS_PANSCAN_EDIT)));
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND | MF_SEPARATOR));
-            if (s.bDarkThemeLoaded) {
-                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+            if (s.bMPCThemeLoaded) {
+                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
                 UINT pos = CMPCThemeMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
-                CMPCThemeMenu::ActivateItemDarkTheme(pPopupMenu, pos-1);
+                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, pos-1);
             }
         }
     }
@@ -6466,14 +6466,14 @@ void CMainFrame::OnUpdateViewDebugShaders(CCmdUI* pCmdUI)
     pCmdUI->SetCheck(dlg && dlg->m_hWnd && dlg->IsWindowVisible());
 }
 
-void CMainFrame::OnUpdateViewDarkTheme(CCmdUI* pCmdUI) {
+void CMainFrame::OnUpdateViewMPCTheme(CCmdUI* pCmdUI) {
     const CAppSettings& s = AfxGetAppSettings();
-    pCmdUI->SetCheck(s.bDarkTheme);
+    pCmdUI->SetCheck(s.bMPCTheme);
 }
 
-void CMainFrame::OnViewDarkTheme() {
+void CMainFrame::OnViewMPCTheme() {
     CAppSettings& s = AfxGetAppSettings();
-    s.bDarkTheme = !s.bDarkTheme;
+    s.bMPCTheme = !s.bMPCTheme;
 }
 
 void CMainFrame::OnViewMinimal()
@@ -13180,8 +13180,8 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
         if (parentMenu && iInsertPos >= 0) {
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
-                if (s.bDarkThemeLoaded) {
-                    CMPCThemeMenu::ActivateItemDarkTheme(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
+                if (s.bMPCThemeLoaded) {
+                    CMPCThemeMenu::fullfillThemeReqsItem(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
                 }
                 m_nJumpToSubMenusCount++;
             } else {
@@ -16412,17 +16412,17 @@ HRESULT CMainFrame::UpdateThumbnailClip()
 
 BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT & rect, CWnd * pParentWnd, LPCTSTR lpszMenuName, DWORD dwExStyle, CCreateContext * pContext)
 {
-    if (m_DefaultDarkMenu == nullptr) m_DefaultDarkMenu = new CMPCThemeMenu();
+    if (defaultMPCThemeMenu == nullptr) defaultMPCThemeMenu = new CMPCThemeMenu();
     if (lpszMenuName != NULL) {
-        m_DefaultDarkMenu->LoadMenu(lpszMenuName);
+        defaultMPCThemeMenu->LoadMenu(lpszMenuName);
 
         if (!CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle,
-            rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, pParentWnd->GetSafeHwnd(), m_DefaultDarkMenu->m_hMenu, (LPVOID)pContext)) {
+            rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, pParentWnd->GetSafeHwnd(), defaultMPCThemeMenu->m_hMenu, (LPVOID)pContext)) {
             return FALSE;
         }
         const CAppSettings& s = AfxGetAppSettings();
-        if (s.bDarkThemeLoaded) {
-            m_DefaultDarkMenu->fulfillThemeReqs(true);
+        if (s.bMPCThemeLoaded) {
+            defaultMPCThemeMenu->fulfillThemeReqs(true);
         }
 
         return TRUE;
@@ -16719,23 +16719,23 @@ void CMainFrame::UpdateUILanguage()
     m_mainPopupMenu.LoadMenu(IDR_POPUPMAIN);
 
     oldMenu = GetMenu();
-    m_DefaultDarkMenu = new CMPCThemeMenu(); //will have been destroyed
-    m_DefaultDarkMenu->LoadMenu(IDR_MAINFRAME);
+    defaultMPCThemeMenu = new CMPCThemeMenu(); //will have been destroyed
+    defaultMPCThemeMenu->LoadMenu(IDR_MAINFRAME);
     if (oldMenu) {
         // Attach the new menu to the window only if there was a menu before
-        SetMenu(m_DefaultDarkMenu);
+        SetMenu(defaultMPCThemeMenu);
         // and then destroy the old one
         oldMenu->DestroyMenu();
     }
     //we don't detach because we retain the cmenu
     //m_hMenuDefault = defaultMenu.Detach();
-    m_hMenuDefault = m_DefaultDarkMenu->GetSafeHmenu();
+    m_hMenuDefault = defaultMPCThemeMenu->GetSafeHmenu();
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         m_popupMenu.fulfillThemeReqs();
         m_mainPopupMenu.fulfillThemeReqs();
-        m_DefaultDarkMenu->fulfillThemeReqs(true);
+        defaultMPCThemeMenu->fulfillThemeReqs(true);
     }
 
 

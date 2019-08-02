@@ -249,7 +249,7 @@ CTreeCtrl* CTreePropSheet::CreatePageTreeObject()
     return new CTreeCtrl;
 }
 
-//added for mpc-hc dark theme
+//added for mpc-hc theming
 void CTreePropSheet::SetTreeCtrlTheme(CTreeCtrl *ctrl) {
     SetWindowTheme(GetSafeHwnd(), L"Explorer", NULL);
 }

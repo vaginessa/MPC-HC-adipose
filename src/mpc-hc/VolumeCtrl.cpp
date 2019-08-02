@@ -54,10 +54,10 @@ bool CVolumeCtrl::Create(CWnd* pParentWnd)
     SetPageSize(s.nVolumeStep);
     SetLineSize(0);
 
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         CToolTipCtrl* pTip = GetToolTips();
         if (NULL != pTip) {
-            darkTT.SubclassWindow(pTip->m_hWnd);
+            themedToolTip.SubclassWindow(pTip->m_hWnd);
         }
     }
 
@@ -119,7 +119,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
                     CDC dc;
                     dc.Attach(pNMCD->hdc);
 
-                    if (s.bDarkThemeLoaded) {
+                    if (s.bMPCThemeLoaded) {
                         CRect rect;
                         GetClientRect(rect);
                         dc.FillSolidRect(&rect, CMPCTheme::PlayerBGColor);
@@ -134,7 +134,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 
                     CPen shadow;
                     CPen light;
-                    if (s.bDarkThemeLoaded) {
+                    if (s.bMPCThemeLoaded) {
                         shadow.CreatePen(PS_SOLID, 1, CMPCTheme::ShadowColor);
                         light.CreatePen(PS_SOLID, 1, CMPCTheme::LightColor);
                         CRect r(pNMCD->rc);
@@ -166,7 +166,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 
                     COLORREF shadow = GetSysColor(COLOR_3DSHADOW);
                     COLORREF light = GetSysColor(COLOR_3DHILIGHT);
-                    if (s.bDarkThemeLoaded) {
+                    if (s.bMPCThemeLoaded) {
                         CBrush fb;
                         if (m_bDrag) {
                             dc.FillSolidRect(r, CMPCTheme::ScrollThumbDragColor);

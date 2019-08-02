@@ -158,15 +158,15 @@ BOOL CPPagePlayback::OnInitDialog()
     UDACCEL accel = { 0, 10 };
     m_SpeedStepCtrl.SetAccel(1, &accel);
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        darkTT.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
-        darkTT.Activate(TRUE);
-        darkTT.SetDelayTime(TTDT_AUTOPOP, 10000);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        themedToolTip.Create(this, TTS_NOPREFIX | TTS_ALWAYSTIP);
+        themedToolTip.Activate(TRUE);
+        themedToolTip.SetDelayTime(TTDT_AUTOPOP, 10000);
         //must add manually the ones we support.
-        darkTT.AddTool(GetDlgItem(IDC_COMBO1), LPSTR_TEXTCALLBACK);
-        darkTT.AddTool(GetDlgItem(IDC_COMBO2), LPSTR_TEXTCALLBACK);
-        darkTT.AddTool(GetDlgItem(IDC_SLIDER1), LPSTR_TEXTCALLBACK);
-        darkTT.AddTool(GetDlgItem(IDC_SLIDER2), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_COMBO1), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_COMBO2), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_SLIDER1), LPSTR_TEXTCALLBACK);
+        themedToolTip.AddTool(GetDlgItem(IDC_SLIDER2), LPSTR_TEXTCALLBACK);
     } else {
         EnableToolTips(TRUE);
     }
@@ -324,9 +324,9 @@ void CPPagePlayback::OnCancel()
 
 
 BOOL CPPagePlayback::PreTranslateMessage(MSG* pMsg) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (IsWindow(darkTT)) {
-            darkTT.RelayEvent(pMsg);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (IsWindow(themedToolTip)) {
+            themedToolTip.RelayEvent(pMsg);
         }
     }
     return __super::PreTranslateMessage(pMsg);

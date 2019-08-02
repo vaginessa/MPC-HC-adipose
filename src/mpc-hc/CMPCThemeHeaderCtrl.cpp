@@ -95,7 +95,7 @@ void CMPCThemeHeaderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
 
     *pResult = CDRF_DODEFAULT;
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {

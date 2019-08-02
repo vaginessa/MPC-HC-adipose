@@ -654,7 +654,7 @@ CMPlayerCApp::~CMPlayerCApp()
 
 int CMPlayerCApp::DoMessageBox(LPCTSTR lpszPrompt, UINT nType,
     UINT nIDPrompt) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
 
         CWnd* pParentWnd = CWnd::GetActiveWindow();
         if (pParentWnd == NULL) {

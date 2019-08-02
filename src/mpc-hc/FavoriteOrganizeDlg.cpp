@@ -193,7 +193,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
     CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
-        if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (AfxGetAppSettings().bMPCThemeLoaded) {
             CBrush b(CMPCTheme::ContentSelectedColor);
             pDC->FillRect(rcItem, &b);
         } else {
@@ -204,7 +204,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
             pDC->FrameRect(rcItem, &b2);
         }
     } else {
-        if (AfxGetAppSettings().bDarkThemeLoaded) {
+        if (AfxGetAppSettings().bMPCThemeLoaded) {
             CBrush b(CMPCTheme::ContentBGColor);
             pDC->FillRect(rcItem, &b);
         } else {
@@ -215,7 +215,7 @@ void CFavoriteOrganizeDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStr
     }
 
     COLORREF textcolor;
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         textcolor = CMPCTheme::TextFGColor;
     } else {
         textcolor = 0;

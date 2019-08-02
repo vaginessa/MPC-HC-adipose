@@ -21,7 +21,7 @@ END_MESSAGE_MAP()
 
 
 void CMPCThemeSpinButtonCtrl::OnPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CWnd *buddy = GetBuddy();
         bool hasBuddy = false;
         CMPCThemeEdit* buddyEdit;
@@ -156,7 +156,7 @@ void CMPCThemeSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point) {
 
 
 BOOL CMPCThemeSpinButtonCtrl::OnEraseBkgnd(CDC* pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         return TRUE;
     } else {
         return __super::OnEraseBkgnd(pDC);

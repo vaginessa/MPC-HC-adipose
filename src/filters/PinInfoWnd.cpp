@@ -261,7 +261,7 @@ void CPinInfoWnd::OnSelectedPinChange()
 
 HBRUSH CPinInfoWnd::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     HBRUSH ret;
-    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    ret = getCtlColor(pDC, pWnd, nCtlColor);
     if (nullptr != ret) {
         return ret;
     } else {

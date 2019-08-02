@@ -23,8 +23,8 @@ END_MESSAGE_MAP()
 
 
 HBRUSH CMPCThemeDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        return DarkCtlColor(pDC, pWnd, nCtlColor);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        return getCtlColor(pDC, pWnd, nCtlColor);
     } else {
         HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;

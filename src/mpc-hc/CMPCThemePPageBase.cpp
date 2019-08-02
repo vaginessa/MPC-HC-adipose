@@ -15,12 +15,12 @@ CMPCThemePPageBase::~CMPCThemePPageBase() {
 
 BOOL CMPCThemePPageBase::OnInitDialog() {
     __super::OnInitDialog();
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return 0;
 }
 
-void CMPCThemePPageBase::SetDarkButtonIcon(UINT nIDButton, UINT nIDIcon) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+void CMPCThemePPageBase::SetButtonIcon(UINT nIDButton, UINT nIDIcon) { //non-virtual override, only used internally
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (!m_buttonIcons.count(nIDIcon)) {
             CImage img, imgEnabled, imgDisabled;
             img.LoadFromResource(AfxGetInstanceHandle(), nIDIcon);
@@ -53,7 +53,7 @@ END_MESSAGE_MAP()
 
 HBRUSH CMPCThemePPageBase::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     HBRUSH ret;
-    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    ret = getCtlColor(pDC, pWnd, nCtlColor);
     if (nullptr != ret) {
         return ret;
     } else {

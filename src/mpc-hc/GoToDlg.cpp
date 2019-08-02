@@ -54,7 +54,7 @@ void CGoToDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT2, m_framestr);
     DDX_Control(pDX, IDC_EDIT1, m_timeedit);
     DDX_Control(pDX, IDC_EDIT2, m_frameedit);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 BOOL CGoToDlg::OnInitDialog()

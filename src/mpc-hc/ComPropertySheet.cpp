@@ -247,25 +247,25 @@ BOOL CComPropertySheet::OnInitDialog()
         CenterWindow();
     }
 
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return bResult;
 }
 
-void CComPropertySheet::enableDarkThemeIfActive() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+void CComPropertySheet::fulfillThemeReqs() {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
 
 HBRUSH CComPropertySheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         LRESULT lResult;
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
         pDC->SetTextColor(CMPCTheme::TextFGColor);
         pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
-        return darkControlAreaBrush;
+        return controlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;

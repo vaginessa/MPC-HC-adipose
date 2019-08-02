@@ -17,7 +17,7 @@ END_MESSAGE_MAP()
 
 
 void CMPCThemeMaskedEdit::PreSubclassWindow() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
         CRect r;
         GetClientRect(r);
@@ -29,7 +29,7 @@ void CMPCThemeMaskedEdit::PreSubclassWindow() {
 }
 
 void CMPCThemeMaskedEdit::OnNcPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CWindowDC dc(this);
 
         CRect rect;

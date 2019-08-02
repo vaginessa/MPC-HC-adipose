@@ -11,29 +11,18 @@ public:
 
     void enableFileDialogHook();
 
-    static HBRUSH DarkCtlColorFileDialog(HDC hDC, UINT nCtlColor);
-    HBRUSH DarkCtlColor(CDC * pDC, CWnd * pWnd, UINT nCtlColor);
+    static HBRUSH getCtlColorFileDialog(HDC hDC, UINT nCtlColor);
+    HBRUSH getCtlColor(CDC * pDC, CWnd * pWnd, UINT nCtlColor);
     static bool MPCThemeEraseBkgnd(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
     void subClassFileDialog(CWnd* wnd, HWND hwnd, bool findSink = true);
 
 protected:
-    static CBrush darkContentBrush, darkWindowBrush, darkControlAreaBrush, W10DarkThemeFileDialogInjectedBGBrush;
+    static CBrush contentBrush, windowBrush, controlAreaBrush, W10DarkThemeFileDialogInjectedBGBrush;
     static CFont dialogFont;
-    std::vector<CWnd *> allocatedButtons;
-    std::vector<CWnd *> allocatedGroupBoxes;
-    std::vector<CWnd *> allocatedLinkCtrls;
-    std::vector<CWnd *> allocatedCheckBoxes;
-    std::vector<CWnd *> allocatedRadioButtons;
-    std::vector<CWnd *> allocated3States;
-    std::vector<CWnd *> allocatedEdits;
-    std::vector<CWnd *> allocatedSpinButtons;
-    std::vector<CWnd *> allocatedStatics;
-    std::vector<CWnd*> allocatedDialogs;
-    std::vector<CWnd*> allocatedComboBoxes;
-    std::vector<CWnd*> allocatedSliders;
-    std::vector<CWnd*> allocatedTabCtrls;
+    std::vector<CWnd *> allocatedWindows;
 
     void fulfillThemeReqs(CWnd *wnd);
     void initHelperObjects(CWnd* wnd);
+    void makeThemed(CWnd* pObject, CWnd* tChild);
 };
 

@@ -25,20 +25,20 @@ BOOL CMPCThemePropertySheet::OnInitDialog() {
 }
 
 void CMPCThemePropertySheet::fulfillThemeReqs() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
 
 HBRUSH CMPCThemePropertySheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         LRESULT lResult;
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
         pDC->SetTextColor(CMPCTheme::TextFGColor);
         pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
-        return darkControlAreaBrush;
+        return controlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;

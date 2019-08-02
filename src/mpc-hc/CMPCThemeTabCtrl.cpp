@@ -22,8 +22,8 @@ END_MESSAGE_MAP()
 
 
 HBRUSH CMPCThemeTabCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        return DarkCtlColor(pDC, pWnd, nCtlColor);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        return getCtlColor(pDC, pWnd, nCtlColor);
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;
@@ -105,13 +105,10 @@ void CMPCThemeTabCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 }
 
 BOOL CMPCThemeTabCtrl::OnEraseBkgnd(CDC* pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CRect r;
         GetClientRect(r);
-        CBrush cbg;
-        CMPCTheme::getParentDialogBG(this, pDC, cbg);
-        pDC->FillRect(r, &cbg);
-        cbg.Detach();
+        CMPCTheme::fillParentDialogBGClr(this, pDC, r);
     }
     return TRUE;
 }
@@ -119,7 +116,7 @@ BOOL CMPCThemeTabCtrl::OnEraseBkgnd(CDC* pDC) {
 
 
 void CMPCThemeTabCtrl::OnPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CPaintDC dc(this); // device context for painting
         int oldDC = dc.SaveDC();
 
@@ -144,7 +141,7 @@ void CMPCThemeTabCtrl::OnPaint() {
         CBrush contentFrameBrush;
         contentFrameBrush.CreateSolidBrush(CMPCTheme::TabCtrlBorderColor);
         rContent.InflateRect(1, 1);
-        dc.FrameRect(rContent, &CMPCThemeUtil::darkWindowBrush);
+        dc.FrameRect(rContent, &CMPCThemeUtil::windowBrush);
         rContent.InflateRect(1, 1);
         dc.FrameRect(rContent, &contentFrameBrush);
 

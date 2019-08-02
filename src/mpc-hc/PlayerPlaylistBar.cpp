@@ -1141,14 +1141,14 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
     const CAppSettings& s = AfxGetAppSettings();
 
     if (!!m_list.GetItemState(nItem, LVIS_SELECTED)) {
-        if (s.bDarkThemeLoaded) {
+        if (s.bMPCThemeLoaded) {
             FillRect(pDC->m_hDC, rcItem, CBrush(CMPCTheme::ContentSelectedColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(0xf1dacc));
             FrameRect(pDC->m_hDC, rcItem, CBrush(0xc56a31));
         }
     } else {
-        if (s.bDarkThemeLoaded) {
+        if (s.bMPCThemeLoaded) {
             FillRect(pDC->m_hDC, rcItem, CBrush(CMPCTheme::ContentBGColor));
         } else {
             FillRect(pDC->m_hDC, rcItem, CBrush(GetSysColor(COLOR_WINDOW)));
@@ -1157,10 +1157,10 @@ void CPlayerPlaylistBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruc
 
     COLORREF textcolor;
 
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         textcolor = CMPCTheme::TextFGColor;
         if (pli.m_fInvalid) {
-            textcolor = CMPCTheme::ContentTextDisabledFGColorWarn;
+            textcolor = CMPCTheme::ContentTextDisabledFGColorFade2;
         }
     } else {
         textcolor = fSelected ? 0xff : 0;
@@ -1504,7 +1504,7 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     m.AppendMenu(MF_STRING | MF_ENABLED | (s.bShufflePlaylistItems ? MF_CHECKED : MF_UNCHECKED), M_SHUFFLE, ResStr(IDS_PLAYLIST_SHUFFLE));
     m.AppendMenu(MF_SEPARATOR);
     m.AppendMenu(MF_STRING | MF_ENABLED | (s.bHidePlaylistFullScreen ? MF_CHECKED : MF_UNCHECKED), M_HIDEFULLSCREEN, ResStr(IDS_PLAYLIST_HIDEFS));
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         m.fulfillThemeReqs();
     }
 
@@ -1812,7 +1812,7 @@ void CPlayerPlaylistBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 
 void CPlayerPlaylistBar::OnLvnBeginlabeleditList(NMHDR* pNMHDR, LRESULT* pResult) {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         HWND e_hwnd = (HWND)m_list.SendMessage(LVM_GETEDITCONTROL);
         if (::IsWindow(m_edit.m_hWnd)) m_edit.UnsubclassWindow();
         m_edit.SubclassWindow(e_hwnd);
@@ -1829,7 +1829,7 @@ void CPlayerPlaylistBar::OnLvnEndlabeleditList(NMHDR* pNMHDR, LRESULT* pResult)
         m_list.SetItemText(pDispInfo->item.iItem, 0, pDispInfo->item.pszText);
     }
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         if (::IsWindow(m_edit.m_hWnd)) m_edit.UnsubclassWindow();
     }
     *pResult = 0;

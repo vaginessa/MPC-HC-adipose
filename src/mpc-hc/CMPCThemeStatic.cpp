@@ -20,7 +20,7 @@ END_MESSAGE_MAP()
 
 
 void CMPCThemeStatic::OnPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CPaintDC dc(this);
 
         CString sTitle;
@@ -82,7 +82,7 @@ void CMPCThemeStatic::OnPaint() {
 
 
 void CMPCThemeStatic::OnNcPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CDC* pDC = GetWindowDC();
 
         CRect rect;
@@ -106,7 +106,7 @@ void CMPCThemeStatic::OnNcPaint() {
 }
 
 void CMPCThemeStatic::OnEnable(BOOL bEnable) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         SetRedraw(FALSE);
         __super::OnEnable(bEnable);
         SetRedraw(TRUE);
@@ -125,17 +125,14 @@ void CMPCThemeStatic::OnEnable(BOOL bEnable) {
 }
 
 BOOL CMPCThemeStatic::OnEraseBkgnd(CDC* pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CRect r;
         GetClientRect(r);
         if (isFileDialogChild) {
-            HBRUSH hBrush=CMPCThemeUtil::DarkCtlColorFileDialog(pDC->GetSafeHdc(), CTLCOLOR_STATIC);
+            HBRUSH hBrush=CMPCThemeUtil::getCtlColorFileDialog(pDC->GetSafeHdc(), CTLCOLOR_STATIC);
             ::FillRect(pDC->GetSafeHdc(), r, hBrush);
         } else {
-            CBrush brush;
-            CMPCTheme::getParentDialogBG(this, pDC, brush);
-            pDC->FillRect(r, &brush);
-            brush.Detach();
+            CMPCTheme::fillParentDialogBGClr(this, pDC, r);
         }
         return TRUE;
     } else {

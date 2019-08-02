@@ -16,7 +16,7 @@ public:
     void SetFixedWidthFont(CFont& f);
 protected:
     CWnd *buddy;
-    CMPCThemeScrollBarHelper *darkSBHelper;
+    CMPCThemeScrollBarHelper *themedSBHelper;
     CFont font;
     bool isFileDialogChild;
 

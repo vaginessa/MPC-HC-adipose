@@ -627,8 +627,8 @@ public:
     CString         strAutoDownloadSubtitlesExclude;
     bool            bAutoUploadSubtitles;
     bool            bPreferHearingImpairedSubtitles;
-    bool            bDarkThemeLoaded;
-    bool            bDarkTheme;
+    bool            bMPCThemeLoaded;
+    bool            bMPCTheme;
     bool            bWindows10DarkThemeActive;
     CString         strSubtitlesProviders;
     CString         strSubtitlePaths;

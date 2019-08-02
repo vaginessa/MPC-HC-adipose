@@ -20,7 +20,6 @@ public:
 
     static const COLORREF ShadowColor;
     static const COLORREF TextFGColor;
-    static const COLORREF ContentTextDisabledFGColorWarn;
     static const COLORREF ContentTextDisabledFGColorFade;
     static const COLORREF ContentTextDisabledFGColorFade2;
     static const COLORREF SubmenuColor;
@@ -171,8 +170,8 @@ public:
     static void drawCheckBox(UINT checkState, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
     static bool canUseWin10DarkTheme();
     static UINT defaultLogo();
-    static void getParentDialogBG(CWnd* wnd, CDC* pDC, CBrush& brush);
-	static void fulfillThemeReqs(CProgressCtrl* ctl);
+    static void fillParentDialogBGClr(CWnd* wnd, CDC* pDC, CRect r);
+    static void fulfillThemeReqs(CProgressCtrl* ctl);
 
     enum CheckBoxStyle {
         CheckBoxRegular = 0,

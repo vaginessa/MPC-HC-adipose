@@ -97,7 +97,7 @@ void CPPageExternalFilters::DoDataExchange(CDataExchange* pDX)
     DDX_Radio(pDX, IDC_RADIO1, m_iLoadType);
     DDX_Control(pDX, IDC_EDIT1, m_dwMerit);
     DDX_Control(pDX, IDC_TREE1, m_tree);
-    m_tree.setDarkTheme();
+    m_tree.fulfillThemeReqs();
 }
 
 void CPPageExternalFilters::Exchange(CListCtrl& list, int i, int j)

@@ -86,13 +86,13 @@ void CPlayerToolBar::LoadToolbarImage()
     float dpiScaling = (float)std::min(m_pMainFrame->m_dpi.ScaleFactorX(), m_pMainFrame->m_dpi.ScaleFactorY());
     float defaultToolbarScaling = AfxGetAppSettings().nDefaultToolbarSize / 16.0f;
 
-    CImage image, darkImage, origImage;
+    CImage image, themedImage, origImage;
     if (LoadExternalToolBar(image) || (!AfxGetAppSettings().bUseLegacyToolbar && SUCCEEDED(SVGImage::Load(IDF_SVG_TOOLBAR, image, dpiScaling * defaultToolbarScaling)))) {
         origImage = image;
         const CAppSettings& s = AfxGetAppSettings();
-        if (s.bDarkThemeLoaded) {
-            ImageGrayer::UpdateColor(image, darkImage, false, s.bDarkThemeLoaded);
-            image = darkImage;
+        if (s.bMPCThemeLoaded) {
+            ImageGrayer::UpdateColor(image, themedImage, false, s.bMPCThemeLoaded);
+            image = themedImage;
         }
         CBitmap* bmp = CBitmap::FromHandle(image);
         int width = image.GetWidth();
@@ -108,7 +108,7 @@ void CPlayerToolBar::LoadToolbarImage()
                 m_pButtonsImages->Add(bmp, nullptr); // alpha is the mask
 
                 CImage imageDisabled;
-                if (ImageGrayer::UpdateColor(origImage, imageDisabled, true, s.bDarkThemeLoaded)) {
+                if (ImageGrayer::UpdateColor(origImage, imageDisabled, true, s.bMPCThemeLoaded)) {
                     m_pDisabledButtonsImages.reset(DEBUG_NEW CImageList());
                     m_pDisabledButtonsImages->Create(height, height, ILC_COLOR32 | ILC_MASK, 1, 0);
                     m_pDisabledButtonsImages->Add(CBitmap::FromHandle(imageDisabled), nullptr); // alpha is the mask
@@ -174,10 +174,10 @@ BOOL CPlayerToolBar::Create(CWnd* pParentWnd)
 
     const CAppSettings& s = AfxGetAppSettings();
 
-    if (s.bDarkThemeLoaded) {
-        darkTT.enableFlickerHelper(); //avoid flicker on button hover
-        darkTT.Create(this, TTS_ALWAYSTIP);
-        tb.SetToolTips(&darkTT);
+    if (s.bMPCThemeLoaded) {
+        themedToolTip.enableFlickerHelper(); //avoid flicker on button hover
+        themedToolTip.Create(this, TTS_ALWAYSTIP);
+        tb.SetToolTips(&themedToolTip);
     } else {
         tb.EnableToolTips();
     }
@@ -323,7 +323,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
                 dc.Attach(pTBCD->nmcd.hdc);
                 RECT r;
                 GetClientRect(&r);
-                if (s.bDarkThemeLoaded) {
+                if (s.bMPCThemeLoaded) {
                     dc.FillSolidRect(&r, CMPCTheme::PlayerBGColor);
                 } else {
                     dc.FillSolidRect(&r, ::GetSysColor(COLOR_BTNFACE));
@@ -335,7 +335,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
         case CDDS_ITEMPREPAINT:
             lr |= CDRF_NOTIFYPOSTPAINT;
             {
-                if (s.bDarkThemeLoaded) {
+                if (s.bMPCThemeLoaded) {
                     lr |= TBCDRF_NOBACKGROUND | TBCDRF_NOOFFSET;
                     if (pTBCD->nmcd.uItemState & CDIS_CHECKED) {
                         drawButtonBG(pTBCD->nmcd, CMPCTheme::PlayerButtonCheckedColor);
@@ -351,7 +351,7 @@ void CPlayerToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
             dc.Attach(pTBCD->nmcd.hdc);
             RECT r;
             GetItemRect(11, &r);
-            if (s.bDarkThemeLoaded) {
+            if (s.bMPCThemeLoaded) {
                 dc.FillSolidRect(&r, CMPCTheme::PlayerBGColor);
             } else {
                 dc.FillSolidRect(&r, GetSysColor(COLOR_BTNFACE));
@@ -412,7 +412,7 @@ void CPlayerToolBar::OnNcPaint() // when using XP styles the NC area isn't drawn
     wr.OffsetRect(-wr.left, -wr.top);
     dc.ExcludeClipRect(&cr);
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         dc.FillSolidRect(wr, CMPCTheme::PlayerBGColor);
     } else {
         dc.FillSolidRect(wr, ::GetSysColor(COLOR_BTNFACE));

@@ -4,26 +4,26 @@
 #include "mplayerc.h"
 
 CMPCThemePlayerListCtrl::CMPCThemePlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
-    darkGridLines = false;
+    themeGridLines = false;
     fullRowSelect = false;
-    darkSBHelper = nullptr;
+    themeSBHelper = nullptr;
     hasCheckedColors = false;
     hasCBImages = false;
     if (!CMPCTheme::canUseWin10DarkTheme()) {
-        darkSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
+        themeSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
 
 
 CMPCThemePlayerListCtrl::~CMPCThemePlayerListCtrl() {
-    if (nullptr != darkSBHelper) {
-        delete darkSBHelper;
+    if (nullptr != themeSBHelper) {
+        delete themeSBHelper;
     }
 }
 
 
 void CMPCThemePlayerListCtrl::PreSubclassWindow() {
-    if (!AfxGetAppSettings().bDarkThemeLoaded) {
+    if (!AfxGetAppSettings().bMPCThemeLoaded) {
         EnableToolTips(TRUE);
     } else {
         if (CMPCTheme::canUseWin10DarkTheme()) {
@@ -63,18 +63,18 @@ END_MESSAGE_MAP()
 
 void CMPCThemePlayerListCtrl::subclassHeader() {
     CHeaderCtrl *t = GetHeaderCtrl();
-    if (nullptr != t && IsWindow(t->m_hWnd) && darkHdrCtrl.m_hWnd == NULL) {
-        darkHdrCtrl.SubclassWindow(t->GetSafeHwnd());
+    if (nullptr != t && IsWindow(t->m_hWnd) && themedHdrCtrl.m_hWnd == NULL) {
+        themedHdrCtrl.SubclassWindow(t->GetSafeHwnd());
     }
 }
 
 void CMPCThemePlayerListCtrl::setAdditionalStyles(DWORD styles) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         DWORD stylesToAdd = styles, stylesToRemove = 0;
         if (styles & LVS_EX_GRIDLINES) {
             stylesToAdd &= ~LVS_EX_GRIDLINES;
             stylesToRemove |= LVS_EX_GRIDLINES;
-            darkGridLines = true;
+            themeGridLines = true;
         }
         if (styles & LVS_EX_FULLROWSELECT) {
             stylesToAdd &= ~LVS_EX_FULLROWSELECT;
@@ -115,13 +115,13 @@ bool CMPCThemePlayerListCtrl::getFlaggedItem(int iItem) {
 
 
 BOOL CMPCThemePlayerListCtrl::PreTranslateMessage(MSG * pMsg) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (!IsWindow(darkTT.m_hWnd)) {
-            darkTT.Create(this, TTS_ALWAYSTIP);
-            darkTT.enableFlickerHelper();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (!IsWindow(themedToolTip.m_hWnd)) {
+            themedToolTip.Create(this, TTS_ALWAYSTIP);
+            themedToolTip.enableFlickerHelper();
         }
-        if (IsWindow(darkTT.m_hWnd)) {
-            darkTT.RelayEvent(pMsg);
+        if (IsWindow(themedToolTip.m_hWnd)) {
+            themedToolTip.RelayEvent(pMsg);
         }
     }
     return __super::PreTranslateMessage(pMsg);
@@ -135,11 +135,11 @@ void CMPCThemePlayerListCtrl::setCheckedColors(COLORREF checkedBG, COLORREF chec
 }
 
 void CMPCThemePlayerListCtrl::OnNcPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->darkNcPaintWithSB();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (nullptr != themeSBHelper) {
+            themeSBHelper->themedNcPaintWithSB();
         } else {
-            CMPCThemeScrollBarHelper::darkNcPaint(this, this);
+            CMPCThemeScrollBarHelper::themedNcPaint(this, this);
         }
     } else {
         __super::OnNcPaint();
@@ -151,7 +151,7 @@ int CMPCThemePlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (__super::OnCreate(lpCreateStruct) == -1)
         return -1;
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         SetBkColor(CMPCTheme::ContentBGColor);
         subclassHeader();
     }
@@ -160,9 +160,9 @@ int CMPCThemePlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 }
 
 BOOL CMPCThemePlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->updateDarkScrollInfo();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (nullptr != themeSBHelper) {
+            themeSBHelper->updateScrollInfo();
         }
         *pResult = 0;
     }
@@ -170,20 +170,20 @@ BOOL CMPCThemePlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
 }
 
 void CMPCThemePlayerListCtrl::updateSB() {
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->hideSB();
+    if (nullptr != themeSBHelper) {
+        themeSBHelper->hideSB();
     }
 }
 
-void CMPCThemePlayerListCtrl::updateDarkScrollInfo() {
-    if (nullptr != darkSBHelper) {
-        darkSBHelper->updateDarkScrollInfo();
+void CMPCThemePlayerListCtrl::updateScrollInfo() {
+    if (nullptr != themeSBHelper) {
+        themeSBHelper->updateScrollInfo();
     }
 }
 
 LRESULT CMPCThemePlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
-    if (AfxGetAppSettings().bDarkThemeLoaded && nullptr != darkSBHelper) {
-        if (darkSBHelper->WindowProc(this, message, wParam, lParam)) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themeSBHelper) {
+        if (themeSBHelper->WindowProc(this, message, wParam, lParam)) {
             return 1;
         }
     }
@@ -191,23 +191,23 @@ LRESULT CMPCThemePlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM 
 }
 
 void CMPCThemePlayerListCtrl::updateToolTip(CPoint point) {
-    if (AfxGetAppSettings().bDarkThemeLoaded && nullptr != darkTT) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themedToolTip) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
-        if (tid != -1 && darkTTcid != ti.uId) {
-            if (darkTT.GetToolCount() > 0) {
-                darkTT.DelTool(this);
-                darkTT.Activate(FALSE);
+        if (tid != -1 && themedToolTipCid != ti.uId) {
+            if (themedToolTip.GetToolCount() > 0) {
+                themedToolTip.DelTool(this);
+                themedToolTip.Activate(FALSE);
             }
 
-            darkTTcid = ti.uId;
+            themedToolTipCid = ti.uId;
 
             CRect cr;
             GetClientRect(&cr); //we reset the tooltip every time we move anyway, so this rect is adequate
 
-            darkTT.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
-            darkTT.Activate(TRUE);
+            themedToolTip.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
+            themedToolTip.Activate(TRUE);
         }
     }
 }
@@ -361,7 +361,7 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
                 }
                 dcMem.FillSolidRect(rTextBG, bgClr);
 
-                if (darkGridLines) {
+                if (themeGridLines) {
                     CRect rGrid = rect;
                     rGrid.bottom -= 1;
                     CPen gridPen, *oldPen;
@@ -392,7 +392,7 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
 }
 
 BOOL CMPCThemePlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>(pNMHDR);
 
         *pResult = CDRF_DODEFAULT;
@@ -424,7 +424,7 @@ BOOL CMPCThemePlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
 
 
 BOOL CMPCThemePlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CRect r;
         GetClientRect(r);
         int dcState = pDC->SaveDC();
@@ -435,15 +435,15 @@ BOOL CMPCThemePlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
         }
         pDC->FillSolidRect(r, CMPCTheme::ContentBGColor);
 
-        if (darkGridLines) {
+        if (themeGridLines) {
 
             CPen gridPen, *oldPen;
             gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::WindowBorderColorDim);
             oldPen = pDC->SelectObject(&gridPen);
 
             CRect gr;
-            for (int x = 0; x < darkHdrCtrl.GetItemCount(); x++) {
-                darkHdrCtrl.GetItemRect(x, gr);
+            for (int x = 0; x < themedHdrCtrl.GetItemCount(); x++) {
+                themedHdrCtrl.GetItemRect(x, gr);
                 pDC->MoveTo(gr.right, r.top);
                 pDC->LineTo(gr.right, r.bottom);
             }
@@ -469,7 +469,7 @@ BOOL CMPCThemePlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
 
 HBRUSH CMPCThemePlayerListCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     HBRUSH ret;
-    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    ret = getCtlColor(pDC, pWnd, nCtlColor);
     if (nullptr != ret) {
         return ret;
     } else {
@@ -480,23 +480,23 @@ HBRUSH CMPCThemePlayerListCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 void CMPCThemePlayerListCtrl::OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult) {
 //    LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        if (nullptr != darkSBHelper) {
-            darkSBHelper->updateDarkScrollInfo();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (nullptr != themeSBHelper) {
+            themeSBHelper->updateScrollInfo();
         }
     }
     *pResult = 0;
 }
 
 LRESULT CMPCThemePlayerListCtrl::OnDelayed_updateListCtrl(WPARAM, LPARAM) {
-    updateDarkScrollInfo();
+    updateScrollInfo();
     return 0;
 }
 
 BOOL CMPCThemePlayerListCtrl::OnLvnItemchanged(NMHDR* pNMHDR, LRESULT* pResult) {
     //LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         ::PostMessage(m_hWnd, PLAYER_PLAYLIST_LVN_ITEMCHANGED, 0, 0);
     }
     *pResult = 0;

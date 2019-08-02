@@ -9,10 +9,10 @@ class CMPCThemeListBox :
 {
     DECLARE_DYNAMIC(CMPCThemeListBox)
 private:
-    CMPCThemeScrollBar darkVSB;
-    CMPCThemeToolTipCtrl darkTT;
-    UINT_PTR darkTTcid;
-    CMPCThemeScrollBarHelper *darkSBHelper;
+    CMPCThemeScrollBar vertSB;
+    CMPCThemeToolTipCtrl themedToolTip;
+    UINT_PTR themedToolTipCid;
+    CMPCThemeScrollBarHelper *themedSBHelper;
 protected:
     virtual void PreSubclassWindow();
 public:

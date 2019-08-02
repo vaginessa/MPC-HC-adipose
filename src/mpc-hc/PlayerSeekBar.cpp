@@ -211,7 +211,7 @@ void CPlayerSeekBar::CreateThumb(bool bEnabled, CDC& parentDC)
         VERIFY(pThumb->SelectObject(bmp));
 
         const CAppSettings& s = AfxGetAppSettings();
-        if (s.bDarkThemeLoaded) {
+        if (s.bMPCThemeLoaded) {
             //just a rectangle, we will draw from scratch
         } else {
             pThumb->Draw3dRect(&r, light, 0);
@@ -496,7 +496,7 @@ void CPlayerSeekBar::OnPaint()
     bkg    = GetSysColor(COLOR_BTNFACE);
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         // Thumb
         {
             CRect r(GetThumbRect());

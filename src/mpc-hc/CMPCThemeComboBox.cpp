@@ -66,7 +66,7 @@ void CMPCThemeComboBox::PreSubclassWindow() {
 
 
 void CMPCThemeComboBox::OnPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CPaintDC dc(this);
         CRect r, rBorder, rText, rBG, rSelect, rDownArrow;
         GetClientRect(r);

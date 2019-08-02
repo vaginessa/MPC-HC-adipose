@@ -12,7 +12,7 @@ public:
 protected:
     CBrush bgBrush;
     bool m_bDrag, m_bHover;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 public:
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
     void invalidateThumb();

@@ -13,10 +13,10 @@ CMPCThemeSliderCtrl::~CMPCThemeSliderCtrl() {
 }
 
 void CMPCThemeSliderCtrl::PreSubclassWindow() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CToolTipCtrl* pTip = GetToolTips();
         if (nullptr != pTip) {
-            darkTT.SubclassWindow(pTip->m_hWnd);
+            themedToolTip.SubclassWindow(pTip->m_hWnd);
         }
     }
 }
@@ -36,7 +36,7 @@ void CMPCThemeSliderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     LRESULT lr = CDRF_DODEFAULT;
 
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         switch (pNMCD->dwDrawStage) {
         case CDDS_PREPAINT:
             lr = CDRF_NOTIFYITEMDRAW;
@@ -79,7 +79,7 @@ void CMPCThemeSliderCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
                 CRect r(pNMCD->rc);
                 r.DeflateRect(0, 0, 1, 0);
 
-                if (s.bDarkThemeLoaded) {
+                if (s.bMPCThemeLoaded) {
                     CBrush fb;
                     if (m_bDrag) {
                         dc.FillSolidRect(r, CMPCTheme::ScrollThumbDragColor);

@@ -6,7 +6,7 @@ public:
     virtual ~CMPCThemePropertyPage();
 
 
-    void enableDarkThemeIfActive() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
+    void fulfillThemeReqs() { CMPCThemeUtil::fulfillThemeReqs((CWnd*)this); };
     DECLARE_DYNAMIC(CMPCThemePropertyPage)
 
     DECLARE_MESSAGE_MAP()

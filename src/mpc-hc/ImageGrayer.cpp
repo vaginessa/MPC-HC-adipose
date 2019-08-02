@@ -137,14 +137,14 @@ bool ImageGrayer::Gray(const CImage& imgSource, CImage& imgDest)
     return true;
 }
 
-bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool disabled, bool darkTheme)
+bool ImageGrayer::UpdateColor(const CImage& imgSource, CImage& imgDest, bool disabled, bool mpcTheme)
 {
     // Only support 32-bit image for now
     if (imgSource.GetBPP() != 32) {
         return false;
     }
 
-    if (!darkTheme) {
+    if (!mpcTheme) { //fixme when theme is not dark
         return Gray(imgSource, imgDest);
     }
 

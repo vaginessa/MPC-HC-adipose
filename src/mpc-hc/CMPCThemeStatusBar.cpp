@@ -10,7 +10,7 @@ CMPCThemeStatusBar::~CMPCThemeStatusBar() {
 }
 
 void CMPCThemeStatusBar::PreSubclassWindow() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         ModifyStyleEx(WS_BORDER, WS_EX_STATICEDGE, 0);
     } else {
         __super::PreSubclassWindow();
@@ -26,7 +26,7 @@ END_MESSAGE_MAP()
 void CMPCThemeStatusBar::SetText(LPCTSTR lpszText, int nPane, int nType) {
     CStatusBarCtrl &ctrl = GetStatusBarCtrl();
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         ctrl.SetText(_T(""), nPane, SBT_OWNERDRAW);
         texts[nPane] = lpszText;
     } else {
@@ -74,7 +74,7 @@ void CMPCThemeStatusBar::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
 
 void CMPCThemeStatusBar::OnNcPaint() {
-    if (!AfxGetAppSettings().bDarkThemeLoaded) {
+    if (!AfxGetAppSettings().bMPCThemeLoaded) {
         return __super::OnNcPaint();
     } else {
         CWindowDC dc(this);
@@ -89,7 +89,7 @@ void CMPCThemeStatusBar::OnNcPaint() {
 
 
 BOOL CMPCThemeStatusBar::OnEraseBkgnd(CDC* pDC) {
-    if (!AfxGetAppSettings().bDarkThemeLoaded) {
+    if (!AfxGetAppSettings().bMPCThemeLoaded) {
         return __super::OnEraseBkgnd(pDC);
     } else {
         return TRUE;

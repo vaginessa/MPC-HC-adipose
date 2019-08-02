@@ -18,7 +18,7 @@ END_MESSAGE_MAP()
 
 BOOL CMPCThemePlayerBar::OnEraseBkgnd(CDC* pDC) {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         CRect rect;
         pDC->GetClipBox(&rect);
         pDC->FillSolidRect(rect.left, rect.top, rect.Width(), rect.Height(), CMPCTheme::WindowBGColor);
@@ -29,7 +29,7 @@ BOOL CMPCThemePlayerBar::OnEraseBkgnd(CDC* pDC) {
     }
 }
 
-void biHidePaintDark(CDC* pDC, CSCBButton b) //derived from CSCBButton::Paint
+void paintHideButton(CDC* pDC, CSCBButton b) //derived from CSCBButton::Paint
 {
     CRect rc = b.GetRect();
 
@@ -62,7 +62,7 @@ void biHidePaintDark(CDC* pDC, CSCBButton b) //derived from CSCBButton::Paint
 
 void CMPCThemePlayerBar::NcPaintGripper(CDC* pDC, CRect rcClient) { //derived from CSizingControlBarG base implementation
     const CAppSettings& s = AfxGetAppSettings();
-    if (!s.bDarkThemeLoaded) {
+    if (!s.bMPCThemeLoaded) {
         __super::NcPaintGripper(pDC, rcClient);
         return;
     }
@@ -104,12 +104,12 @@ void CMPCThemePlayerBar::NcPaintGripper(CDC* pDC, CRect rcClient) { //derived fr
 
     pDC->BitBlt(gripper.left, gripper.top, gripper.Width(), gripper.Height(), &dcMemory, 0, 0, SRCCOPY);
 
-    biHidePaintDark(pDC, m_biHide);
+    paintHideButton(pDC, m_biHide);
 }
 
 void CMPCThemePlayerBar::mpc_fillNcBG(CDC* mdc, CRect rcDraw) {
     const CAppSettings& s = AfxGetAppSettings();
-    if (s.bDarkThemeLoaded) {
+    if (s.bMPCThemeLoaded) {
         if (IsFloating()) {
             rcDraw.DeflateRect(1, 1);
         }

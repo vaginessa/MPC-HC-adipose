@@ -47,7 +47,7 @@ private:
     CMPCThemeMenu m_timerMenu;
 
     CToolTipCtrl m_tooltip;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

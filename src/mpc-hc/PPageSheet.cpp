@@ -83,7 +83,7 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
         }
     }
 
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST1, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
         CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST2, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
         CMPCThemeUtil::ModifyTemplates(this, RUNTIME_CLASS(CPPageShaders), IDC_LIST3, LBS_OWNERDRAWFIXED | LBS_HASSTRINGS);
@@ -96,8 +96,8 @@ CPPageSheet::CPPageSheet(LPCTSTR pszCaption, IFilterGraph* pFG, CWnd* pParentWnd
 CPPageSheet::~CPPageSheet() {
 }
 
-void CPPageSheet::enableDarkThemeIfActive() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+void CPPageSheet::fulfillThemeReqs() {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
     }
 }
@@ -119,8 +119,8 @@ CMPCThemeTreeCtrl* CPPageSheet::CreatePageTreeObject()
 }
 
 void CPPageSheet::SetTreeCtrlTheme(CTreeCtrl * ctrl) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
-        ((CMPCThemeTreeCtrl*)ctrl)->setDarkTheme();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        ((CMPCThemeTreeCtrl*)ctrl)->fulfillThemeReqs();
     } else {
         __super::SetTreeCtrlTheme(ctrl);
     }
@@ -148,7 +148,7 @@ BOOL CPPageSheet::OnInitDialog()
         GetPageTreeControl()->EnableWindow(FALSE);
     }
 
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return bResult;
 }
 
@@ -170,7 +170,7 @@ void CPPageSheet::OnApply()
 }
 
 TreePropSheet::CPropPageFrame* CPPageSheet::CreatePageFrame() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         return DEBUG_NEW CMPCThemePropPageFrame;
     } else {
         return __super::CreatePageFrame();
@@ -179,14 +179,14 @@ TreePropSheet::CPropPageFrame* CPPageSheet::CreatePageFrame() {
 
 
 HBRUSH CPPageSheet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         LRESULT lResult;
         if (pWnd->SendChildNotifyLastMsg(&lResult)) {
             return (HBRUSH)lResult;
         }
         pDC->SetTextColor(CMPCTheme::TextFGColor);
         pDC->SetBkColor(CMPCTheme::ControlAreaBGColor);
-        return darkControlAreaBrush;
+        return controlAreaBrush;
     } else {
         HBRUSH hbr = __super::OnCtlColor(pDC, pWnd, nCtlColor);
         return hbr;

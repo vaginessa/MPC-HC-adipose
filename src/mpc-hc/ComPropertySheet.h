@@ -60,7 +60,7 @@ public:
     }
 
     virtual BOOL OnInitDialog();
-    void enableDarkThemeIfActive();
+    void fulfillThemeReqs();
 
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 

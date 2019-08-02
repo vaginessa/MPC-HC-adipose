@@ -12,7 +12,7 @@ public:
     DECLARE_DYNAMIC(CMPCThemePlayerListCtrl)
 
     void updateSB();
-    void updateDarkScrollInfo();
+    void updateScrollInfo();
     LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     void updateToolTip(CPoint point);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -35,16 +35,16 @@ public:
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
-    CMPCThemeScrollBarHelper *darkSBHelper;
-    CMPCThemeToolTipCtrl darkTT, lvsToolTip;
-    UINT_PTR darkTTcid;
+    CMPCThemeScrollBarHelper *themeSBHelper;
+    CMPCThemeToolTipCtrl themedToolTip, lvsToolTip;
+    UINT_PTR themedToolTipCid;
     COLORREF checkedBGClr, checkedTextClr, uncheckedTextClr;
     std::map<int, bool> flaggedItems;
     bool hasCheckedColors;
     bool hasCBImages;
-    bool darkGridLines;
+    bool themeGridLines;
     bool fullRowSelect;
-    CMPCThemeHeaderCtrl darkHdrCtrl;
+    CMPCThemeHeaderCtrl themedHdrCtrl;
     CFont listMPCThemeFont, listMPCThemeFontBold;
     void drawItem(CDC* pDC, int nItem, int nSubItem);
     virtual void PreSubclassWindow();

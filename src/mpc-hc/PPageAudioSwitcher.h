@@ -68,7 +68,7 @@ private:
     CToolTipCtrl m_tooltip;
 
     //replaces tooltip from EnableTooltips()
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
 public:
     CPPageAudioSwitcher(IFilterGraph* pFG);

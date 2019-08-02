@@ -109,7 +109,7 @@ void CTunerScanDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, ID_SAVE, m_btnSave);
     DDX_Control(pDX, IDCANCEL, m_btnCancel);
     DDX_Control(pDX, IDC_OFFSET, m_OffsetEditBox);
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
 }
 
 BEGIN_MESSAGE_MAP(CTunerScanDlg, CMPCThemeDialog)

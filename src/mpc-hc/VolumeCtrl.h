@@ -42,7 +42,7 @@ public:
 protected:
     afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
     bool m_bDrag, m_bHover;
-    CMPCThemeToolTipCtrl darkTT;
+    CMPCThemeToolTipCtrl themedToolTip;
 
     DECLARE_MESSAGE_MAP()
 

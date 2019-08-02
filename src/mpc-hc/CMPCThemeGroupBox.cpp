@@ -18,7 +18,7 @@ END_MESSAGE_MAP()
 
 
 void CMPCThemeGroupBox::OnPaint() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
 
         CPaintDC dc(this);
 

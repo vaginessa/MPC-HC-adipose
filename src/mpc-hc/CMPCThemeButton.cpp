@@ -5,7 +5,7 @@
 #include "mplayerc.h"
 
 CMPCThemeButton::CMPCThemeButton() {
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         m_nFlatStyle = CMFCButton::BUTTONSTYLE_FLAT; //just setting this to get hovering working
     }
 }
@@ -124,7 +124,7 @@ void CMPCThemeButton::drawButton(HDC hdc, CRect rect, UINT state) {
 void CMPCThemeButton::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
     *pResult = CDRF_DODEFAULT;
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (pNMCD->dwDrawStage == CDDS_PREERASE) {
             drawButton(pNMCD->hdc, pNMCD->rc, pNMCD->uItemState);
             *pResult = CDRF_SKIPDEFAULT;

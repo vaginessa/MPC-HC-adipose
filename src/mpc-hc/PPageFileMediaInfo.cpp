@@ -182,7 +182,7 @@ BOOL CPPageFileMediaInfo::OnInitDialog()
     // Use a negative value to match the character height instead of the cell height.
     const int fonts_size[] = { 10, 10, 11, 11 };
     size_t i;
-    if (AfxGetAppSettings().bDarkThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
         i = 0; //added Consolas to the beginning for CMPCTheme
     } else {
         i = 1; //otherwise honor the old order (overly respectful of Lucida for old windows :) )

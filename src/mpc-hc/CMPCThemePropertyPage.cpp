@@ -11,7 +11,7 @@ CMPCThemePropertyPage::~CMPCThemePropertyPage() {
 
 BOOL CMPCThemePropertyPage::OnInitDialog() {
     __super::OnInitDialog();
-    enableDarkThemeIfActive();
+    fulfillThemeReqs();
     return 0;
 }
 
@@ -23,7 +23,7 @@ END_MESSAGE_MAP()
 
 HBRUSH CMPCThemePropertyPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) {
     HBRUSH ret;
-    ret = DarkCtlColor(pDC, pWnd, nCtlColor);
+    ret = getCtlColor(pDC, pWnd, nCtlColor);
     if (nullptr != ret) {
         return ret;
     } else {
