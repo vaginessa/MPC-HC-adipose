@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemePropertySheet.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 CMPCThemePropertySheet::CMPCThemePropertySheet(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPage)
     : CPropertySheet(nIDCaption, pParentWnd, iSelectPage) {

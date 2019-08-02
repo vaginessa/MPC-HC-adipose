@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeStatusBar.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 CMPCThemeStatusBar::CMPCThemeStatusBar() {
 }
@@ -60,7 +61,7 @@ void CMPCThemeStatusBar::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     dc.SetBkColor(CMPCTheme::StatusBarBGColor);
     dc.SetTextColor(CMPCTheme::TextFGColor);
     CFont font;
-    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDMessageFont);
+    CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::MessageFont);
     dc.SelectObject(&font);
     dc.FillSolidRect(rect, CMPCTheme::StatusBarBGColor);
     dc.DrawText(texts[item], rect, 0);

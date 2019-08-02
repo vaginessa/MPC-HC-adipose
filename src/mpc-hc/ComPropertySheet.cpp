@@ -25,6 +25,7 @@
 #include "DSUtil.h"
 #include "../filters/InternalPropertyPage.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 // CComPropertyPageSite
 

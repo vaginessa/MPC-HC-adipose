@@ -135,56 +135,7 @@ public:
     static const int CheckWidth;
     static const int CheckHeight;
 
-    static void getFontByFace(CFont &font, CDC *pDC, wchar_t *fontName, int size, LONG weight = FW_REGULAR);
-    static void getFontByType(CFont &font, CDC *pDC, int type, bool underline = false, bool bold = false);
-    enum fontType {
-        CDCaptionFont,
-        CDSmallCaptionFont,
-        CDMenuFont,
-        CDStatusFont,
-        CDMessageFont,
-        CDDialogFont,
-        CDFixedFont,
-    };
-
-    static CSize GetTextSize(CString str, HDC hDC, int type);
-    static CSize GetTextSizeDiff(CString str, HDC hDC, int type, CFont *curFont);
-
-
-    struct themeMetrics {
-        NONCLIENTMETRICS ncMetrics;
-        CSize avgCharSize;
-        int checkboxWidth;
-        int checkboxHeight;
-    };
-
-    static themeMetrics _metrics;
-    static bool haveMetrics;
-    static themeMetrics & GetMetrics(CDC * pDC);
-    static void initMemDC(CDC * pDC, CDC & dcMem, CBitmap & bmMem, CRect rect);
-    static void flushMemDC(CDC * pDC, CDC & dcMem, CRect rect);
-    static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
-    static void Draw2BitTransparent(CDC &dc, int left, int top, int width, int height, CBitmap &bmp, COLORREF fgColor);
-    static void dbg(CString text, ...);
-    static UINT getResourceByDPI(CDC *pDC, const UINT * resources);
-    static void drawCheckBox(UINT checkState, bool isHover, bool useSystemSize, CRect rectCheck, CDC *pDC, bool isRadio=false);
-    static bool canUseWin10DarkTheme();
-    static UINT defaultLogo();
-    static void fillParentDialogBGClr(CWnd* wnd, CDC* pDC, CRect r);
-    static void fulfillThemeReqs(CProgressCtrl* ctl);
-
-    enum CheckBoxStyle {
-        CheckBoxRegular = 0,
-        CheckBoxHover = 1,
-    };
-
-    enum RadoStyle {
-        RadioRegular = 0,
-        RadioRegularSet = 1,
-        RadioHover = 2,
-        RadioHoverSet = 3
-    };
-
     const static UINT ThemeCheckBoxes[5];
     const static UINT ThemeRadios[5];
+
 };

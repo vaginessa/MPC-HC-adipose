@@ -2,6 +2,7 @@
 #include "CMPCThemeTabCtrl.h"
 #include "mplayerc.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 
 CMPCThemeTabCtrl::CMPCThemeTabCtrl():CTabCtrl() {
@@ -89,7 +90,7 @@ void CMPCThemeTabCtrl::doDrawItem(int nItem, CRect rText, bool isSelected, CDC* 
         pDC->SetTextColor(textColor);
         pDC->SetBkColor(bgColor);
 
-        CMPCTheme::DrawBufferedText(pDC, text, rText, textFormat);
+        CMPCThemeUtil::DrawBufferedText(pDC, text, rText, textFormat);
 
         pDC->SetTextColor(oldTextColor);
         pDC->SetBkColor(oldBkColor);
@@ -108,7 +109,7 @@ BOOL CMPCThemeTabCtrl::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         CRect r;
         GetClientRect(r);
-        CMPCTheme::fillParentDialogBGClr(this, pDC, r);
+        CMPCThemeUtil::fillParentDialogBGClr(this, pDC, r);
     }
     return TRUE;
 }

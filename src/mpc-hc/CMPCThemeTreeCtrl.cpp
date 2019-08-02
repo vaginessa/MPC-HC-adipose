@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "CMPCThemeTreeCtrl.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 
 CMPCThemeTreeCtrl::CMPCThemeTreeCtrl() {
     m_brBkgnd.CreateSolidBrush(CMPCTheme::InlineEditBorderColor);
     themedSBHelper = nullptr;
-    if (!CMPCTheme::canUseWin10DarkTheme()) {
+    if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
         themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
@@ -28,7 +29,7 @@ BOOL CMPCThemeTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
 }
 
 void CMPCThemeTreeCtrl::fulfillThemeReqs() {
-    if (CMPCTheme::canUseWin10DarkTheme()) {
+    if (CMPCThemeUtil::canUseWin10DarkTheme()) {
         SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
     } else {
         SetWindowTheme(GetSafeHwnd(), L"", NULL);
@@ -63,9 +64,9 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             isFocus = 0 != (pNMCD->uItemState & CDIS_FOCUS);
             isHot = 0 != (pNMCD->uItemState & CDIS_HOT);
 
-            if (!CMPCTheme::canUseWin10DarkTheme()) { //regular theme is a bit ugly but better than Explorer theme.  we will clean up the fonts at least
+            if (!CMPCThemeUtil::canUseWin10DarkTheme()) { //regular theme is a bit ugly but better than Explorer theme.  we will clean up the fonts at least
                 pNMCD->uItemState &= ~(CDIS_FOCUS | CDIS_HOT | CDIS_SELECTED);
-                if (font.m_hObject == nullptr) CMPCTheme::getFontByType(font, GetWindowDC(), CMPCTheme::CDMenuFont);
+                if (font.m_hObject == nullptr) CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::MenuFont);
                 ::SelectObject(pNMCD->hdc, font.GetSafeHandle());
             }
 

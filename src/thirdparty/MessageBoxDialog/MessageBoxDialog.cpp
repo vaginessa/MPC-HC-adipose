@@ -38,6 +38,7 @@ modified to use Theme Font
 
 #include "MessageBoxDialog.h"
 #include "../mpc-hc/CMPCTheme.h"
+#include "../mpc-hc/CMPCThemeUtil.h"
 #include <uxtheme.h>
 
 #ifdef _DEBUG
@@ -793,7 +794,7 @@ void CMessageBoxDialog::CreateIconControl ( )
 		CRect rcDummy;
 
 		// Create the control for the icon.
-		BOOL created = m_stcIcon.Create(NULL, WS_CHILD | WS_VISIBLE | WS_DISABLED | SS_ICON,
+		m_stcIcon.Create(NULL, WS_CHILD | WS_VISIBLE | WS_DISABLED | SS_ICON,
 			rcDummy, this, (UINT)IDC_STATIC);
 
 		// Set the icon of the control.
@@ -821,7 +822,7 @@ void CMessageBoxDialog::CreateMessageControl ( )
     //mpc-hc use theme font for metrics
     //CFont* pOldFont = dcDisplay.SelectObject(GetFont());
     CFont font;
-    CMPCTheme::getFontByType(font, &dcDisplay, CMPCTheme::CDMessageFont);
+    CMPCThemeUtil::getFontByType(font, &dcDisplay, CMPCThemeUtil::MessageFont);
 	CFont* pOldFont = dcDisplay.SelectObject(&font);
 
 	// Define the maximum width of the message.

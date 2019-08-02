@@ -27,6 +27,7 @@
 #include "TunerScanDlg.h"
 #include "DVBChannel.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 
 enum TSC_COLUMN {
@@ -81,11 +82,11 @@ BOOL CTunerScanDlg::OnInitDialog()
     m_ChannelList.InsertColumn(TSCC_CHANNEL, _T("Channel"), LVCFMT_LEFT, 0);
 
     m_Progress.SetRange(0, 100);
-    CMPCTheme::fulfillThemeReqs(&m_Progress);
+    CMPCThemeUtil::fulfillThemeReqs(&m_Progress);
     m_Strength.SetRange(0, 100);
-    CMPCTheme::fulfillThemeReqs(&m_Strength);
+    CMPCThemeUtil::fulfillThemeReqs(&m_Strength);
     m_Quality.SetRange(0, 100);
-    CMPCTheme::fulfillThemeReqs(&m_Quality);
+    CMPCThemeUtil::fulfillThemeReqs(&m_Quality);
 
     m_btnSave.EnableWindow(FALSE);
 

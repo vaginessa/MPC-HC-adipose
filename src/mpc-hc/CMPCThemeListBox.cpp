@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeListBox.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include "mplayerc.h"
 
 IMPLEMENT_DYNAMIC(CMPCThemeListBox, CListBox)
@@ -8,7 +9,7 @@ IMPLEMENT_DYNAMIC(CMPCThemeListBox, CListBox)
 CMPCThemeListBox::CMPCThemeListBox() {
     themedToolTipCid = (UINT_PTR)-1;
     themedSBHelper = nullptr;
-    if (!CMPCTheme::canUseWin10DarkTheme()) {
+    if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
         themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
@@ -55,7 +56,7 @@ void CMPCThemeListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     GetText(lpDrawItemStruct->itemID, strText);
 
     CFont font;
-    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDDialogFont);
+    CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::DialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     dc.DrawText(strText, strText.GetLength(), &lpDrawItemStruct->rcItem, DT_VCENTER | DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
 
@@ -90,7 +91,7 @@ BOOL CMPCThemeListBox::PreTranslateMessage(MSG* pMsg) {
 void CMPCThemeListBox::PreSubclassWindow() {
     CListBox::PreSubclassWindow();
     if (AfxGetAppSettings().bMPCThemeLoaded) {
-        if (CMPCTheme::canUseWin10DarkTheme()) {
+        if (CMPCThemeUtil::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
@@ -131,11 +132,16 @@ void CMPCThemeListBox::updateToolTip(CPoint point) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
-        if (tid != -1 && themedToolTipCid != ti.uId && 0 != ti.uId) {
+
+        if (tid == -1 || themedToolTipCid != ti.uId) { //if no tooltip, or id has changed, remove old tool
             if (themedToolTip.GetToolCount() > 0) {
                 themedToolTip.DelTool(this);
                 themedToolTip.Activate(FALSE);
             }
+            themedToolTipCid = (UINT_PTR)-1;
+        }
+
+        if (tid != -1 && themedToolTipCid != ti.uId && 0 != ti.uId) { 
 
             themedToolTipCid = ti.uId;
 
@@ -156,7 +162,7 @@ void CMPCThemeListBox::OnMouseMove(UINT nFlags, CPoint point) {
 void CMPCThemeListBox::setIntegralHeight() {
     CWindowDC dc(this);
     CFont font;
-    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDDialogFont);
+    CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::DialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     CRect r(0, 0, 99, 99);
     CString test = _T("W");

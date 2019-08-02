@@ -39,7 +39,7 @@ void CMPCThemePropPageFrame::DrawCaption(CDC *pDC, CRect rect, LPCTSTR lpszCapti
     int nBkStyle = pDC->SetBkMode(TRANSPARENT);
 
     CFont f;
-    CMPCTheme::getFontByFace(f, pDC, CMPCTheme::uiTextFont, 10, FW_BOLD);
+    CMPCThemeUtil::getFontByFace(f, pDC, CMPCTheme::uiTextFont, 10, FW_BOLD);
     CFont *pFont = pDC->SelectObject(&f);
 
     pDC->DrawText(lpszCaption, rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);

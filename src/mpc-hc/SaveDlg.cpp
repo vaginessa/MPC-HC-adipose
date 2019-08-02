@@ -24,6 +24,7 @@
 #include "SaveDlg.h"
 #include "../filters/Filters.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 // CSaveDlg dialog
 
@@ -79,7 +80,7 @@ BOOL CSaveDlg::OnInitDialog()
     m_fromto.SetWindowText(str);
 
     m_progress.SetRange(0, 100);
-    CMPCTheme::fulfillThemeReqs(&m_progress);
+    CMPCThemeUtil::fulfillThemeReqs(&m_progress);
 
     if (FAILED(pGB.CoCreateInstance(CLSID_FilterGraph)) || !(pMC = pGB) || !(pME = pGB) || !(pMS = pGB)
             || FAILED(pME->SetNotifyWindow((OAHWND)m_hWnd, WM_GRAPHNOTIFY, 0))) {

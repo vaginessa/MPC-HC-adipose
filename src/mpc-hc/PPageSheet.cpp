@@ -24,6 +24,7 @@
 #include "PPageSheet.h"
 #include "SettingsDefines.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include <prsht.h>
 
 // CPPageSheet

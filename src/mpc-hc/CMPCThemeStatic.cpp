@@ -37,7 +37,7 @@ void CMPCThemeStatic::OnPaint() {
 
         if (!sTitle.IsEmpty()) {
             CFont font;
-            CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDDialogFont);
+            CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::DialogFont);
             CFont* pOldFont = dc.SelectObject(&font);
 
             UINT uFormat = 0;
@@ -132,7 +132,7 @@ BOOL CMPCThemeStatic::OnEraseBkgnd(CDC* pDC) {
             HBRUSH hBrush=CMPCThemeUtil::getCtlColorFileDialog(pDC->GetSafeHdc(), CTLCOLOR_STATIC);
             ::FillRect(pDC->GetSafeHdc(), r, hBrush);
         } else {
-            CMPCTheme::fillParentDialogBGClr(this, pDC, r);
+            CMPCThemeUtil::fillParentDialogBGClr(this, pDC, r);
         }
         return TRUE;
     } else {

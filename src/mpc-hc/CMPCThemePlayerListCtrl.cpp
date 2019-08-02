@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemePlayerListCtrl.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include "mplayerc.h"
 
 CMPCThemePlayerListCtrl::CMPCThemePlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
@@ -9,7 +10,7 @@ CMPCThemePlayerListCtrl::CMPCThemePlayerListCtrl(int tStartEditingDelay) : CPlay
     themeSBHelper = nullptr;
     hasCheckedColors = false;
     hasCBImages = false;
-    if (!CMPCTheme::canUseWin10DarkTheme()) {
+    if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
         themeSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
@@ -26,7 +27,7 @@ void CMPCThemePlayerListCtrl::PreSubclassWindow() {
     if (!AfxGetAppSettings().bMPCThemeLoaded) {
         EnableToolTips(TRUE);
     } else {
-        if (CMPCTheme::canUseWin10DarkTheme()) {
+        if (CMPCThemeUtil::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
@@ -35,8 +36,8 @@ void CMPCThemePlayerListCtrl::PreSubclassWindow() {
         if (nullptr != t) {
             lvsToolTip.SubclassWindow(t->m_hWnd);
         }
-        CMPCTheme::getFontByType(listMPCThemeFont, GetWindowDC(), CMPCTheme::CDMessageFont);
-        CMPCTheme::getFontByType(listMPCThemeFontBold, GetWindowDC(), CMPCTheme::CDMessageFont, false, true);
+        CMPCThemeUtil::getFontByType(listMPCThemeFont, GetWindowDC(), CMPCThemeUtil::MessageFont);
+        CMPCThemeUtil::getFontByType(listMPCThemeFontBold, GetWindowDC(), CMPCThemeUtil::MessageFont, false, true);
         SetFont(&listMPCThemeFont);
         subclassHeader();
     }
@@ -262,7 +263,7 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             rectDC = rRow;
             CDC dcMem;
             CBitmap bmMem;
-            CMPCTheme::initMemDC(pDC, dcMem, bmMem, rectDC);
+            CMPCThemeUtil::initMemDC(pDC, dcMem, bmMem, rectDC);
             rect.OffsetRect(-rectDC.TopLeft());
             rText.OffsetRect(-rectDC.TopLeft());
             rIcon.OffsetRect(-rectDC.TopLeft());
@@ -316,7 +317,7 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
                             rIcon.DeflateRect(0, (rIcon.Height() - rIcon.Width()) / 2); //as tall as wide
                         }
 
-                        CMPCTheme::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
+                        CMPCThemeUtil::drawCheckBox(isChecked, false, false, rIcon, &dcMem);
                     } else {
                         if (dwStyle == LVS_ICON) {
                         } else if (dwStyle == LVS_SMALLICON || dwStyle == LVS_LIST || dwStyle == LVS_REPORT) {
@@ -338,7 +339,7 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
                     int cbYMargin = (rect.Height() - cbSize - 1) / 2;
                     int cbXMargin = (contentLeft - rect.left - cbSize) / 2;
                     CRect rcb = { rect.left + cbXMargin, rect.top + cbYMargin, rect.left + cbXMargin + cbSize, rect.top + cbYMargin + cbSize };
-                    CMPCTheme::drawCheckBox(isChecked, false, true, rcb, &dcMem);
+                    CMPCThemeUtil::drawCheckBox(isChecked, false, true, rcb, &dcMem);
                 }
             }
 
@@ -382,9 +383,9 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             if (getFlaggedItem(nItem)) { //could be a setting, but flagged items are bold for now
                 dcMem.SelectObject(listMPCThemeFontBold);
             }
-            //CMPCTheme::DrawBufferedText(pDC, text, rText, textFormat);
+            //CMPCThemeUtil::DrawBufferedText(pDC, text, rText, textFormat);
             dcMem.DrawText(text, rText, textFormat);
-            CMPCTheme::flushMemDC(pDC, dcMem, rectDC);
+            CMPCThemeUtil::flushMemDC(pDC, dcMem, rectDC);
             pDC->SetTextColor(oldTextColor);
             pDC->SetBkColor(oldBkColor);
         }

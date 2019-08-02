@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeStaticLink.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 CMPCThemeStaticLink::CMPCThemeStaticLink(LPCTSTR lpText, bool bDeleteOnDestroy) : CStaticLink(lpText, bDeleteOnDestroy) {
 }
@@ -51,10 +52,10 @@ void CMPCThemeStaticLink::OnPaint() {
             dc.SetTextColor(CMPCTheme::TextFGColor);
         }
         CFont f;
-        CMPCTheme::getFontByType(f, &dc, CMPCTheme::CDMessageFont, true);
+        CMPCThemeUtil::getFontByType(f, &dc, CMPCThemeUtil::MessageFont, true);
         CFont *oldFont = dc.SelectObject(&f);
         dc.DrawText(text, r, format | DT_CALCRECT);
-        CMPCTheme::fillParentDialogBGClr(this, &dc, r);
+        CMPCThemeUtil::fillParentDialogBGClr(this, &dc, r);
         dc.DrawText(text, r, format);
 
         dc.SelectObject(oldFont);

@@ -26,6 +26,7 @@
 #include "PPageSubMisc.h"
 #include "mplayerc.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include "CMPCThemeMenu.h"
 
 // User Defined Window Messages
@@ -66,7 +67,7 @@ BOOL CSubtitleUpDlg::OnInitDialog()
     __super::OnInitDialog();
 
     m_progress.SetParent(&m_status);
-    CMPCTheme::fulfillThemeReqs(&m_progress);
+    CMPCThemeUtil::fulfillThemeReqs(&m_progress);
 
     int n = 0, curPos = 0;
     CArray<int> columnWidth;

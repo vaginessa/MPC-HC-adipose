@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeToolTipCtrl.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include <afxglobals.h>
 
 
@@ -33,7 +34,7 @@ END_MESSAGE_MAP()
 
 void CMPCThemeToolTipCtrl::drawText(CDC& dc, CMPCThemeToolTipCtrl* tt, CRect& rect, bool calcRect) {
     CFont font;
-    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDMessageFont);
+    CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::MessageFont);
     CFont* pOldFont = dc.SelectObject(&font);
 
     CString text;

@@ -2,6 +2,7 @@
 #include "CMPCThemeRadioOrCheck.h"
 #include "CMPCTheme.h"
 #include "CMPCThemeButton.h"
+#include "CMPCThemeUtil.h"
 
 CMPCThemeRadioOrCheck::CMPCThemeRadioOrCheck() {
     isHover = false;
@@ -28,7 +29,7 @@ void CMPCThemeRadioOrCheck::PreSubclassWindow() {
     ASSERT(buttonType != unknownType);
 
     buttonStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
-    CMPCTheme::getFontByType(font, GetWindowDC(), CMPCTheme::CDDialogFont);
+    CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::DialogFont);
     SetFont(&font); //DSUtil checks metrics and resizes.  if our font is a bit different, things can look funny
     CButton::PreSubclassWindow();
 }
@@ -85,11 +86,11 @@ void CMPCThemeRadioOrCheck::OnPaint() {
             rectCheck.bottom = rectCheck.top + cbHeight;
 
             if (buttonType == checkType) {
-                CMPCTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
+                CMPCThemeUtil::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
             } else if (buttonType == threeStateType) {
-                CMPCTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
+                CMPCThemeUtil::drawCheckBox(checkState, isHover, true, rectCheck, &dc);
             } else if (buttonType == radioType) {
-                CMPCTheme::drawCheckBox(checkState, isHover, true, rectCheck, &dc, true);
+                CMPCThemeUtil::drawCheckBox(checkState, isHover, true, rectCheck, &dc, true);
             }
 
             if (!sTitle.IsEmpty()) {

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeHeaderCtrl.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 
 CMPCThemeHeaderCtrl::CMPCThemeHeaderCtrl() {
     hotItem = -2;
@@ -83,7 +84,7 @@ void CMPCThemeHeaderCtrl::drawItem(int nItem, CRect rText, CDC* pDC) {
         pDC->SetTextColor(textColor);
         pDC->SetBkColor(bgColor);
 
-        CMPCTheme::DrawBufferedText(pDC, text, rText, textFormat);
+        CMPCThemeUtil::DrawBufferedText(pDC, text, rText, textFormat);
     }
 
     pDC->SetTextColor(oldTextColor);
@@ -158,7 +159,7 @@ void CMPCThemeHeaderCtrl::OnPaint() {
     CMemDC memDC(dc, this);
     CDC* pDC = &memDC.GetDC();
     CFont font;
-    CMPCTheme::getFontByType(font, pDC, CMPCTheme::CDDialogFont);
+    CMPCThemeUtil::getFontByType(font, pDC, CMPCThemeUtil::DialogFont);
     CFont* pOldFont = pDC->SelectObject(&font);
 
     CRect rectClip;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CMPCThemeComboBox.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include "mplayerc.h"
 
 IMPLEMENT_DYNAMIC(CMPCThemeComboBox, CComboBox)
@@ -31,7 +32,7 @@ void CMPCThemeComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF b
     //textRect.left += 3;
 
     CFont font;
-    CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDDialogFont);
+    CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::DialogFont);
     CFont* pOldFont = dc.SelectObject(&font);
     dc.DrawText(strText, &textRect, DT_VCENTER | DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
     dc.SelectObject(pOldFont);
@@ -121,9 +122,9 @@ void CMPCThemeComboBox::OnPaint() {
         arrowLeft = rDownArrow.left + (rDownArrow.Width() - arrowWidth) / 2;
         arrowTop = rDownArrow.top + (rDownArrow.Height() - (arrowHeight + 1) + 1) / 2; //add 1 to height because arrow is 1 taller than BMP.  add 1 to force rounding positive
 
-        CMPCTheme::Draw2BitTransparent(dc, arrowLeft, arrowTop, arrowWidth, arrowUpperHeight, arrowUpperBMP, arrClr[0]);
-        CMPCTheme::Draw2BitTransparent(dc, arrowLeft, arrowTop + 1, arrowWidth, arrowUpperHeight, arrowUpperBMP, arrClr[1]);
-        CMPCTheme::Draw2BitTransparent(dc, arrowLeft, arrowTop + 1, arrowWidth, arrowHeight, arrowLowerBMP, arrClr[2]);
+        CMPCThemeUtil::Draw2BitTransparent(dc, arrowLeft, arrowTop, arrowWidth, arrowUpperHeight, arrowUpperBMP, arrClr[0]);
+        CMPCThemeUtil::Draw2BitTransparent(dc, arrowLeft, arrowTop + 1, arrowWidth, arrowUpperHeight, arrowUpperBMP, arrClr[1]);
+        CMPCThemeUtil::Draw2BitTransparent(dc, arrowLeft, arrowTop + 1, arrowWidth, arrowHeight, arrowLowerBMP, arrClr[2]);
 
         rBorder = r;
         dc.FrameRect(rBorder, &fb);

@@ -8,7 +8,7 @@ CMPCThemeEdit::CMPCThemeEdit() {
     themedSBHelper = nullptr;
     isFileDialogChild = false;
 //horizontal scrollbar broken for CEdit, we must theme ourselves
-//    if (!CMPCTheme::canUseWin10DarkTheme()) {
+//    if (!CMPCThemeUtil::canUseWin10DarkTheme()()) {
         themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
 //    }
 }
@@ -36,7 +36,7 @@ void CMPCThemeEdit::PreSubclassWindow() {
         GetClientRect(r);
         r.DeflateRect(2, 2); //some default padding for those spaceless fonts
         SetRect(r);
-        if (CMPCTheme::canUseWin10DarkTheme()) {
+        if (CMPCThemeUtil::canUseWin10DarkTheme()) {
             SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
@@ -80,7 +80,7 @@ void CMPCThemeEdit::OnNcPaint() {
 void CMPCThemeEdit::SetFixedWidthFont(CFont& f) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         CWindowDC dc(this);
-        CMPCTheme::getFontByType(font, &dc, CMPCTheme::CDFixedFont);
+        CMPCThemeUtil::getFontByType(font, &dc, CMPCThemeUtil::fixedFont);
         SetFont(&font);
     } else {
         SetFont(&f);

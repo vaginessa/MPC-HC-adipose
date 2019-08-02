@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "CMPCThemeMenu.h"
 #include "CMPCTheme.h"
+#include "CMPCThemeUtil.h"
 #include <strsafe.h>
 #include "AppSettings.h"
 #include "PPageAccelTbl.h"
@@ -271,7 +272,7 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
         COLORREF oldTextFGColor = pDC->SetTextColor(TextFGColor);
         CFont font;
-        CMPCTheme::getFontByType(font, pDC, CMPCTheme::CDMenuFont);
+        CMPCThemeUtil::getFontByType(font, pDC, CMPCThemeUtil::MenuFont);
         CFont* pOldFont = pDC->SelectObject(&font);
 
 
@@ -300,7 +301,7 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
             if (mInfo.hSubMenu) {
                 CFont sfont;
-                CMPCTheme::getFontByFace(sfont, pDC, CMPCTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CMPCThemeUtil::getFontByFace(sfont, pDC, CMPCTheme::uiSymbolFont, 14, FW_BOLD); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
 
                 pDC->SelectObject(&sfont);
                 pDC->SetTextColor(ArrowColor);
@@ -319,7 +320,7 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
                     size = 10;
                 }
                 CFont bFont;
-                CMPCTheme::getFontByFace(bFont, pDC, CMPCTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
+                CMPCThemeUtil::getFontByFace(bFont, pDC, CMPCTheme::uiSymbolFont, size, FW_REGULAR); //this seems right but explorer has subpixel hints and we don't. why (directdraw)?
                 pDC->SelectObject(&bFont);
                 pDC->SetTextColor(TextFGColor);
                 pDC->DrawText(check, rectIcon, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
@@ -358,13 +359,13 @@ void CMPCThemeMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
         lpMeasureItemStruct->itemWidth = 0;
         lpMeasureItemStruct->itemHeight = separatorHeight;
     } else {
-        CSize cs = CMPCTheme::GetTextSize(mo->m_strCaption, hDC, CMPCTheme::CDMenuFont);
+        CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
         if (mo->isMenubar) {
             lpMeasureItemStruct->itemWidth = cs.cx;
         } else {
             lpMeasureItemStruct->itemWidth = iconSpacing + cs.cx + postTextSpacing + subMenuPadding;
             if (mo->m_strAccel.GetLength() > 0) {
-                cs = CMPCTheme::GetTextSize(mo->m_strAccel, hDC, CMPCTheme::CDMenuFont);
+                cs = CMPCThemeUtil::GetTextSize(mo->m_strAccel, hDC, CMPCThemeUtil::MenuFont);
                 lpMeasureItemStruct->itemWidth += accelSpacing + cs.cx;
             }
         }
