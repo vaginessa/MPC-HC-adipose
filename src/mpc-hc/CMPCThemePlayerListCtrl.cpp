@@ -196,11 +196,16 @@ void CMPCThemePlayerListCtrl::updateToolTip(CPoint point) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
-        if (tid != -1 && themedToolTipCid != ti.uId) {
+
+        if (tid == -1 || themedToolTipCid != ti.uId) { //if no tooltip, or id has changed, remove old tool
             if (themedToolTip.GetToolCount() > 0) {
                 themedToolTip.DelTool(this);
                 themedToolTip.Activate(FALSE);
             }
+            themedToolTipCid = (UINT_PTR)-1;
+        }
+
+        if (tid != -1 && themedToolTipCid != ti.uId && 0 != ti.uId) {
 
             themedToolTipCid = ti.uId;
 

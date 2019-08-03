@@ -128,7 +128,7 @@ void CMPCThemeListBox::OnLbnSelchange() {
 
 
 void CMPCThemeListBox::updateToolTip(CPoint point) {
-    if (AfxGetAppSettings().bMPCThemeLoaded) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themedToolTip) {
         TOOLINFO ti = { 0 };
         UINT_PTR tid = OnToolHitTest(point, &ti);
         //OnToolHitTest returns -1 on failure but doesn't update uId to match
