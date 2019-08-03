@@ -29,7 +29,7 @@
 
 // CPlayerSubresyncBar
 
-IMPLEMENT_DYNAMIC(CPlayerSubresyncBar, CPlayerBar)
+IMPLEMENT_DYNAMIC(CPlayerSubresyncBar, CMPCThemePlayerBar)
 CPlayerSubresyncBar::CPlayerSubresyncBar(CMainFrame* pMainFrame)
     : m_pSubLock(nullptr)
     , m_pMainFrame(pMainFrame)
@@ -567,7 +567,7 @@ bool CPlayerSubresyncBar::ModEnd(int iItem, REFERENCE_TIME t, bool bReset)
     return bRet;
 }
 
-BEGIN_MESSAGE_MAP(CPlayerSubresyncBar, CPlayerBar)
+BEGIN_MESSAGE_MAP(CPlayerSubresyncBar, CMPCThemePlayerBar)
     ON_WM_MEASUREITEM()
     ON_WM_SIZE()
     ON_NOTIFY(LVN_GETDISPINFO, IDC_SUBRESYNCLIST, OnGetDisplayInfo)

@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "PlayerBar.h"
-#include "PlayerListCtrl.h"
+#include "CMPCThemePlayerBar.h"
+#include "CMPCThemePlayerListCtrl.h"
 #include "../Subtitles/STS.h"
 #include "../Subtitles/VobSubFile.h"
 #include <map>
@@ -34,7 +34,7 @@ interface ISubStream;
 
 // CPlayerSubresyncBar
 
-class CPlayerSubresyncBar : public CPlayerBar
+class CPlayerSubresyncBar : public CMPCThemePlayerBar
 {
     DECLARE_DYNAMIC(CPlayerSubresyncBar)
 
@@ -42,7 +42,7 @@ private:
     CString m_strYes, m_strNo;
     CString m_strYesMenu, m_strNoMenu;
 
-    CPlayerListCtrl m_list;
+    CMPCThemePlayerListCtrl m_list;
 
     CMainFrame* m_pMainFrame;
 
