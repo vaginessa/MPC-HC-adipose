@@ -93,7 +93,9 @@ void CMPCThemeButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool
             int shieldY = rect.top + (rect.Height() - iconsize) / 2;
             CRect centerRect = rect;
             pDC->DrawText(strText, rect, format | DT_CALCRECT);
-            rect.OffsetRect((centerRect.Width() - rect.Width()) / 2, (centerRect.Height() - rect.Height()) / 2);
+            rect.top = centerRect.top;
+            rect.bottom = centerRect.bottom;
+            rect.OffsetRect((centerRect.Width() - rect.Width()) / 2, 0);
             rect.OffsetRect(iconsize / 2, 0);
             int shieldX = rect.left - iconsize - 1;
             HICON hShieldIcon = (HICON)LoadImage(0, IDI_SHIELD, IMAGE_ICON, iconsize, iconsize, LR_SHARED);
