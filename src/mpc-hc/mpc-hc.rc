@@ -388,7 +388,7 @@ BEGIN
     GROUPBOX        "Association",IDC_STATIC3,5,157,286,26
     CONTROL         "Use the format-specific icons",IDC_CHECK8,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,169,190,8
     PUSHBUTTON      "Run as &administrator",IDC_BUTTON1,10,166,135,14
-    PUSHBUTTON      "Set as &default program",IDC_BUTTON7,202,160,85,20,BS_MULTILINE
+    PUSHBUTTON      "Set as &default program",IDC_BUTTON7,190,163,96,14,BS_MULTILINE
     GROUPBOX        "Real-Time Streaming Protocol handler (for rtsp://... URLs)",IDC_STATIC,5,186,286,24
     CONTROL         "RealMedia",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,10,198,50,8
     CONTROL         "QuickTime",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,64,198,50,8
@@ -2280,6 +2280,11 @@ BEGIN
 END
 
 IDD_FAVORGANIZE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_PPAGEFORMATS AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

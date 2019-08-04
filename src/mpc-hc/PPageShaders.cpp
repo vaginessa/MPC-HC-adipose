@@ -257,12 +257,12 @@ BOOL CPPageShaders::OnInitDialog()
         VERIFY(m_PresetsBox.SelectString(-1, preset) != CB_ERR);
     }
 
-    SetButtonIcon(IDC_BUTTON6, IDB_SHADER_UP);
-    SetButtonIcon(IDC_BUTTON7, IDB_SHADER_DOWN);
-    SetButtonIcon(IDC_BUTTON8, IDB_SHADER_DEL);
-    SetButtonIcon(IDC_BUTTON9, IDB_SHADER_UP);
-    SetButtonIcon(IDC_BUTTON10, IDB_SHADER_DOWN);
-    SetButtonIcon(IDC_BUTTON11, IDB_SHADER_DEL);
+    SetMPCThemeButtonIcon(IDC_BUTTON6, IDB_SHADER_UP);
+    SetMPCThemeButtonIcon(IDC_BUTTON7, IDB_SHADER_DOWN);
+    SetMPCThemeButtonIcon(IDC_BUTTON8, IDB_SHADER_DEL);
+    SetMPCThemeButtonIcon(IDC_BUTTON9, IDB_SHADER_UP);
+    SetMPCThemeButtonIcon(IDC_BUTTON10, IDB_SHADER_DOWN);
+    SetMPCThemeButtonIcon(IDC_BUTTON11, IDB_SHADER_DEL);
 
     m_bCurrentPresetChanged = false;
 

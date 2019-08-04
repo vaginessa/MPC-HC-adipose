@@ -19,7 +19,7 @@ BOOL CMPCThemePPageBase::OnInitDialog() {
     return 0;
 }
 
-void CMPCThemePPageBase::SetButtonIcon(UINT nIDButton, UINT nIDIcon) { //non-virtual override, only used internally
+void CMPCThemePPageBase::SetMPCThemeButtonIcon(UINT nIDButton, UINT nIDIcon) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (!m_buttonIcons.count(nIDIcon)) {
             CImage img, imgEnabled, imgDisabled;
