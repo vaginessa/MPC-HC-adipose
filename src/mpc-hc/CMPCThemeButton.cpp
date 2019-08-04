@@ -8,6 +8,7 @@ CMPCThemeButton::CMPCThemeButton() {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         m_nFlatStyle = CMFCButton::BUTTONSTYLE_FLAT; //just setting this to get hovering working
     }
+    drawShield = false;
 }
 
 CMPCThemeButton::~CMPCThemeButton() {
@@ -29,10 +30,15 @@ BEGIN_MESSAGE_MAP(CMPCThemeButton, CMFCButton)
     ON_WM_SETFONT()
     ON_WM_GETFONT()
     ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CMPCThemeButton::OnNMCustomdraw)
+    ON_MESSAGE(BCM_SETSHIELD, &setShieldIcon)
 END_MESSAGE_MAP()
 
+LRESULT CMPCThemeButton::setShieldIcon(WPARAM wParam, LPARAM lParam) {
+    drawShield = (BOOL)lParam;
+    return 1; //pass it along
+}
 
-void CMPCThemeButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool selected, bool highLighted, bool focused, bool disabled, bool thin) {
+void CMPCThemeButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool selected, bool highLighted, bool focused, bool disabled, bool thin, bool shield) {
     CBrush fb, fb2;
     fb.CreateSolidBrush(CMPCTheme::ButtonBorderOuterColor);
 
@@ -81,7 +87,22 @@ void CMPCThemeButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool
         else
             oldTextFGColor = pDC->SetTextColor(CMPCTheme::TextFGColor);
 
-        pDC->DrawText(strText, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        UINT format = DT_CENTER | DT_VCENTER | DT_SINGLELINE;
+        if (shield) {
+            int iconsize = MulDiv(pDC->GetDeviceCaps(LOGPIXELSX), 1, 6);
+            int shieldY = rect.top + (rect.Height() - iconsize) / 2;
+            CRect centerRect = rect;
+            pDC->DrawText(strText, rect, format | DT_CALCRECT);
+            rect.OffsetRect((centerRect.Width() - rect.Width()) / 2, (centerRect.Height() - rect.Height()) / 2);
+            rect.OffsetRect(iconsize / 2, 0);
+            int shieldX = rect.left - iconsize - 1;
+            HICON hShieldIcon = (HICON)LoadImage(0, IDI_SHIELD, IMAGE_ICON, iconsize, iconsize, LR_SHARED);
+            if (hShieldIcon) {
+                DrawIconEx(pDC->GetSafeHdc(), shieldX, shieldY, hShieldIcon, iconsize, iconsize, 0, NULL, DI_NORMAL);
+            }
+        }
+
+        pDC->DrawText(strText, rect, format);
 
         pDC->SetTextColor(oldTextFGColor);
         pDC->SetBkMode(nMode);
@@ -102,8 +123,9 @@ void CMPCThemeButton::drawButton(HDC hdc, CRect rect, UINT state) {
     GetImageList(&imgList);
     CImageList *images = CImageList::FromHandlePermanent(imgList.himl);
     bool thin = (images != nullptr); //thin borders for image buttons
-   
-    drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin);
+
+
+    drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin, drawShield);
 
     int imageIndex = 0; //Normal
     if (state & ODS_DISABLED) {
