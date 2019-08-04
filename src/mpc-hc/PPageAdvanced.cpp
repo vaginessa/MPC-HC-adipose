@@ -63,6 +63,9 @@ BOOL CPPageAdvanced::OnInitDialog()
         pToolTip->SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOREDRAW | SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOCOPYBITS | SWP_NOOWNERZORDER);
     }
 
+    GetDlgItem(IDC_EDIT1)->GetWindowRect(editRect);
+    ScreenToClient(editRect);
+
     m_spinButtonCtrl.SetBuddy(GetDlgItem(IDC_EDIT1));
 
     GetDlgItem(IDC_EDIT1)->ShowWindow(SW_HIDE);
@@ -355,6 +358,10 @@ void CPPageAdvanced::OnLvnItemchangedList(NMHDR* pNMHDR, LRESULT* pResult)
                 setDialogItemsVisibility({ IDC_COMBO1, IDC_RADIO1, IDC_RADIO2 }, SW_HIDE);
                 GetDlgItem(IDC_EDIT1)->ModifyStyle(0, ES_NUMBER, 0);
                 const auto& range = pItemInt->GetRange();
+                if (!m_spinButtonCtrl.GetBuddy()) {
+                    GetDlgItem(IDC_EDIT1)->MoveWindow(editRect, TRUE);
+                    m_spinButtonCtrl.SetBuddy(GetDlgItem(IDC_EDIT1));
+                }
                 m_spinButtonCtrl.SetRange32(range.first, range.second);
                 m_spinButtonCtrl.SetPos32(pItemInt->GetValue());
                 m_spinButtonCtrl.ShowWindow(SW_SHOW);
@@ -363,6 +370,7 @@ void CPPageAdvanced::OnLvnItemchangedList(NMHDR* pNMHDR, LRESULT* pResult)
                 setDialogItemsVisibility({ IDC_COMBO1, IDC_RADIO1, IDC_RADIO2, IDC_BUTTON1, IDC_SPIN1 }, SW_HIDE);
                 GetDlgItem(IDC_EDIT1)->ModifyStyle(ES_NUMBER, 0, 0);
                 SetDlgItemText(IDC_EDIT1, pItemCString->GetValue());
+                m_spinButtonCtrl.SetBuddy(NULL);
                 GetDlgItem(IDC_EDIT1)->ShowWindow(SW_SHOW);
             } else {
                 UNREACHABLE_CODE();

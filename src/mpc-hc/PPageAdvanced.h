@@ -229,6 +229,7 @@ private:
         }
         return iItem;
     };
+    CRect editRect;
 
 protected:
     CMPCThemePlayerListCtrl m_list;
