@@ -18,6 +18,7 @@ const COLORREF CMPCTheme::MenuItemDisabledColor = COLORREF(RGB(109, 109, 109));
 
 const COLORREF CMPCTheme::ShadowColor = COLORREF(RGB(25, 25, 25));
 const COLORREF CMPCTheme::TextFGColor = COLORREF(RGB(255, 255, 255));
+const COLORREF CMPCTheme::TextFGColorFade = COLORREF(RGB(200, 200, 200));
 const COLORREF CMPCTheme::ContentTextDisabledFGColorFade = COLORREF(RGB(109, 109, 109));
 const COLORREF CMPCTheme::ContentTextDisabledFGColorFade2 = COLORREF(RGB(60, 60, 60)); //even more faded, used for NA text on CListCtrl/audio switcher
 
@@ -88,7 +89,9 @@ const COLORREF CMPCTheme::ColumnHeaderHotColor = COLORREF(RGB(67, 67, 67));;
 const COLORREF CMPCTheme::StaticEtchedColor = COLORREF(RGB(65, 65, 65));
 
 const COLORREF CMPCTheme::ListCtrlDisabledBGColor = COLORREF(RGB(40, 40, 40));
-const COLORREF CMPCTheme::ListCtrlGridColor = COLORREF(RGB(99, 99, 99));
+const COLORREF CMPCTheme::ListCtrlGridColor = COLORREF(RGB(43, 43, 43));
+const COLORREF CMPCTheme::HeaderCtrlGridColor = COLORREF(RGB(99, 99, 99));
+const COLORREF CMPCTheme::AudioSwitcherGridColor = COLORREF(RGB(99, 99, 99));
 
 const COLORREF CMPCTheme::TabCtrlBorderColor = COLORREF(RGB(99, 99, 99));
 const COLORREF CMPCTheme::TabCtrlInactiveColor = COLORREF(RGB(40, 40, 40));
@@ -105,6 +108,12 @@ const COLORREF CMPCTheme::W10DarkThemeFileDialogInjectedEditBorderColor = COLORR
 const COLORREF CMPCTheme::ProgressBarBGColor = COLORREF(RGB(0, 0, 0));
 const COLORREF CMPCTheme::ProgressBarColor = COLORREF(RGB(75, 75, 75));
 
+const COLORREF CMPCTheme::SubresyncFadeText1 = COLORREF(RGB(190, 190, 190));
+const COLORREF CMPCTheme::SubresyncFadeText2 = COLORREF(RGB(160, 160, 160));
+const COLORREF CMPCTheme::SubresyncActiveFadeText = COLORREF(RGB(215, 215, 215));
+const COLORREF CMPCTheme::SubresyncHLColor1 = COLORREF(RGB(100, 100, 100));
+const COLORREF CMPCTheme::SubresyncHLColor2 = COLORREF(RGB(80, 80, 80));
+const COLORREF CMPCTheme::SubresyncGridSepColor = COLORREF(RGB(220, 220, 220));
 
 wchar_t* const CMPCTheme::uiTextFont = L"Segoe UI";
 wchar_t* const CMPCTheme::uiStaticTextFont = L"Segoe UI Semilight";

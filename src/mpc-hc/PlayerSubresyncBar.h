@@ -34,7 +34,9 @@ interface ISubStream;
 
 // CPlayerSubresyncBar
 
+
 class CPlayerSubresyncBar : public CMPCThemePlayerBar
+    ,public CMPCThemeListCtrlCustomInterface
 {
     DECLARE_DYNAMIC(CPlayerSubresyncBar)
 
@@ -151,6 +153,9 @@ public:
 protected:
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
+    virtual void GetCustomTextColors(int nItem, int iSubItem, COLORREF& clrText, COLORREF& clrTextBk);
+    virtual void DoCustomPrePaint();
+    virtual void GetCustomGridColors(int nItem, COLORREF& horzGridColor, COLORREF& vertGridColor);
 
     bool HandleShortCuts(const MSG* pMsg);
 
@@ -165,5 +170,5 @@ protected:
     afx_msg void OnRclickList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnNMDblclkList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnLvnKeydownList(NMHDR* pNMHDR, LRESULT* pResult);
-    afx_msg void OnCustomdrawList(NMHDR* pNMHDR, LRESULT* pResult);
+    void OnCustomdrawList(NMHDR* pNMHDR, LRESULT* pResult);
 };

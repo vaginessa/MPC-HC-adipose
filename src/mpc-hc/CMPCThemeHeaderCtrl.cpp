@@ -45,7 +45,7 @@ void CMPCThemeHeaderCtrl::drawItem(int nItem, CRect rText, CDC* pDC) {
     pDC->FillSolidRect(rGrid, bgColor);
 
     CPen gridPen, *oldPen;
-    gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::ListCtrlGridColor);
+    gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::HeaderCtrlGridColor);
     oldPen = pDC->SelectObject(&gridPen);
     if (nItem != 0) {
         //we will draw left border, which lines up with grid.  this differs from native widget

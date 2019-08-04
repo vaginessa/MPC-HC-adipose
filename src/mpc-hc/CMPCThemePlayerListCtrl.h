@@ -5,6 +5,13 @@
 #include "CMPCThemeUtil.h"
 #include "CMPCThemeHeaderCtrl.h"
 
+class CMPCThemeListCtrlCustomInterface {
+public:
+    virtual void GetCustomTextColors(int nItem, int iSubItem, COLORREF& clrText, COLORREF& clrTextBk)=0;
+    virtual void DoCustomPrePaint() = 0;
+    virtual void GetCustomGridColors(int nItem, COLORREF& horzGridColor, COLORREF& vertGridColor) = 0;
+};
+
 class CMPCThemePlayerListCtrl :	public CPlayerListCtrl, CMPCThemeUtil, CMPCThemeScrollable {
 public:
 	CMPCThemePlayerListCtrl(int tStartEditingDelay = 500);
@@ -23,6 +30,7 @@ public:
     void setItemTextWithDefaultFlag(int nItem, int nSubItem, LPCTSTR lpszText, bool flagged);
     void setFlaggedItem(int iItem, bool flagged);
     bool getFlaggedItem(int iItem);
+    void setColorInterface(CMPCThemeListCtrlCustomInterface* iface) { customThemeInterface = iface; };
 
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNcPaint();
@@ -46,6 +54,7 @@ protected:
     bool fullRowSelect;
     CMPCThemeHeaderCtrl themedHdrCtrl;
     CFont listMPCThemeFont, listMPCThemeFontBold;
+    CMPCThemeListCtrlCustomInterface* customThemeInterface;
     void drawItem(CDC* pDC, int nItem, int nSubItem);
     virtual void PreSubclassWindow();
 public:

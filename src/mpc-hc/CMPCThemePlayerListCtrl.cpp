@@ -10,6 +10,7 @@ CMPCThemePlayerListCtrl::CMPCThemePlayerListCtrl(int tStartEditingDelay) : CPlay
     themeSBHelper = nullptr;
     hasCheckedColors = false;
     hasCBImages = false;
+    customThemeInterface = nullptr;
     if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
         themeSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
@@ -78,8 +79,11 @@ void CMPCThemePlayerListCtrl::setAdditionalStyles(DWORD styles) {
             themeGridLines = true;
         }
         if (styles & LVS_EX_FULLROWSELECT) {
-            stylesToAdd &= ~LVS_EX_FULLROWSELECT;
-            stylesToRemove |= LVS_EX_FULLROWSELECT;
+//we need these to remain, or else other columns may not get refreshed on a selection change.
+//no regressions observed yet, but unclear why we removed this style for custom draw previously
+//error was observed with playersubresyncbar
+//            stylesToAdd &= ~LVS_EX_FULLROWSELECT;
+//            stylesToRemove |= LVS_EX_FULLROWSELECT;
             fullRowSelect = true;
         }
         if (styles & LVS_EX_DOUBLEBUFFER) { //we will buffer ourselves
@@ -260,10 +264,12 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             COLORREF oldBkColor = pDC->GetBkColor();
 
             CString text = GetItemText(nItem, nSubItem);
+            if (nullptr != customThemeInterface) { //subclasses can override colors here
+                customThemeInterface->GetCustomTextColors(nItem, nSubItem, textColor, bgColor);
+            }
+
             pDC->SetTextColor(textColor);
             pDC->SetBkColor(bgColor);
-
-
 
             rectDC = rRow;
             CDC dcMem;
@@ -348,10 +354,9 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
                 }
             }
 
-            COLORREF bgClr = CMPCTheme::ContentBGColor;
             if (IsWindowEnabled()) {
                 if (GetItemState(nItem, LVIS_SELECTED) == LVIS_SELECTED && (nSubItem == 0 || fullRowSelect)) {
-                    bgClr = CMPCTheme::ContentSelectedColor;
+                    bgColor = CMPCTheme::ContentSelectedColor;
                     if (LVS_REPORT != dwStyle) { //in list mode we don't fill the "whole" column
                         CRect tmp = rText;
                         dcMem.DrawText(text, tmp, textFormat | DT_CALCRECT); //end of string
@@ -359,28 +364,42 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
                     }
                 } else if (hasCheckedColors) {
                     if (isChecked && checkedBGClr != -1) {
-                        bgClr = checkedBGClr;
+                        bgColor = checkedBGClr;
                     }
                     if (isChecked && checkedTextClr != -1) dcMem.SetTextColor(checkedTextClr);
                     if (!isChecked && uncheckedTextClr != -1)
                         dcMem.SetTextColor(uncheckedTextClr);
                 }
-                dcMem.FillSolidRect(rTextBG, bgClr);
+                dcMem.FillSolidRect(rTextBG, bgColor);
 
-                if (themeGridLines) {
+                if (themeGridLines || nullptr != customThemeInterface) {
                     CRect rGrid = rect;
                     rGrid.bottom -= 1;
-                    CPen gridPen, *oldPen;
-                    gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::WindowBorderColorDim);
-                    oldPen = dcMem.SelectObject(&gridPen);
+                    CPen gridPenV, gridPenH, *oldPen;
+                    if (nullptr != customThemeInterface) {
+                        COLORREF horzGridColor, vertGridColor;
+                        customThemeInterface->GetCustomGridColors(nItem, horzGridColor, vertGridColor);
+                        gridPenV.CreatePen(PS_SOLID, 1, vertGridColor);
+                        gridPenH.CreatePen(PS_SOLID, 1, horzGridColor);
+                    } else {
+                        gridPenV.CreatePen(PS_SOLID, 1, CMPCTheme::ListCtrlGridColor);
+                        gridPenH.CreatePen(PS_SOLID, 1, CMPCTheme::ListCtrlGridColor);
+                    }
+
+                    oldPen = dcMem.SelectObject(&gridPenV);
                     if (nSubItem != 0) {
                         dcMem.MoveTo(rGrid.TopLeft());
                         dcMem.LineTo(rGrid.left, rGrid.bottom);
                     } else {
                         dcMem.MoveTo(rGrid.left, rGrid.bottom);
                     }
+
+                    dcMem.SelectObject(&gridPenH);
                     dcMem.LineTo(rGrid.BottomRight());
+
+                    dcMem.SelectObject(&gridPenV);
                     dcMem.LineTo(rGrid.right, rGrid.top);
+
                     dcMem.SelectObject(oldPen);
                 }
             }
@@ -388,7 +407,6 @@ void CMPCThemePlayerListCtrl::drawItem(CDC* pDC, int nItem, int nSubItem) {
             if (getFlaggedItem(nItem)) { //could be a setting, but flagged items are bold for now
                 dcMem.SelectObject(listMPCThemeFontBold);
             }
-            //CMPCThemeUtil::DrawBufferedText(pDC, text, rText, textFormat);
             dcMem.DrawText(text, rText, textFormat);
             CMPCThemeUtil::flushMemDC(pDC, dcMem, rectDC);
             pDC->SetTextColor(oldTextColor);
@@ -403,6 +421,9 @@ BOOL CMPCThemePlayerListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) {
 
         *pResult = CDRF_DODEFAULT;
         if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT) {
+            if (nullptr != customThemeInterface) {
+                customThemeInterface->DoCustomPrePaint();
+            }
             *pResult = CDRF_NOTIFYITEMDRAW;
         } else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
             DWORD dwStyle = GetStyle() & LVS_TYPEMASK;
@@ -441,10 +462,10 @@ BOOL CMPCThemePlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
         }
         pDC->FillSolidRect(r, CMPCTheme::ContentBGColor);
 
-        if (themeGridLines) {
+        if (themeGridLines || nullptr != customThemeInterface) {
 
             CPen gridPen, *oldPen;
-            gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::WindowBorderColorDim);
+            gridPen.CreatePen(PS_SOLID, 1, CMPCTheme::ListCtrlGridColor);
             oldPen = pDC->SelectObject(&gridPen);
 
             CRect gr;
@@ -460,8 +481,21 @@ BOOL CMPCThemePlayerListCtrl::OnEraseBkgnd(CDC* pDC) {
                 } else {
                     GetItemRect(y, gr, LVIR_BOUNDS);
                 }
-                pDC->MoveTo(r.left, gr.bottom-1);
-                pDC->LineTo(r.right, gr.bottom-1);
+                {
+                    CPen horzPen;
+                    pDC->MoveTo(r.left, gr.bottom - 1);
+                    if (nullptr != customThemeInterface) {
+                        COLORREF horzGridColor, tmp;
+                        customThemeInterface->GetCustomGridColors(y, horzGridColor, tmp);
+                        horzPen.CreatePen(PS_SOLID, 1, horzGridColor);
+                        pDC->SelectObject(&horzPen);
+                        pDC->LineTo(r.right, gr.bottom - 1);
+                        pDC->SelectObject(&gridPen);
+                        horzPen.DeleteObject();
+                    } else {
+                        pDC->LineTo(r.right, gr.bottom - 1);
+                    }
+                }
             }
             pDC->SelectObject(oldPen);
         }

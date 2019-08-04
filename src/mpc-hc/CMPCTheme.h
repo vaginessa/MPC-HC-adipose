@@ -20,6 +20,7 @@ public:
 
     static const COLORREF ShadowColor;
     static const COLORREF TextFGColor;
+    static const COLORREF TextFGColorFade;
     static const COLORREF ContentTextDisabledFGColorFade;
     static const COLORREF ContentTextDisabledFGColorFade2;
     static const COLORREF SubmenuColor;
@@ -89,6 +90,8 @@ public:
 
     static const COLORREF ListCtrlDisabledBGColor;
     static const COLORREF ListCtrlGridColor;
+    static const COLORREF HeaderCtrlGridColor;
+    static const COLORREF AudioSwitcherGridColor;
 
     static const COLORREF TabCtrlBorderColor;
     static const COLORREF TabCtrlInactiveColor;
@@ -103,6 +106,13 @@ public:
 
     static const COLORREF ProgressBarBGColor;
     static const COLORREF ProgressBarColor;
+
+    static const COLORREF SubresyncFadeText1;
+    static const COLORREF SubresyncFadeText2;
+    static const COLORREF SubresyncActiveFadeText;
+    static const COLORREF SubresyncHLColor1;
+    static const COLORREF SubresyncHLColor2;
+    static const COLORREF SubresyncGridSepColor;
 
     static const BYTE GripperBitsH[10];
     static const BYTE GripperBitsV[8];
