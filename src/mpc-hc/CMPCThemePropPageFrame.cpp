@@ -20,7 +20,7 @@ END_MESSAGE_MAP()
 BOOL CMPCThemePropPageFrame::Create(DWORD dwWindowStyle, const RECT & rect, CWnd * pwndParent, UINT nID) {
     return CWnd::Create(
         AfxRegisterWndClass(CS_HREDRAW | CS_VREDRAW, AfxGetApp()->LoadStandardCursor(IDC_ARROW), 0),
-        _T("Dark Page Frame"),
+        _T("MPCTheme Page Frame"),
         dwWindowStyle, rect, pwndParent, nID);
 }
 
