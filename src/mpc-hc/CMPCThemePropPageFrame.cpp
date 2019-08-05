@@ -3,6 +3,7 @@
 #include "CMPCTheme.h"
 #include "CMPCThemeUtil.h"
 #include "TreePropSheet/PropPageFrameDefault.h"
+#include "../DSUtil/WinAPIUtils.h"
 
 CBrush CMPCThemePropPageFrame::mpcThemeBorderBrush = CBrush();
 
@@ -41,14 +42,18 @@ void CMPCThemePropPageFrame::DrawCaption(CDC *pDC, CRect rect, LPCTSTR lpszCapti
     COLORREF clrPrev = pDC->SetTextColor(CMPCTheme::TextFGColor);
     int nBkStyle = pDC->SetBkMode(TRANSPARENT);
 
+    LOGFONT lf;
+    GetMessageFont(&lf);
+    lf.lfHeight = rect.Height();
+    lf.lfWeight = FW_BOLD;
     CFont f;
-    CMPCThemeUtil::getFontByFace(f, pDC, CMPCTheme::uiTextFont, 10, FW_BOLD);
-    CFont *pFont = pDC->SelectObject(&f);
+    f.CreateFontIndirect(&lf);
+    CFont * oldFont = pDC->SelectObject(&f);
 
     pDC->DrawText(lpszCaption, rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 
     pDC->SetTextColor(clrPrev);
-    pDC->SelectObject(pFont);
+    pDC->SelectObject(oldFont);
     pDC->SetBkMode(nBkStyle);
 }
 
