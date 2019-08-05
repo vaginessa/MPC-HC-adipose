@@ -202,7 +202,9 @@ BOOL CPPageFormats::OnInitDialog()
 {
     __super::OnInitDialog();
 
-    m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
+    //m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
+    m_list.setAdditionalStyles(LVS_EX_FULLROWSELECT);
+
 
     m_list.InsertColumn(COL_CATEGORY, _T("Category"), LVCFMT_LEFT, 290);
     m_list.InsertColumn(COL_ENGINE, _T("Engine"), LVCFMT_RIGHT, 50);
