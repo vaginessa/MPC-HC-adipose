@@ -13,6 +13,7 @@ public:
     afx_msg void OnPaint();
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     DECLARE_MESSAGE_MAP()
-
+protected:
+    static CBrush mpcThemeBorderBrush;
 };
 

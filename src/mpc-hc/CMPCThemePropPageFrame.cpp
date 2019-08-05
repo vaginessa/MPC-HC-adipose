@@ -4,7 +4,10 @@
 #include "CMPCThemeUtil.h"
 #include "TreePropSheet/PropPageFrameDefault.h"
 
+CBrush CMPCThemePropPageFrame::mpcThemeBorderBrush = CBrush();
+
 CMPCThemePropPageFrame::CMPCThemePropPageFrame() : CPropPageFrameDefault() {
+    mpcThemeBorderBrush.CreateSolidBrush(CMPCTheme::WindowBorderColorLight);
 }
 
 
@@ -57,6 +60,9 @@ void CMPCThemePropPageFrame::OnPaint() {
 BOOL CMPCThemePropPageFrame::OnEraseBkgnd(CDC * pDC) {
     bool ret = CMPCThemeUtil::MPCThemeEraseBkgnd(pDC, this, CTLCOLOR_DLG);
     if (ret) {
+        CRect rect;
+        GetClientRect(rect);
+        pDC->FrameRect(rect, &mpcThemeBorderBrush);
         return ret;
     } else {
         return __super::OnEraseBkgnd(pDC);
