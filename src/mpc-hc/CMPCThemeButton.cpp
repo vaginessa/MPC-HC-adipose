@@ -90,13 +90,12 @@ void CMPCThemeButton::drawButtonBase(CDC* pDC, CRect rect, CString strText, bool
         UINT format = DT_CENTER | DT_VCENTER | DT_SINGLELINE;
         if (shield) {
             int iconsize = MulDiv(pDC->GetDeviceCaps(LOGPIXELSX), 1, 6);
-            int shieldY = rect.top + (rect.Height() - iconsize) / 2;
+            int shieldY = rect.top + (rect.Height() - iconsize) / 2 + 1;
             CRect centerRect = rect;
             pDC->DrawText(strText, rect, format | DT_CALCRECT);
             rect.top = centerRect.top;
             rect.bottom = centerRect.bottom;
-            rect.OffsetRect((centerRect.Width() - rect.Width()) / 2, 0);
-            rect.OffsetRect(iconsize / 2, 0);
+            rect.OffsetRect((centerRect.Width() - rect.Width() + iconsize) / 2, 0);
             int shieldX = rect.left - iconsize - 1;
             HICON hShieldIcon = (HICON)LoadImage(0, IDI_SHIELD, IMAGE_ICON, iconsize, iconsize, LR_SHARED);
             if (hShieldIcon) {
