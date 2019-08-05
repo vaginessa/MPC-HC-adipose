@@ -258,7 +258,7 @@ protected:
 	afx_msg void OnMenuCommands( UINT uID );
 
 	// WM_TIMER message handler.
-	afx_msg void OnTimer( UINT nIDEvent );
+	afx_msg void OnTimer(UINT_PTR nIDEvent );
 
 	// WM_SIZE message handler.
 	afx_msg void OnSize( UINT nType, int cx, int cy );

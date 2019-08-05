@@ -1059,7 +1059,7 @@ void CXeScrollBarBase::OnMenuCommands( UINT uID )
 	}
 }
 
-void CXeScrollBarBase::OnTimer( UINT nIDEvent )
+void CXeScrollBarBase::OnTimer( UINT_PTR nIDEvent )
 {	// WM_TIMER message handler.
 	ASSERT(::IsWindow(m_hWnd));
 	if( nIDEvent == XSB_LBTN_DOWN_TIMERID )
