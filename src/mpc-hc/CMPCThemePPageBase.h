@@ -2,6 +2,7 @@
 #include "PPageBase.h"
 #include "CMPCThemeButton.h"
 #include "CMPCThemeUtil.h"
+#include "ImageGrayer.h"
 class CMPCThemePPageBase :
 	public CPPageBase, public CMPCThemeUtil
 {
@@ -15,6 +16,6 @@ public:
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
     virtual BOOL OnInitDialog();
-    void SetMPCThemeButtonIcon(UINT nIDButton, UINT nIDIcon);
+    void SetMPCThemeButtonIcon(UINT nIDButton, UINT nIDIcon, ImageGrayer::mpcColorStyle colorStyle = ImageGrayer::mpcMono);
 };
 

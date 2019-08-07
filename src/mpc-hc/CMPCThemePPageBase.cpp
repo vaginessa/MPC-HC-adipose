@@ -19,14 +19,14 @@ BOOL CMPCThemePPageBase::OnInitDialog() {
     return 0;
 }
 
-void CMPCThemePPageBase::SetMPCThemeButtonIcon(UINT nIDButton, UINT nIDIcon) {
+void CMPCThemePPageBase::SetMPCThemeButtonIcon(UINT nIDButton, UINT nIDIcon, ImageGrayer::mpcColorStyle colorStyle) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         if (!m_buttonIcons.count(nIDIcon)) {
             CImage img, imgEnabled, imgDisabled;
             img.LoadFromResource(AfxGetInstanceHandle(), nIDIcon);
 
-            ImageGrayer::UpdateColor(img, imgEnabled, false, true);
-            ImageGrayer::UpdateColor(img, imgDisabled, true, true);
+            ImageGrayer::UpdateColor(img, imgEnabled, false, colorStyle);
+            ImageGrayer::UpdateColor(img, imgDisabled, true, colorStyle);
 
             CImageList& imageList = m_buttonIcons[nIDIcon];
             imageList.Create(img.GetWidth(), img.GetHeight(), ILC_COLOR32, 2, 0);

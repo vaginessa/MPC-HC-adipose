@@ -129,7 +129,7 @@ void CMPCThemeButton::drawButton(HDC hdc, CRect rect, UINT state) {
     drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin, drawShield);
 
     int imageIndex = 0; //Normal
-    if (state & ODS_DISABLED) {
+    if (disabled) {
         imageIndex = 1;
     }
 

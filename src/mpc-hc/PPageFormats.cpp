@@ -221,10 +221,10 @@ BOOL CPPageFormats::OnInitDialog()
     LoadSettings();
     CreateToolTip();
 
-    SetButtonIcon(IDC_ASSOCIATE_ALL_FORMATS,   IDB_CHECK_ALL);
-    SetButtonIcon(IDC_ASSOCIATE_AUDIO_FORMATS, IDB_CHECK_AUDIO);
-    SetButtonIcon(IDC_ASSOCIATE_VIDEO_FORMATS, IDB_CHECK_VIDEO);
-    SetButtonIcon(IDC_CLEAR_ALL_ASSOCIATIONS,  IDB_UNCHECK_ALL);
+    SetMPCThemeButtonIcon(IDC_ASSOCIATE_ALL_FORMATS,   IDB_CHECK_ALL, ImageGrayer::mpcGrayDisabled);
+    SetMPCThemeButtonIcon(IDC_ASSOCIATE_AUDIO_FORMATS, IDB_CHECK_AUDIO, ImageGrayer::mpcGrayDisabled);
+    SetMPCThemeButtonIcon(IDC_ASSOCIATE_VIDEO_FORMATS, IDB_CHECK_VIDEO, ImageGrayer::mpcGrayDisabled);
+    SetMPCThemeButtonIcon(IDC_CLEAR_ALL_ASSOCIATIONS,  IDB_UNCHECK_ALL, ImageGrayer::mpcGrayDisabled);
 
     if (!IsUserAnAdmin()) {
         GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);

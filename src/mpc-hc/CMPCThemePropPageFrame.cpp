@@ -8,7 +8,9 @@
 CBrush CMPCThemePropPageFrame::mpcThemeBorderBrush = CBrush();
 
 CMPCThemePropPageFrame::CMPCThemePropPageFrame() : CPropPageFrameDefault() {
-    mpcThemeBorderBrush.CreateSolidBrush(CMPCTheme::WindowBorderColorLight);
+    if (nullptr == mpcThemeBorderBrush.m_hObject) {
+        mpcThemeBorderBrush.CreateSolidBrush(CMPCTheme::WindowBorderColorLight);
+    }
 }
 
 

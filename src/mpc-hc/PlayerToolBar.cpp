@@ -91,7 +91,7 @@ void CPlayerToolBar::LoadToolbarImage()
         origImage = image;
         const CAppSettings& s = AfxGetAppSettings();
         if (s.bMPCThemeLoaded) {
-            ImageGrayer::UpdateColor(image, themedImage, false, s.bMPCThemeLoaded);
+            ImageGrayer::UpdateColor(image, themedImage, false, ImageGrayer::mpcMono);
             image = themedImage;
         }
         CBitmap* bmp = CBitmap::FromHandle(image);
@@ -108,7 +108,7 @@ void CPlayerToolBar::LoadToolbarImage()
                 m_pButtonsImages->Add(bmp, nullptr); // alpha is the mask
 
                 CImage imageDisabled;
-                if (ImageGrayer::UpdateColor(origImage, imageDisabled, true, s.bMPCThemeLoaded)) {
+                if (ImageGrayer::UpdateColor(origImage, imageDisabled, true, s.bMPCThemeLoaded ? ImageGrayer::mpcMono : ImageGrayer::classicGrayscale)) {
                     m_pDisabledButtonsImages.reset(DEBUG_NEW CImageList());
                     m_pDisabledButtonsImages->Create(height, height, ILC_COLOR32 | ILC_MASK, 1, 0);
                     m_pDisabledButtonsImages->Add(CBitmap::FromHandle(imageDisabled), nullptr); // alpha is the mask
