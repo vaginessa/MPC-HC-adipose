@@ -522,7 +522,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_MESSAGE(WM_LOADSUBTITLES, OnLoadSubtitles)
     ON_MESSAGE(WM_GETSUBTITLES, OnGetSubtitles)
     ON_WM_DRAWITEM()
-END_MESSAGE_MAP()
+        ON_WM_SETTINGCHANGE()
+        END_MESSAGE_MAP()
 
 #ifdef _DEBUG
 const TCHAR* GetEventString(LONG evCode)
@@ -1621,6 +1622,8 @@ LRESULT CMainFrame::OnDpiChanged(WPARAM wParam, LPARAM lParam)
 {
     m_dpi.Override(LOWORD(wParam), HIWORD(wParam));
     m_eventc.FireEvent(MpcEvent::DPI_CHANGED);
+    CMPCThemeUtil::clearMetrics();
+    CMPCThemeMenu::clearDimensions();
     MoveWindow(reinterpret_cast<RECT*>(lParam));
     RecalcLayout();
     return 0;
@@ -16420,10 +16423,7 @@ BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwS
             rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, pParentWnd->GetSafeHwnd(), defaultMPCThemeMenu->m_hMenu, (LPVOID)pContext)) {
             return FALSE;
         }
-        const CAppSettings& s = AfxGetAppSettings();
-        if (s.bMPCThemeLoaded) {
-            defaultMPCThemeMenu->fulfillThemeReqs(true);
-        }
+        defaultMPCThemeMenu->fulfillThemeReqs(true);
 
         return TRUE;
     }
@@ -17408,3 +17408,14 @@ bool CMainFrame::DownloadWithYoutubeDL(CString url, CString filename)
 }
 
 
+void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection) {
+    __super::OnSettingChange(uFlags, lpszSection);
+    if (SPI_SETNONCLIENTMETRICS == uFlags) {
+        CMPCThemeUtil::clearMetrics();
+        CMPCThemeMenu::clearDimensions();
+        if (nullptr != defaultMPCThemeMenu) {
+            UpdateUILanguage(); //cheap way to rebuild menus--we want to do this to force them to re-measure
+        }
+        RecalcLayout();
+    }
+}

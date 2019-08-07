@@ -406,18 +406,6 @@ CMPCThemeUtil::themeMetrics& CMPCThemeUtil::GetMetrics(CDC* pDC) {
     if (!haveMetrics) {
         _metrics.ncMetrics.cbSize = sizeof(NONCLIENTMETRICS);
         ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CMPCThemeUtil::_metrics.ncMetrics, 0);
-        /*
-        _metrics.checkboxWidth = 12 * pDC->GetDeviceCaps(LOGPIXELSX) / 96 + 1;
-        _metrics.checkboxHeight = 12 * pDC->GetDeviceCaps(LOGPIXELSY) / 96 + 1;
-        */
-        CPngImage image;
-        image.Load(getResourceByDPI(pDC, CMPCTheme::ThemeCheckBoxes), AfxGetInstanceHandle());
-        BITMAP bm;
-        image.GetBitmap(&bm);
-        _metrics.checkboxWidth = bm.bmHeight;
-        _metrics.checkboxHeight = bm.bmHeight;
-
-
         haveMetrics = true;
     }
     return CMPCThemeUtil::_metrics;

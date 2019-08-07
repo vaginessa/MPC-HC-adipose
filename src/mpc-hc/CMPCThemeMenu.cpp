@@ -12,7 +12,7 @@ std::map<UINT, CMPCThemeMenu*> CMPCThemeMenu::subMenuIDs;
 
 IMPLEMENT_DYNAMIC(CMPCThemeMenu, CMenu);
 
-bool CMPCThemeMenu::initSizes = false;
+bool CMPCThemeMenu::hasDimensions = false;
 int CMPCThemeMenu::subMenuPadding;
 int CMPCThemeMenu::iconSpacing;
 int CMPCThemeMenu::iconPadding;
@@ -23,18 +23,6 @@ int CMPCThemeMenu::postTextSpacing;
 int CMPCThemeMenu::accelSpacing;
 
 CMPCThemeMenu::CMPCThemeMenu(){
-    if (!initSizes) {
-        DpiHelper dpi=DpiHelper();
-        subMenuPadding = dpi.ScaleX(20);
-        iconSpacing = dpi.ScaleX(22);
-        iconPadding = dpi.ScaleX(10);
-        rowPadding = dpi.ScaleY(7);
-        separatorPadding = dpi.ScaleX(8);
-        separatorHeight = dpi.ScaleX(7);
-        postTextSpacing = dpi.ScaleX(20);
-        accelSpacing = dpi.ScaleX(30);
-        initSizes = true;
-    }
 }
 
 
@@ -55,6 +43,23 @@ CMPCThemeMenu::~CMPCThemeMenu() {
         delete allocatedMenus[i];
     }
 }
+
+void CMPCThemeMenu::initDimensions() {
+    if (!hasDimensions) {
+        DpiHelper dpi = DpiHelper();
+
+        subMenuPadding = dpi.ScaleX(20);
+        iconSpacing = dpi.ScaleX(22);
+        iconPadding = dpi.ScaleX(10);
+        rowPadding = dpi.ScaleY(7);
+        separatorPadding = dpi.ScaleX(8);
+        separatorHeight = dpi.ScaleX(7);
+        postTextSpacing = dpi.ScaleX(20);
+        accelSpacing = dpi.ScaleX(30);
+        hasDimensions = true;
+    }
+}
+
 
 void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
@@ -344,6 +349,8 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 }
 
 void CMPCThemeMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
+    initDimensions();
+
     HDC hDC = ::GetDC(NULL);
     MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
 
