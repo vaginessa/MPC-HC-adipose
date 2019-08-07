@@ -8,19 +8,33 @@
 #include "mplayerc.h"
 
 std::map<UINT, CMPCThemeMenu*> CMPCThemeMenu::subMenuIDs;
-const int CMPCThemeMenu::subMenuPadding = 20;
-const int CMPCThemeMenu::iconSpacing = 22;
-const int CMPCThemeMenu::rowHeight = 22;
-const int CMPCThemeMenu::iconPadding = 10;
-const int CMPCThemeMenu::separatorPadding = 8;
-const int CMPCThemeMenu::separatorHeight = 7;
-const int CMPCThemeMenu::postTextSpacing = 20;
-const int CMPCThemeMenu::accelSpacing = 30;
 
 
 IMPLEMENT_DYNAMIC(CMPCThemeMenu, CMenu);
 
+bool CMPCThemeMenu::initSizes = false;
+int CMPCThemeMenu::subMenuPadding;
+int CMPCThemeMenu::iconSpacing;
+int CMPCThemeMenu::iconPadding;
+int CMPCThemeMenu::rowPadding;
+int CMPCThemeMenu::separatorPadding;
+int CMPCThemeMenu::separatorHeight;
+int CMPCThemeMenu::postTextSpacing;
+int CMPCThemeMenu::accelSpacing;
+
 CMPCThemeMenu::CMPCThemeMenu(){
+    if (!initSizes) {
+        DpiHelper dpi=DpiHelper();
+        subMenuPadding = dpi.ScaleX(20);
+        iconSpacing = dpi.ScaleX(22);
+        iconPadding = dpi.ScaleX(10);
+        rowPadding = dpi.ScaleY(7);
+        separatorPadding = dpi.ScaleX(8);
+        separatorHeight = dpi.ScaleX(7);
+        postTextSpacing = dpi.ScaleX(20);
+        accelSpacing = dpi.ScaleX(30);
+        initSizes = true;
+    }
 }
 
 
@@ -195,6 +209,13 @@ CMPCThemeMenu* CMPCThemeMenu::getParentMenu(UINT itemID) {
     return nullptr;
 }
 
+void CMPCThemeMenu::GetRects(RECT rcItem, CRect& rectFull, CRect& rectM, CRect &rectIcon, CRect &rectText, CRect &rectArrow) {
+    rectFull.CopyRect(&rcItem);
+    rectM = rectFull;
+    rectIcon.SetRect(rectM.left, rectM.top, rectM.left + iconSpacing, rectM.bottom);
+    rectText.SetRect(rectM.left + iconSpacing + iconPadding, rectM.top, rectM.right - subMenuPadding, rectM.bottom);
+    rectArrow.SetRect(rectM.right - subMenuPadding, rectM.top, rectM.right, rectM.bottom);
+}
 
 void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 
@@ -206,16 +227,14 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     mInfo.fMask = MIIM_FTYPE | MIIM_STATE | MIIM_SUBMENU;
     mInfo.cbSize = sizeof(MENUITEMINFO);
     GetMenuItemInfo(lpDrawItemStruct->itemID, &mInfo);
-  
 
-    CRect rectFull(lpDrawItemStruct->rcItem);
+    CRect rectFull;
+    CRect rectM;
+    CRect rectIcon;
+    CRect rectText;
+    CRect rectArrow;
 
-
-    //CRect rectM(0, 0, rectFull.right - rectFull.left, rectFull.bottom - rectFull.top);
-    CRect rectM = rectFull;
-    CRect rectIcon(rectM.left, rectM.top, rectM.left + iconSpacing, rectM.bottom);
-    CRect rectText(rectM.left + iconSpacing + iconPadding, rectM.top, rectM.right - subMenuPadding, rectM.bottom);
-    CRect rectArrow(rectM.right - subMenuPadding, rectM.top, rectM.right, rectM.bottom);
+    GetRects(lpDrawItemStruct->rcItem, rectFull, rectM, rectIcon, rectText, rectArrow);
     
     UINT captionAlign = DT_LEFT;
 
@@ -227,16 +246,6 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     COLORREF TextSelectColor = CMPCTheme::MenuSelectedColor;
 
     CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
-
-    /* for fake grayscale smoothing
-    CDC* cDC = CDC::FromHandle(lpDrawItemStruct->hDC);
-    CDC *mDC = new mDC;
-    CBitmap bitmap;
-    CBitmap *pOldBmp;
-    mDC->CreateCompatibleDC(cDC);
-    bitmap.CreateCompatibleBitmap(cDC, rectM.right, rectM.bottom);
-    pOldBmp = mDC->SelectObject(&bitmap);
-    */
 
     if ((lpDrawItemStruct->itemState & ODS_DISABLED)) {
         TextFGColor = CMPCTheme::MenuItemDisabledColor;
@@ -330,43 +339,29 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
         pDC->SetBkMode(oldBKMode);
         pDC->SetTextColor(oldTextFGColor);
         pDC->SelectObject(pOldFont);
-
-
-        //fake greyscale anti-aliasing to emulate explorer (using directdraw?) SLOW!
-        /*
-        for (int y = 0; y < rectM.bottom; y++) {
-            for (int x = 0; x < rectM.right; x++) {
-                COLORREF rgb = mDC->GetPixel(x, y);
-                BYTE r = GetRValue(rgb);
-                BYTE g = GetGValue(rgb);
-                BYTE b = GetBValue(rgb);
-                BYTE bw = (BYTE)(0.299 * r + 0.587 * g + 0.114 * b);
-             //   mDC->SetPixel(x, y, RGB(bw, bw, bw));
-            }
-        }
-        cDC->BitBlt(rectFull.left, rectFull.top, rectM.right, rectM.bottom, &mDC, 0, 0, SRCCOPY);
-        mDC->DeleteDC();
-    */
     }
     ExcludeClipRect(lpDrawItemStruct->hDC, rectFull.left, rectFull.top, rectFull.right, rectFull.bottom);
 }
 
 void CMPCThemeMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
-    lpMeasureItemStruct->itemHeight = rowHeight;
-    MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
     HDC hDC = ::GetDC(NULL);
+    MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
+
     if (mo->isSeparator) {
         lpMeasureItemStruct->itemWidth = 0;
         lpMeasureItemStruct->itemHeight = separatorHeight;
     } else {
-        CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
         if (mo->isMenubar) {
+            CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
             lpMeasureItemStruct->itemWidth = cs.cx;
+            lpMeasureItemStruct->itemHeight = cs.cy + rowPadding;
         } else {
-            lpMeasureItemStruct->itemWidth = iconSpacing + cs.cx + postTextSpacing + subMenuPadding;
+            CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
+            lpMeasureItemStruct->itemHeight = cs.cy + rowPadding;
+            lpMeasureItemStruct->itemWidth = iconSpacing + postTextSpacing + subMenuPadding + cs.cx;
             if (mo->m_strAccel.GetLength() > 0) {
-                cs = CMPCThemeUtil::GetTextSize(mo->m_strAccel, hDC, CMPCThemeUtil::MenuFont);
-                lpMeasureItemStruct->itemWidth += accelSpacing + cs.cx;
+                CSize csAccel = CMPCThemeUtil::GetTextSize(mo->m_strAccel, hDC, CMPCThemeUtil::MenuFont);
+                lpMeasureItemStruct->itemWidth += accelSpacing + csAccel.cx;
             }
         }
     }

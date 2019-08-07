@@ -120,7 +120,11 @@ void CMPCThemeUtil::initHelperObjects(CWnd* wnd) {
     if (windowBrush.m_hObject == nullptr) windowBrush.CreateSolidBrush(CMPCTheme::WindowBGColor);
     if (controlAreaBrush.m_hObject == nullptr) controlAreaBrush.CreateSolidBrush(CMPCTheme::ControlAreaBGColor);
     if (W10DarkThemeFileDialogInjectedBGBrush.m_hObject == nullptr) W10DarkThemeFileDialogInjectedBGBrush.CreateSolidBrush(CMPCTheme::W10DarkThemeFileDialogInjectedBGColor);
-    if (dialogFont.m_hObject == nullptr) CMPCThemeUtil::getFontByType(dialogFont, wnd->GetWindowDC(), CMPCThemeUtil::DialogFont);
+    if (dialogFont.m_hObject == nullptr) {
+        CDC* pDC = wnd->GetWindowDC();
+        CMPCThemeUtil::getFontByType(dialogFont, pDC, CMPCThemeUtil::DialogFont);
+        wnd->ReleaseDC(pDC);
+    }
 }
 
 void CMPCThemeUtil::makeThemed(CWnd* pObject, CWnd* tChild) {

@@ -18,14 +18,15 @@ public:
 	CMPCThemeMenu();
 	virtual ~CMPCThemeMenu();
 
-    static const int subMenuPadding;
-    static const int iconSpacing;
-    static const int rowHeight;
-    static const int iconPadding;
-    static const int separatorPadding;
-    static const int separatorHeight;
-    static const int postTextSpacing;
-    static const int accelSpacing;
+    static bool initSizes;
+    static int subMenuPadding;
+    static int iconSpacing;
+    static int iconPadding;
+    static int rowPadding;
+    static int separatorPadding;
+    static int separatorHeight;
+    static int postTextSpacing;
+    static int accelSpacing;
 
     std::vector<MenuObject *> allocatedItems;
     std::vector<CMPCThemeMenu *> allocatedMenus;
@@ -39,5 +40,7 @@ public:
     virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
     CMPCThemeMenu* GetSubMenu(int nPos);
     static void updateItem(CCmdUI* pCmdUI);
+protected:
+    void GetRects(RECT rcItem, CRect& rectFull, CRect& rectM, CRect& rectIcon, CRect& rectText, CRect& rectArrow);
 };
 
