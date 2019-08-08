@@ -70,16 +70,24 @@ void CMPCThemeToolTipCtrl::paintTT(CDC& dc, CMPCThemeToolTipCtrl* tt) {
 }
 
 void CMPCThemeToolTipCtrl::OnPaint() {
-    CPaintDC dc(this);
-    if (useFlickerHelper) { //helper will paint
-        return;
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        CPaintDC dc(this);
+        if (useFlickerHelper) { //helper will paint
+            return;
+        }
+        paintTT(dc, this);
+    } else {
+        __super::OnPaint();
     }
-    paintTT(dc, this);
 }
 
 
 BOOL CMPCThemeToolTipCtrl::OnEraseBkgnd(CDC* pDC) {
-    return TRUE;
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        return TRUE;
+    } else {
+        return __super::OnEraseBkgnd(pDC);
+    }
 }
 
 
@@ -87,7 +95,9 @@ int CMPCThemeToolTipCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (CToolTipCtrl::OnCreate(lpCreateStruct) == -1)
         return -1;
 
-    makeHelper();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        makeHelper();
+    }
     return 0;
 }
 
@@ -138,39 +148,46 @@ BOOL CMPCThemeToolTipCtrl::CMPCThemeToolTipCtrlHelper::OnEraseBkgnd(CDC* pDC) {
 
 void CMPCThemeToolTipCtrl::OnMove(int x, int y) {
     CToolTipCtrl::OnMove(x, y);
-    makeHelper();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        makeHelper();
+    }
 }
 
 
 void CMPCThemeToolTipCtrl::OnShowWindow(BOOL bShow, UINT nStatus) {
 
     CToolTipCtrl::OnShowWindow(bShow, nStatus);
-    if (!bShow) {
-        if (helper != nullptr) {
-            delete helper;
-            helper = nullptr;
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (!bShow) {
+            if (helper != nullptr) {
+                delete helper;
+                helper = nullptr;
+            }
         }
     }
 }
 
 void CMPCThemeToolTipCtrl::OnSize(UINT nType, int cx, int cy) {
-    //hack to make it fit if fonts differ from parent. can be manually avoided
-    //if the parent widget is set to same font (see CMPCThemePlayerListCtrl using MessageFont now)
-    if (GetMaxTipWidth() == -1) {
-        CWindowDC dc(this);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        //hack to make it fit if fonts differ from parent. can be manually avoided
+        //if the parent widget is set to same font (see CMPCThemePlayerListCtrl using MessageFont now)
+        if (GetMaxTipWidth() == -1) {
+            CWindowDC dc(this);
 
-        CRect cr, origCr, wr, origWr;
-        GetWindowRect(wr);
-        GetClientRect(cr);
-        origCr = cr;
-        origWr = wr;
-        drawText(dc, this, cr, true);//calculate crect required to fit the text
-        wr.right += cr.Width() - origCr.Width();//add the difference to the window
-        if (origWr.right != wr.right) {
-            MoveWindow(wr, FALSE);
+            CRect cr, origCr, wr, origWr;
+            GetWindowRect(wr);
+            GetClientRect(cr);
+            origCr = cr;
+            origWr = wr;
+            drawText(dc, this, cr, true);//calculate crect required to fit the text
+            wr.right += cr.Width() - origCr.Width();//add the difference to the window
+            if (origWr.right != wr.right) {
+                MoveWindow(wr, FALSE);
+            }
         }
     }
-
     CToolTipCtrl::OnSize(nType, cx, cy);
-    makeHelper();
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        makeHelper();
+    }
 }
