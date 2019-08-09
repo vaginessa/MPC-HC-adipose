@@ -180,7 +180,7 @@ BOOL CPPageFileMediaInfo::OnInitDialog()
     // The empty string will fall back to the first font that matches the other specified attributes.
     LPCTSTR fonts[] = { _T("Consolas"), _T("Lucida Console"), _T("Courier New"), _T("") };
     // Use a negative value to match the character height instead of the cell height.
-    const int fonts_size[] = { 10, 10, 11, 11 };
+    const int fonts_size[] = { 12, 12, 13, 13 };
     size_t i;
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         i = 0; //added Consolas to the beginning for CMPCTheme
