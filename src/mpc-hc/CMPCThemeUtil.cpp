@@ -84,6 +84,14 @@ void CMPCThemeUtil::fulfillThemeReqs(CWnd* wnd) {
                         makeThemed(pObject, tChild);
                     } else {
                         CMPCThemeStatic* pObject = DEBUG_NEW CMPCThemeStatic();
+                        if (0 == (style & SS_LEFTNOWORDWRAP) && 0 == windowTitle.Left(20).Compare(_T("Select which output "))) {
+                            //this is a hack for LAVFilters to avoid wrapping the statics
+                            CRect wr;
+                            tChild->GetWindowRect(wr);
+                            wnd->ScreenToClient(wr);
+                            wr.right += 5;
+                            tChild->MoveWindow(wr);
+                        }
                         makeThemed(pObject, tChild);
                     }
                 } else if (0 == _tcsicmp(windowClass, WC_EDIT)) {
