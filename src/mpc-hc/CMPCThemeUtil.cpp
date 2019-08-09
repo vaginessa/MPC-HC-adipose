@@ -328,7 +328,7 @@ void CMPCThemeUtil::getFontByFace(CFont& font, CDC* pDC, wchar_t* fontName, int 
 }
 
 void CMPCThemeUtil::getFontByType(CFont& font, CDC* pDC, int type, bool underline, bool bold) {
-    themeMetrics tm = GetMetrics(pDC);
+    themeMetrics tm = GetMetrics();
     NONCLIENTMETRICS& m = tm.ncMetrics;
 
     LOGFONT* lf;
@@ -402,7 +402,7 @@ CSize CMPCThemeUtil::GetTextSizeDiff(CString str, HDC hDC, int type, CFont* curF
 
 bool CMPCThemeUtil::haveMetrics = false;
 CMPCThemeUtil::themeMetrics CMPCThemeUtil::_metrics = CMPCThemeUtil::themeMetrics();
-CMPCThemeUtil::themeMetrics& CMPCThemeUtil::GetMetrics(CDC* pDC) {
+CMPCThemeUtil::themeMetrics& CMPCThemeUtil::GetMetrics() {
     if (!haveMetrics) {
         _metrics.ncMetrics.cbSize = sizeof(NONCLIENTMETRICS);
         ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CMPCThemeUtil::_metrics.ncMetrics, 0);

@@ -51,7 +51,7 @@ void CMPCThemeMenu::initDimensions() {
         subMenuPadding = dpi.ScaleX(20);
         iconSpacing = dpi.ScaleX(22);
         iconPadding = dpi.ScaleX(10);
-        rowPadding = dpi.ScaleY(7);
+        rowPadding = dpi.ScaleY(4) + 3; //windows 10 explorer has paddings of 7,8,9,9,11--this yields 7,8,9,10,11
         separatorPadding = dpi.ScaleX(8);
         separatorHeight = dpi.ScaleX(7);
         postTextSpacing = dpi.ScaleX(20);

@@ -51,7 +51,7 @@ public:
 
     static themeMetrics _metrics;
     static bool haveMetrics;
-    static themeMetrics& GetMetrics(CDC* pDC);
+    static themeMetrics& GetMetrics();
     static void clearMetrics() { haveMetrics = false; };
     static void initMemDC(CDC* pDC, CDC& dcMem, CBitmap& bmMem, CRect rect);
     static void flushMemDC(CDC* pDC, CDC& dcMem, CRect rect);
