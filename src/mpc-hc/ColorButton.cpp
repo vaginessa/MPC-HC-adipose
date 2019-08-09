@@ -19,8 +19,8 @@
  */
 
 #include "stdafx.h"
-#include "ColorButton.h"
 #include "mplayerc.h"
+#include "ColorButton.h"
 #include "CMPCTheme.h"
 
 CColorButton::CColorButton()

@@ -20,7 +20,6 @@
  */
 
 #pragma once
-
 #include "../Subtitles/STS.h"
 #include "../filters/switcher/AudioSwitcher/AudioSwitcher.h"
 #include "../thirdparty/sanear/sanear/src/Interfaces.h"
@@ -29,7 +28,7 @@
 #include "FilterEnum.h"
 #include "MediaFormats.h"
 #include "MediaPositionList.h"
-#include "RenderersSettings.h"
+#include "../filters/renderer/VideoRenderers/RenderersSettings.h"
 #include "SettingsDefines.h"
 #include "Shaders.h"
 
