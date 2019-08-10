@@ -60,6 +60,57 @@ void CMPCThemeMenu::initDimensions() {
     }
 }
 
+UINT CMPCThemeMenu::findID(UINT i, bool byCommand) {
+    int iMaxItems = GetMenuItemCount();
+
+    UINT nID;
+    if (byCommand) {
+        nID = i;
+        bool found = false;
+        for (int j = 0; j < iMaxItems; j++) {
+            if (nID == GetMenuItemID(j)) {
+                i = j;
+                found = true;
+                break;
+            }
+        }
+        if (!found) return (UINT )-1;
+    } else {
+        nID = GetMenuItemID(i);
+    }
+    return nID;
+}
+
+void CMPCThemeMenu::cleanupItem(UINT nPosition, UINT nFlags) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        UINT nID = findID(nPosition, 0 == (nFlags & MF_BYPOSITION));
+
+        MENUITEMINFO tInfo = { sizeof(MENUITEMINFO) };
+        tInfo.fMask = MIIM_DATA;
+        GetMenuItemInfo(nID, &tInfo);
+        MenuObject* pObject = (MenuObject*)tInfo.dwItemData;
+        if (std::find(allocatedItems.begin(), allocatedItems.end(), pObject) != allocatedItems.end()) {
+            allocatedItems.erase(std::remove(allocatedItems.begin(), allocatedItems.end(), pObject), allocatedItems.end());
+            delete pObject;
+        }
+    }
+}
+
+BOOL CMPCThemeMenu::DeleteMenu(UINT nPosition, UINT nFlags) {
+    cleanupItem(nPosition, nFlags);
+    return CMenu::DeleteMenu(nPosition, nFlags);
+}
+
+BOOL CMPCThemeMenu::RemoveMenu(UINT nPosition, UINT nFlags) {
+    cleanupItem(nPosition, nFlags);
+    return CMenu::RemoveMenu(nPosition, nFlags);
+}
+
+BOOL CMPCThemeMenu::AppendMenu(UINT nFlags, UINT_PTR nIDNewItem, LPCTSTR lpszNewItem ) {
+    BOOL ret = CMenu::AppendMenu(nFlags, nIDNewItem, lpszNewItem);
+    fullfillThemeReqsItem(nIDNewItem);
+    return ret;
+}
 
 void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
@@ -117,64 +168,55 @@ void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
 }
 
 void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        MENUITEMINFO tInfo = { sizeof(MENUITEMINFO) };
+        tInfo.fMask = MIIM_DATA;
+        GetMenuItemInfo(i, &tInfo, !byCommand);
+        if (NULL == tInfo.dwItemData) {
+            CString nameHolder;
+            MenuObject* pObject = new MenuObject;
+            allocatedItems.push_back(pObject);
+            pObject->m_hIcon = NULL;
 
-    int iMaxItems = GetMenuItemCount();
+            UINT posOrCmd = byCommand ? MF_BYCOMMAND : MF_BYPOSITION;
 
-    CString nameHolder;
-    MenuObject* pObject = new MenuObject;
-    allocatedItems.push_back(pObject);
-    pObject->m_hIcon = NULL;
-
-    UINT posOrCmd = byCommand ? MF_BYCOMMAND : MF_BYPOSITION;
-
-    GetMenuString(i, pObject->m_strCaption, posOrCmd);
+            GetMenuString(i, pObject->m_strCaption, posOrCmd);
 
 
-    UINT nID;
-    if (byCommand) {
-        nID = i;
-        bool found = false;
-        for (int j = 0; j < iMaxItems; j++) {
-            if (nID == GetMenuItemID(j)) {
-                i = j;
-                found = true;
-                break;
+            UINT nID = findID(i, byCommand);
+            if (nID == -1) return;
+
+            pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
+
+            subMenuIDs[nID] = this;
+
+            MENUITEMINFO tInfo;
+            ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
+            tInfo.fMask = MIIM_FTYPE;
+            tInfo.cbSize = sizeof(MENUITEMINFO);
+            GetMenuItemInfo(i, &tInfo, true);
+
+            if (tInfo.fType & MFT_SEPARATOR) {
+                pObject->isSeparator = true;
+            }
+
+            MENUITEMINFO mInfo;
+            ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
+
+            mInfo.fMask = MIIM_FTYPE | MIIM_DATA;
+            mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
+            mInfo.cbSize = sizeof(MENUITEMINFO);
+            mInfo.dwItemData = (ULONG_PTR)pObject;
+            SetMenuItemInfo(i, &mInfo, true);
+
+            CMenu* t = GetSubMenu(i);
+            if (nullptr != t) {
+                CMPCThemeMenu* pSubMenu = new CMPCThemeMenu;
+                allocatedMenus.push_back(pSubMenu);
+                pSubMenu->Attach(t->GetSafeHmenu());
+                pSubMenu->fulfillThemeReqs();
             }
         }
-        if (!found) return;
-    } else {
-        nID = GetMenuItemID(i);
-    }
-
-    pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
-
-    subMenuIDs[nID] = this;
-
-    MENUITEMINFO tInfo;
-    ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
-    tInfo.fMask = MIIM_FTYPE;
-    tInfo.cbSize = sizeof(MENUITEMINFO);
-    GetMenuItemInfo(i, &tInfo, true);
-
-    if (tInfo.fType & MFT_SEPARATOR) {
-        pObject->isSeparator = true;
-    }
-
-    MENUITEMINFO mInfo;
-    ZeroMemory(&mInfo, sizeof(MENUITEMINFO));
-
-    mInfo.fMask = MIIM_FTYPE | MIIM_DATA;
-    mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
-    mInfo.cbSize = sizeof(MENUITEMINFO);
-    mInfo.dwItemData = (ULONG_PTR)pObject;
-    SetMenuItemInfo(i, &mInfo, true);
-
-    CMenu *t = GetSubMenu(i);
-    if (nullptr != t) {
-        CMPCThemeMenu* pSubMenu = new CMPCThemeMenu;
-        allocatedMenus.push_back(pSubMenu);
-        pSubMenu->Attach(t->GetSafeHmenu());
-        pSubMenu->fulfillThemeReqs();
     }
 }
 
@@ -358,13 +400,14 @@ void CMPCThemeMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
         lpMeasureItemStruct->itemWidth = 0;
         lpMeasureItemStruct->itemHeight = separatorHeight;
     } else {
+        CSize height = CMPCThemeUtil::GetTextSize(_T("W"), hDC, CMPCThemeUtil::MenuFont);
         if (mo->isMenubar) {
             CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
             lpMeasureItemStruct->itemWidth = cs.cx;
-            lpMeasureItemStruct->itemHeight = cs.cy + rowPadding;
+            lpMeasureItemStruct->itemHeight = height.cy + rowPadding;
         } else {
             CSize cs = CMPCThemeUtil::GetTextSize(mo->m_strCaption, hDC, CMPCThemeUtil::MenuFont);
-            lpMeasureItemStruct->itemHeight = cs.cy + rowPadding;
+            lpMeasureItemStruct->itemHeight = height.cy + rowPadding;
             lpMeasureItemStruct->itemWidth = iconSpacing + postTextSpacing + subMenuPadding + cs.cx;
             if (mo->m_strAccel.GetLength() > 0) {
                 CSize csAccel = CMPCThemeUtil::GetTextSize(mo->m_strAccel, hDC, CMPCThemeUtil::MenuFont);

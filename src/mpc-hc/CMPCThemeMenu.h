@@ -25,6 +25,9 @@ public:
     static CMPCThemeMenu* getParentMenu(UINT itemID);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
     virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
+    virtual BOOL AppendMenu(UINT nFlags, UINT_PTR nIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
+    virtual BOOL DeleteMenu(UINT nPosition, UINT nFlags);
+    virtual BOOL RemoveMenu(UINT nPosition, UINT nFlags);
     CMPCThemeMenu* GetSubMenu(int nPos);
     static void updateItem(CCmdUI* pCmdUI);
     static void clearDimensions() { hasDimensions = false; };
@@ -33,6 +36,9 @@ protected:
     std::vector<MenuObject*> allocatedItems;
     std::vector<CMPCThemeMenu*> allocatedMenus;
     void initDimensions();
+    UINT findID(UINT i, bool byCommand);
+    void cleanupItem(UINT nPosition, UINT nFlags);
+
 
     void GetRects(RECT rcItem, CRect& rectFull, CRect& rectM, CRect& rectIcon, CRect& rectText, CRect& rectArrow);
     static bool hasDimensions;

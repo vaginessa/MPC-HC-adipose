@@ -12554,7 +12554,7 @@ void CMainFrame::SetupOpenCDSubMenu()
 
 void CMainFrame::SetupFiltersSubMenu()
 {
-    CMenu& subMenu = m_filtersMenu;
+    CMPCThemeMenu& subMenu = m_filtersMenu;
     // Empty the menu
     while (subMenu.RemoveMenu(0, MF_BYPOSITION));
 
