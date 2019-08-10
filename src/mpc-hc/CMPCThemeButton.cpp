@@ -14,14 +14,23 @@ CMPCThemeButton::CMPCThemeButton() {
 CMPCThemeButton::~CMPCThemeButton() {
 }
 
-void CMPCThemeButton::PreSubclassWindow() { //bypass CMFCButton impl since it will enable ownerdraw
+void CMPCThemeButton::PreSubclassWindow() { //bypass CMFCButton impl since it will enable ownerdraw. also clear CS_DBLCLKS class style, due to mfcbutton requirements
     InitStyle(GetStyle());
     CButton::PreSubclassWindow();
+    DWORD dwExtendedStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
+    dwExtendedStyle &= ~(CS_DBLCLKS);
+    ::SetClassLongPtr(m_hWnd, GCL_STYLE, dwExtendedStyle);
 }
 
-BOOL CMPCThemeButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton impl since it will enable ownerdraw
+BOOL CMPCThemeButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton impl since it will enable ownerdraw. also clear CS_DBLCLKS class style, due to mfcbutton requirements
     InitStyle(cs.style);
-    return CButton::PreCreateWindow(cs);
+    if (!CButton::PreCreateWindow(cs)){
+        return FALSE;
+    }
+    DWORD dwExtendedStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
+    dwExtendedStyle &= ~(CS_DBLCLKS);
+    ::SetClassLongPtr(m_hWnd, GCL_STYLE, dwExtendedStyle);
+    return TRUE;
 }
 
 
@@ -31,7 +40,6 @@ BEGIN_MESSAGE_MAP(CMPCThemeButton, CMFCButton)
     ON_WM_GETFONT()
     ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CMPCThemeButton::OnNMCustomdraw)
     ON_MESSAGE(BCM_SETSHIELD, &setShieldIcon)
-    ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 LRESULT CMPCThemeButton::setShieldIcon(WPARAM wParam, LPARAM lParam) {
@@ -124,7 +132,8 @@ void CMPCThemeButton::drawButton(HDC hdc, CRect rect, UINT state) {
     BUTTON_IMAGELIST imgList;
     GetImageList(&imgList);
     CImageList *images = CImageList::FromHandlePermanent(imgList.himl);
-    bool thin = (images != nullptr); //thin borders for image buttons
+    //bool thin = (images != nullptr); //thin borders for image buttons
+    bool thin = true;
 
 
     drawButtonBase(pDC, rect, strText, selected, IsHighlighted(), focused, disabled, thin, drawShield);
@@ -161,53 +170,4 @@ void CMPCThemeButton::OnSetFont(CFont* pFont, BOOL bRedraw) {
 
 HFONT CMPCThemeButton::OnGetFont() {
     return (HFONT)Default();
-}
-
-
-void CMPCThemeButton::OnLButtonUp(UINT nFlags, CPoint point) {
-    BOOL bClicked = m_bPushed && m_bClickiedInside && m_bHighlighted;
-
-    m_bPushed = FALSE;
-    m_bClickiedInside = FALSE;
-    m_bHighlighted = FALSE;
-
-    if (bClicked && m_bAutoCheck) {
-        if (m_bCheckButton) {
-            m_bChecked = !m_bChecked;
-        } else if (m_bRadioButton && !m_bChecked) {
-            m_bChecked = TRUE;
-            UncheckRadioButtonsInGroup();
-        }
-    }
-
-    HWND hWnd = GetSafeHwnd();
-
-    if (m_bWasDblClk) { //we don't send a second single click after a double click!
-        m_bWasDblClk = FALSE;
-    }
-
-    if (!::IsWindow(hWnd)) {
-        return;
-    }
-
-    RedrawWindow();
-
-    CButton::OnLButtonUp(nFlags, point);
-
-    if (!::IsWindow(hWnd)) {
-        return;
-    }
-
-    if (m_bCaptured) {
-        ReleaseCapture();
-        m_bCaptured = FALSE;
-    }
-
-    if (m_nAutoRepeatTimeDelay > 0) {
-        KillTimer(AFX_TIMER_ID_AUTOCOMMAND);
-    }
-
-    if (m_pToolTip->GetSafeHwnd() != NULL) {
-        m_pToolTip->Pop();
-    }
 }
