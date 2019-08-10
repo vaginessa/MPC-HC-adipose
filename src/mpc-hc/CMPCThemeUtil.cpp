@@ -86,6 +86,7 @@ void CMPCThemeUtil::fulfillThemeReqs(CWnd* wnd) {
                         CMPCThemeStatic* pObject = DEBUG_NEW CMPCThemeStatic();
                         if (0 == (style & SS_LEFTNOWORDWRAP) && 0 == windowTitle.Left(20).Compare(_T("Select which output "))) {
                             //this is a hack for LAVFilters to avoid wrapping the statics
+                            //FIXME by upstreaming a change to dialog layout of lavfilters, or by developing a dynamic re-layout engine
                             CRect wr;
                             tChild->GetWindowRect(wr);
                             wnd->ScreenToClient(wr);
