@@ -7975,7 +7975,7 @@ void CMainFrame::OnPlaySubtitles(UINT nID)
                         styles.Add(val);
                     }
 
-                    CPropertySheet dlg(IDS_SUBTITLES_STYLES_CAPTION, GetModalParent());
+                    CMPCThemePropertySheet dlg(IDS_SUBTITLES_STYLES_CAPTION, GetModalParent());
                     for (size_t l = 0; l < pages.GetCount(); l++) {
                         dlg.AddPage(pages[l]);
                     }
