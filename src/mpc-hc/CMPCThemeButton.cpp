@@ -17,9 +17,9 @@ CMPCThemeButton::~CMPCThemeButton() {
 void CMPCThemeButton::PreSubclassWindow() { //bypass CMFCButton impl since it will enable ownerdraw. also clear CS_DBLCLKS class style, due to mfcbutton requirements
     InitStyle(GetStyle());
     CButton::PreSubclassWindow();
-    DWORD dwExtendedStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
-    dwExtendedStyle &= ~(CS_DBLCLKS);
-    ::SetClassLongPtr(m_hWnd, GCL_STYLE, dwExtendedStyle);
+    DWORD classStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
+    classStyle &= ~(CS_DBLCLKS);
+    ::SetClassLongPtr(m_hWnd, GCL_STYLE, classStyle);
 }
 
 BOOL CMPCThemeButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton impl since it will enable ownerdraw. also clear CS_DBLCLKS class style, due to mfcbutton requirements
@@ -27,9 +27,9 @@ BOOL CMPCThemeButton::PreCreateWindow(CREATESTRUCT& cs) {//bypass CMFCButton imp
     if (!CButton::PreCreateWindow(cs)){
         return FALSE;
     }
-    DWORD dwExtendedStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
-    dwExtendedStyle &= ~(CS_DBLCLKS);
-    ::SetClassLongPtr(m_hWnd, GCL_STYLE, dwExtendedStyle);
+    DWORD classStyle = ::GetClassLongPtr(m_hWnd, GCL_STYLE);
+    classStyle &= ~(CS_DBLCLKS);
+    ::SetClassLongPtr(m_hWnd, GCL_STYLE, classStyle);
     return TRUE;
 }
 
