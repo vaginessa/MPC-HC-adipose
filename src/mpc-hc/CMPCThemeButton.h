@@ -17,5 +17,6 @@ public:
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnSetFont(CFont* pFont, BOOL bRedraw);
     afx_msg HFONT OnGetFont();
+    afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 };
 
