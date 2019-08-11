@@ -10,7 +10,7 @@ private:
     CBrush bgBrush;
 public:
 	CMPCThemeComboBox();
-    void doDraw(CDC & dc, CString strText, CRect r, COLORREF bkColor, bool drawDotted);
+    void doDraw(CDC & dc, CString strText, CRect r, COLORREF bkColor, COLORREF fgColor, bool drawDotted);
 	virtual ~CMPCThemeComboBox();
     void themeDropDown();
 	void PreSubclassWindow();

@@ -21,12 +21,12 @@ CMPCThemeComboBox::CMPCThemeComboBox() {
     isThemedDropDown = false;
 }
 
-void CMPCThemeComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF bkColor, bool drawDotted) {
+void CMPCThemeComboBox::doDraw(CDC& dc, CString strText, CRect rText, COLORREF bkColor, COLORREF fgColor, bool drawDotted) {
     COLORREF crOldTextColor = dc.GetTextColor();
     COLORREF crOldBkColor = dc.GetBkColor();
 
     dc.SetBkColor(bkColor);
-    dc.SetTextColor(CMPCTheme::TextFGColor);
+    dc.SetTextColor(fgColor);
 
     CRect textRect = rText;
     //textRect.left += 3;
@@ -89,7 +89,7 @@ void CMPCThemeComboBox::OnPaint() {
         COMBOBOXINFO info = { sizeof(COMBOBOXINFO) };
         GetComboBoxInfo(&info);
 
-        COLORREF bkColor;
+        COLORREF bkColor, fgColor = CMPCTheme::TextFGColor;
         if (::IsWindowVisible(info.hwndList) || info.stateButton == STATE_SYSTEM_PRESSED) { //always looks the same once the list is open
             bkColor = CMPCTheme::ButtonFillSelectedColor;
             drawDotted = false;
@@ -97,6 +97,10 @@ void CMPCThemeComboBox::OnPaint() {
         } else if (info.stateButton == 0 && isHover) {  //not pressed and hovered
             bkColor = CMPCTheme::ButtonFillHoverColor;
             arrClr = CMPCTheme::ComboboxArrowColorHover;
+        } else if (!IsWindowEnabled()) {
+            bkColor = CMPCTheme::ButtonFillColor;
+            arrClr = CMPCTheme::ComboboxArrowColorDisabled;
+            fgColor = CMPCTheme::ButtonDisabledFGColor;
         } else {
             bkColor = CMPCTheme::ButtonFillColor;
             arrClr = CMPCTheme::ComboboxArrowColor;
@@ -109,7 +113,7 @@ void CMPCThemeComboBox::OnPaint() {
         rText = r;
         rText.right = info.rcItem.right;
         rText.DeflateRect(3, 3);
-        doDraw(dc, strText, rText, bkColor, drawDotted);
+        doDraw(dc, strText, rText, bkColor, fgColor, drawDotted);
 
         rDownArrow = info.rcButton;
         CBitmap arrowLowerBMP, arrowUpperBMP;

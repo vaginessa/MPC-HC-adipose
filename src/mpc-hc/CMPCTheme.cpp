@@ -181,6 +181,13 @@ const COLORREF CMPCTheme::ComboboxArrowColorHover[3] = {
     COLORREF(RGB(78, 78, 78)),
 };
 
+const COLORREF CMPCTheme::ComboboxArrowColorDisabled[3] = {
+    COLORREF(RGB(75, 75, 75)),
+    COLORREF(RGB(109, 109, 109)),
+    COLORREF(RGB(48, 48, 48)),
+};
+
+
 const COLORREF CMPCTheme::ComboboxArrowColorClick[3] = {
     COLORREF(RGB(143, 143, 143)),
     COLORREF(RGB(183, 183, 183)),

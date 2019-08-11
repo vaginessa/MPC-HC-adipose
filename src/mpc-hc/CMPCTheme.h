@@ -134,6 +134,7 @@ public:
 
     static const COLORREF ComboboxArrowColor[3];
     static const COLORREF ComboboxArrowColorHover[3];
+    static const COLORREF ComboboxArrowColorDisabled[3];
     static const COLORREF ComboboxArrowColorClick[3];
 
     static const BYTE SpinnerArrowBitsV[6];
