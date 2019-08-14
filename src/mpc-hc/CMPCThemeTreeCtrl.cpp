@@ -36,9 +36,14 @@ void CMPCThemeTreeCtrl::fulfillThemeReqs() {
         else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
-        SetExtendedStyle(TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER);
+        SetExtendedStyle(TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER); //necessary to prevent significant flicker
         if (font.m_hObject == nullptr) CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::MenuFont);
         SetFont(&font);
+    } else {
+        //adipose--enabling this cuts down on a very minor flicker in classic mode;
+        //the duplicate line above is necessary due to a non-default bg.
+        //treat as a separate line of code to be clear that this one is "optional" while the other is not
+        SetExtendedStyle(TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER); //optional
     }
 }
 
