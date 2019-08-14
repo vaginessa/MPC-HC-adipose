@@ -7,19 +7,19 @@
 CMPCThemePlayerListCtrl::CMPCThemePlayerListCtrl(int tStartEditingDelay) : CPlayerListCtrl(tStartEditingDelay) {
     themeGridLines = false;
     fullRowSelect = false;
-    themeSBHelper = nullptr;
+    themedSBHelper = nullptr;
     hasCheckedColors = false;
     hasCBImages = false;
     customThemeInterface = nullptr;
     if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
-        themeSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
+        themedSBHelper = DEBUG_NEW CMPCThemeScrollBarHelper(this);
     }
 }
 
 
 CMPCThemePlayerListCtrl::~CMPCThemePlayerListCtrl() {
-    if (nullptr != themeSBHelper) {
-        delete themeSBHelper;
+    if (nullptr != themedSBHelper) {
+        delete themedSBHelper;
     }
 }
 
@@ -141,8 +141,8 @@ void CMPCThemePlayerListCtrl::setCheckedColors(COLORREF checkedBG, COLORREF chec
 
 void CMPCThemePlayerListCtrl::OnNcPaint() {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
-        if (nullptr != themeSBHelper) {
-            themeSBHelper->themedNcPaintWithSB();
+        if (nullptr != themedSBHelper) {
+            themedSBHelper->themedNcPaintWithSB();
         } else {
             CMPCThemeScrollBarHelper::themedNcPaint(this, this);
         }
@@ -166,8 +166,8 @@ int CMPCThemePlayerListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 
 BOOL CMPCThemePlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
-        if (nullptr != themeSBHelper) {
-            themeSBHelper->updateScrollInfo();
+        if (nullptr != themedSBHelper) {
+            themedSBHelper->updateScrollInfo();
         }
         *pResult = 0;
     }
@@ -175,20 +175,20 @@ BOOL CMPCThemePlayerListCtrl::OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult) {
 }
 
 void CMPCThemePlayerListCtrl::updateSB() {
-    if (nullptr != themeSBHelper) {
-        themeSBHelper->hideSB();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->hideSB();
     }
 }
 
 void CMPCThemePlayerListCtrl::updateScrollInfo() {
-    if (nullptr != themeSBHelper) {
-        themeSBHelper->updateScrollInfo();
+    if (nullptr != themedSBHelper) {
+        themedSBHelper->updateScrollInfo();
     }
 }
 
 LRESULT CMPCThemePlayerListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
-    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themeSBHelper) {
-        if (themeSBHelper->WindowProc(this, message, wParam, lParam)) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themedSBHelper) {
+        if (themedSBHelper->WindowProc(this, message, wParam, lParam)) {
             return 1;
         }
     }
@@ -521,8 +521,8 @@ HBRUSH CMPCThemePlayerListCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CMPCThemePlayerListCtrl::OnHdnEndtrack(NMHDR *pNMHDR, LRESULT *pResult) {
 //    LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
     if (AfxGetAppSettings().bMPCThemeLoaded) {
-        if (nullptr != themeSBHelper) {
-            themeSBHelper->updateScrollInfo();
+        if (nullptr != themedSBHelper) {
+            themedSBHelper->updateScrollInfo();
         }
     }
     *pResult = 0;

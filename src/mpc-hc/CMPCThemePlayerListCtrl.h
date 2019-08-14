@@ -43,7 +43,7 @@ public:
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 protected:
-    CMPCThemeScrollBarHelper *themeSBHelper;
+    CMPCThemeScrollBarHelper *themedSBHelper;
     CMPCThemeToolTipCtrl themedToolTip, lvsToolTip;
     UINT_PTR themedToolTipCid;
     COLORREF checkedBGClr, checkedTextClr, uncheckedTextClr;
