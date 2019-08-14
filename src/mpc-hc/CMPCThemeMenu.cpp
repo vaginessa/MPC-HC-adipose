@@ -190,7 +190,6 @@ void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
 
             subMenuIDs[nID] = this;
 
-            MENUITEMINFO tInfo;
             ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
             tInfo.fMask = MIIM_FTYPE;
             tInfo.cbSize = sizeof(MENUITEMINFO);
