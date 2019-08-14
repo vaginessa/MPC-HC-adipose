@@ -2,8 +2,8 @@
 #include <afxcmn.h>
 #include "CMPCThemeScrollBarHelper.h"
 
-class CMPCThemeTreeCtrl :
-	public CTreeCtrl, public CMPCThemeScrollable
+class CMPCThemeTreeCtrl : public CTreeCtrl
+    , public CMPCThemeScrollable
 {
 public:
 	CMPCThemeTreeCtrl();
@@ -11,6 +11,7 @@ public:
     void PreSubclassWindow();
     BOOL PreCreateWindow(CREATESTRUCT & cs);
     void fulfillThemeReqs();
+    LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
     DECLARE_DYNAMIC(CMPCThemeTreeCtrl)
     DECLARE_MESSAGE_MAP()
     afx_msg void OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult);
@@ -20,6 +21,7 @@ protected:
     CBrush m_brBkgnd;
     CFont font;
     CMPCThemeScrollBarHelper *themedSBHelper;
+    void doEraseBkgnd(CDC* pDC);
 public:
     void doDefault() { Default(); }
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);

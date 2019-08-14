@@ -148,6 +148,44 @@ bool CMPCThemeScrollBarHelper::WindowProc(CListCtrl *list, UINT message, WPARAM 
     return false;
 }
 
+bool CMPCThemeScrollBarHelper::WindowProc(CTreeCtrl* tree, UINT message, WPARAM wParam, LPARAM lParam) {
+    if (message == WM_VSCROLL || message == WM_HSCROLL) {
+        WORD sbCode = LOWORD(wParam);
+        if (sbCode == SB_THUMBTRACK || sbCode == SB_THUMBPOSITION) {
+            SCROLLINFO siv = { 0 };
+            siv.cbSize = sizeof(SCROLLINFO);
+            siv.fMask = SIF_ALL;
+            SCROLLINFO sih = siv;
+            int nPos = HIWORD(wParam);
+            CRect rcClient;
+            tree->GetClientRect(&rcClient);
+            tree->GetScrollInfo(SB_VERT, &siv);
+            tree->GetScrollInfo(SB_HORZ, &sih);
+
+            WPARAM wp = (WPARAM)-1;
+            int lines = 0;
+            if (WM_VSCROLL == message) {
+                wp = nPos < siv.nPos ? SB_LINEUP : SB_LINEDOWN;
+                lines = abs(nPos - siv.nPos);
+            } else {
+                wp = nPos < sih.nPos ? SB_LINELEFT : SB_LINERIGHT;
+                lines = abs(nPos - sih.nPos);
+            }
+
+            if (-1 != wp && nullptr != pParent && IsWindow(pParent->m_hWnd)) {
+                pParent->SetRedraw(FALSE);
+                while (lines-- > 0) {
+                    tree->SendMessage(message, wp, 0);
+                }
+                pParent->SetRedraw();
+                tree->Invalidate();
+            }
+            return true; //processed
+        }
+    }
+    return false;
+}
+
 void CMPCThemeScrollBarHelper::themedNcPaintWithSB() {
     createSB();
     if (IsWindow(vertSB.m_hWnd) || IsWindow(horzSB.m_hWnd)) {

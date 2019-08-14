@@ -26,7 +26,7 @@ public:
     void hideSB();
     void updateScrollInfo();
     bool WindowProc(CListCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
-    bool WindowProc(CTreeCtrl * list, UINT message, WPARAM wParam, LPARAM lParam);
+    bool WindowProc(CTreeCtrl * tree, UINT message, WPARAM wParam, LPARAM lParam);
     void themedNcPaintWithSB();
     static void themedNcPaint(CWnd *window, CMPCThemeScrollable *swindow);
 };

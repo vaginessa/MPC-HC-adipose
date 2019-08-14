@@ -29,10 +29,16 @@ BOOL CMPCThemeTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
 }
 
 void CMPCThemeTreeCtrl::fulfillThemeReqs() {
-    if (CMPCThemeUtil::canUseWin10DarkTheme()) {
-        SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
-    } else {
-        SetWindowTheme(GetSafeHwnd(), L"", NULL);
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (CMPCThemeUtil::canUseWin10DarkTheme()) {
+            SetWindowTheme(GetSafeHwnd(), L"DarkMode_Explorer", NULL);
+        }
+        else {
+            SetWindowTheme(GetSafeHwnd(), L"", NULL);
+        }
+        SetExtendedStyle(TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER);
+        if (font.m_hObject == nullptr) CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::MenuFont);
+        SetFont(&font);
     }
 }
 
@@ -58,16 +64,21 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
         bool isFocus, isHot;
         switch (pNMCD->dwDrawStage) {
         case CDDS_PREPAINT:
+        {
             *pResult = CDRF_NOTIFYITEMDRAW;
+            CDC dc;
+            dc.Attach(pNMCD->hdc);
+            doEraseBkgnd(&dc);
+            dc.Detach();
             break;
+        }
         case CDDS_ITEMPREPAINT:
             isFocus = 0 != (pNMCD->uItemState & CDIS_FOCUS);
             isHot = 0 != (pNMCD->uItemState & CDIS_HOT);
 
-            if (!CMPCThemeUtil::canUseWin10DarkTheme()) { //regular theme is a bit ugly but better than Explorer theme.  we will clean up the fonts at least
+            //regular theme is a bit ugly but better than Explorer theme. we clear the focus states to control the highlight ourselves
+            if (!CMPCThemeUtil::canUseWin10DarkTheme()) {
                 pNMCD->uItemState &= ~(CDIS_FOCUS | CDIS_HOT | CDIS_SELECTED);
-                if (font.m_hObject == nullptr) CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::MenuFont);
-                ::SelectObject(pNMCD->hdc, font.GetSafeHandle());
             }
 
             if (isFocus) {
@@ -78,7 +89,7 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
                 pstCD->clrTextBk = CMPCTheme::ContentBGColor;
             }
             pstCD->clrText = CMPCTheme::TextFGColor;
-            *pResult = CDRF_NEWFONT;
+            *pResult = CDRF_DODEFAULT;
             break;
         default:
             pResult = CDRF_DODEFAULT;
@@ -89,13 +100,16 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     }
 }
 
+void CMPCThemeTreeCtrl::doEraseBkgnd(CDC* pDC) {
+    CRect r;
+    GetWindowRect(r);
+    r.OffsetRect(-r.left, -r.top);
+    pDC->FillSolidRect(r, CMPCTheme::ContentBGColor);
+}
 
 BOOL CMPCThemeTreeCtrl::OnEraseBkgnd(CDC* pDC) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
-        CRect r;
-        GetWindowRect(r);
-        r.OffsetRect(-r.left, -r.top);
-        pDC->FillSolidRect(r, CMPCTheme::ContentBGColor);
+        //doEraseBkgnd(pDC); //we do this in the custom draw prepaint step now, to allow double buffering to work
         return TRUE;
     } else {
         return __super::OnEraseBkgnd(pDC);
@@ -139,4 +153,13 @@ void CMPCThemeTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
     if (nullptr != themedSBHelper) {
         themedSBHelper->updateScrollInfo();
     }
+}
+
+LRESULT CMPCThemeTreeCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themedSBHelper) {
+        if (themedSBHelper->WindowProc(this, message, wParam, lParam)) {
+            return 1;
+        }
+    }
+    return __super::WindowProc(message, wParam, lParam);
 }
