@@ -121,7 +121,7 @@ BOOL COpenDlg::OnInitDialog()
     size.cx = 1000;
     SetMaxTrackSize(size);
 
-    SetSizeGripBkMode(TRANSPARENT); //fix for gripper in mpc theme
+    fulfillThemeReqs();
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE

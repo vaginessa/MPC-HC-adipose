@@ -46,8 +46,6 @@ void CMediaTypesDlg::DoDataExchange(CDataExchange* pDX)
     CResizableDialog::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_COMBO1, m_pins);
     DDX_Control(pDX, IDC_EDIT1, m_report);
-
-    fulfillThemeReqs();
 }
 
 void CMediaTypesDlg::AddLine(CString str)
@@ -108,7 +106,7 @@ BOOL CMediaTypesDlg::OnInitDialog()
     AddAnchor(IDOK, BOTTOM_RIGHT);
 
     SetMinTrackSize(CSize(300, 200));
-    SetSizeGripBkMode(TRANSPARENT); //fix for gripper in mpc theme
+    fulfillThemeReqs();
 
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE

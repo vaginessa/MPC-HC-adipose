@@ -17,6 +17,13 @@ CMPCThemeResizableDialog::CMPCThemeResizableDialog(LPCTSTR lpszTemplateName, CWn
 CMPCThemeResizableDialog::~CMPCThemeResizableDialog() {
 }
 
+void CMPCThemeResizableDialog::fulfillThemeReqs(){
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        SetSizeGripBkMode(TRANSPARENT); //fix for gripper in mpc theme
+    }
+    CMPCThemeUtil::fulfillThemeReqs((CWnd*)this);
+}
+
 BEGIN_MESSAGE_MAP(CMPCThemeResizableDialog, CResizableDialog)
     ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()

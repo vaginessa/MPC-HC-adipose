@@ -84,7 +84,7 @@ BOOL CmdLineHelpDlg::OnInitDialog()
     AddAnchor(IDOK, BOTTOM_RIGHT);
 
     EnableSaveRestore(IDS_R_DLG_CMD_LINE_HELP);
-    SetSizeGripBkMode(TRANSPARENT);
+    fulfillThemeReqs();
 
     return FALSE;
 }
