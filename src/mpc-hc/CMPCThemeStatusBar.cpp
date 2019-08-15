@@ -30,6 +30,7 @@ void CMPCThemeStatusBar::SetText(LPCTSTR lpszText, int nPane, int nType) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         ctrl.SetText(_T(""), nPane, SBT_OWNERDRAW);
         texts[nPane] = lpszText;
+        Invalidate();
     } else {
         ctrl.SetText(lpszText, nPane, nType);
     }
