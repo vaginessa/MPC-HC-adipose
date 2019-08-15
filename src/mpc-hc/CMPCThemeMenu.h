@@ -19,8 +19,8 @@ public:
 	virtual ~CMPCThemeMenu();
 
     void fulfillThemeReqs(bool menubar = false);
-    void fullfillThemeReqsItem(UINT i, bool byCommand=false);
-    static void fullfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand=false);
+    void fulfillThemeReqsItem(UINT i, bool byCommand=false);
+    static void fulfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand=false);
     static UINT getPosFromID(CMenu* parent, UINT nID);
     static CMPCThemeMenu* getParentMenu(UINT itemID);
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
@@ -36,7 +36,7 @@ protected:
     std::vector<MenuObject*> allocatedItems;
     std::vector<CMPCThemeMenu*> allocatedMenus;
     void initDimensions();
-    UINT findID(UINT i, bool byCommand);
+    UINT findID(UINT &i, bool byCommand);
     void cleanupItem(UINT nPosition, UINT nFlags);
 
 

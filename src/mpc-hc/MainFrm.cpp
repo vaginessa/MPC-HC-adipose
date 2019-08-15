@@ -2974,6 +2974,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
         } else if (itemID == ID_NAVIGATE_GOTO) {
             // ID_NAVIGATE_GOTO is just a marker we use to insert the appropriate submenus
             SetupJumpToSubMenus(pPopupMenu, i + 1);
+            uiMenuCount = pPopupMenu->GetMenuItemCount(); //SetupJumpToSubMenus could actually reduce the menu count!
         } else if (itemID == ID_FAVORITES) {
             SetupFavoritesSubMenu();
             pSubMenu = &m_favoritesMenu;
@@ -3069,7 +3070,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
             if (s.bMPCThemeLoaded) {
-                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                CMPCThemeMenu::fulfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
             }
         }
         //if (j > 0)
@@ -3077,9 +3078,9 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, ResStr(IDS_PANSCAN_EDIT)));
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND | MF_SEPARATOR));
             if (s.bMPCThemeLoaded) {
-                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
+                CMPCThemeMenu::fulfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
                 UINT pos = CMPCThemeMenu::getPosFromID(pPopupMenu, ID_VIEW_RESET); //separator is inserted right before view_reset
-                CMPCThemeMenu::fullfillThemeReqsItem(pPopupMenu, pos-1);
+                CMPCThemeMenu::fulfillThemeReqsItem(pPopupMenu, pos-1);
             }
         }
     }
@@ -13145,7 +13146,7 @@ void CMainFrame::SetupVideoStreamsSubMenu()
 void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInsertPos /*= -1*/)
 {
     const CAppSettings& s = AfxGetAppSettings();
-    auto emptyMenu = [&](CMenu & menu) {
+    auto emptyMenu = [&](CMPCThemeMenu & menu) {
         while (menu.RemoveMenu(0, MF_BYPOSITION));
     };
 
@@ -13183,7 +13184,7 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
                 if (s.bMPCThemeLoaded) {
-                    CMPCThemeMenu::fullfillThemeReqsItem(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
+                    CMPCThemeMenu::fulfillThemeReqsItem(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
                 }
                 m_nJumpToSubMenusCount++;
             } else {

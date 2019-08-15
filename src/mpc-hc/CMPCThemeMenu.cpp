@@ -61,23 +61,29 @@ void CMPCThemeMenu::initDimensions() {
     }
 }
 
-UINT CMPCThemeMenu::findID(UINT i, bool byCommand) {
+UINT CMPCThemeMenu::findID(UINT &nPos, bool byCommand) {
     int iMaxItems = GetMenuItemCount();
 
     UINT nID;
     if (byCommand) {
-        nID = i;
+        nID = nPos;
         bool found = false;
         for (int j = 0; j < iMaxItems; j++) {
             if (nID == GetMenuItemID(j)) {
-                i = j;
+                nPos = j;
                 found = true;
                 break;
             }
         }
         if (!found) return (UINT )-1;
     } else {
-        nID = GetMenuItemID(i);
+        nID = GetMenuItemID(nPos);
+        if (nID == 0xFFFFFFFF) { //submenu, have to find the old-fashioned way
+            MENUITEMINFO mii = { sizeof(mii) };
+            mii.fMask = MIIM_ID;
+            GetMenuItemInfo(nPos, &mii, TRUE);
+            nID = mii.wID;
+        }
     }
     return nID;
 }
@@ -109,7 +115,7 @@ BOOL CMPCThemeMenu::RemoveMenu(UINT nPosition, UINT nFlags) {
 
 BOOL CMPCThemeMenu::AppendMenu(UINT nFlags, UINT_PTR nIDNewItem, LPCTSTR lpszNewItem ) {
     BOOL ret = CMenu::AppendMenu(nFlags, nIDNewItem, lpszNewItem);
-    fullfillThemeReqsItem(nIDNewItem);
+    fulfillThemeReqsItem(nIDNewItem);
     return ret;
 }
 
@@ -168,7 +174,7 @@ void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
     }
 }
 
-void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
+void CMPCThemeMenu::fulfillThemeReqsItem(UINT i, bool byCommand) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
         MENUITEMINFO tInfo = { sizeof(MENUITEMINFO) };
         tInfo.fMask = MIIM_DATA;
@@ -183,8 +189,8 @@ void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
 
             GetMenuString(i, pObject->m_strCaption, posOrCmd);
 
-
-            UINT nID = findID(i, byCommand);
+            UINT nPos = i;
+            UINT nID = findID(nPos, byCommand);
             if (nID == -1) return;
 
             pObject->m_strAccel = CPPageAccelTbl::MakeAccelShortcutLabel(nID);
@@ -194,7 +200,7 @@ void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
             ZeroMemory(&tInfo, sizeof(MENUITEMINFO));
             tInfo.fMask = MIIM_FTYPE;
             tInfo.cbSize = sizeof(MENUITEMINFO);
-            GetMenuItemInfo(i, &tInfo, true);
+            GetMenuItemInfo(nPos, &tInfo, true);
 
             if (tInfo.fType & MFT_SEPARATOR) {
                 pObject->isSeparator = true;
@@ -207,9 +213,9 @@ void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
             mInfo.fType = MFT_OWNERDRAW | tInfo.fType;
             mInfo.cbSize = sizeof(MENUITEMINFO);
             mInfo.dwItemData = (ULONG_PTR)pObject;
-            SetMenuItemInfo(i, &mInfo, true);
+            SetMenuItemInfo(nPos, &mInfo, true);
 
-            CMenu* t = GetSubMenu(i);
+            CMenu* t = GetSubMenu(nPos);
             if (nullptr != t) {
                 CMPCThemeMenu* pSubMenu = new CMPCThemeMenu;
                 allocatedMenus.push_back(pSubMenu);
@@ -220,10 +226,10 @@ void CMPCThemeMenu::fullfillThemeReqsItem(UINT i, bool byCommand) {
     }
 }
 
-void CMPCThemeMenu::fullfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand) {
+void CMPCThemeMenu::fulfillThemeReqsItem(CMenu* parent, UINT i, bool byCommand) {
     CMPCThemeMenu* t;
     if ((t = DYNAMIC_DOWNCAST(CMPCThemeMenu, parent)) != nullptr) {
-        t->fullfillThemeReqsItem(i, byCommand);
+        t->fulfillThemeReqsItem(i, byCommand);
     }
 }
 
