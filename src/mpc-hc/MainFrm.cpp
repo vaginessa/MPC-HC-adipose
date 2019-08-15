@@ -12736,6 +12736,7 @@ void CMainFrame::SetupFiltersSubMenu()
             VERIFY(subMenu.InsertMenu(0, MF_STRING | MF_ENABLED | MF_BYPOSITION, ID_FILTERS_COPY_TO_CLIPBOARD, ResStr(IDS_FILTERS_COPY_TO_CLIPBOARD)));
             VERIFY(subMenu.InsertMenu(1, MF_SEPARATOR | MF_ENABLED | MF_BYPOSITION));
         }
+        subMenu.fulfillThemeReqs();
     }
 }
 
