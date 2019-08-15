@@ -34,7 +34,7 @@ END_MESSAGE_MAP()
 
 void CMPCThemeListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
     CDC dc;
-
+    if (lpDrawItemStruct->itemID == -1) return;
     dc.Attach(lpDrawItemStruct->hDC);
 
     COLORREF crOldTextColor = dc.GetTextColor();
