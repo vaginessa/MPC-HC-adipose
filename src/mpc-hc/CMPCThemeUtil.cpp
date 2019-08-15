@@ -326,7 +326,10 @@ void CMPCThemeUtil::getFontByFace(CFont& font, CDC* pDC, wchar_t* fontName, int 
     LOGFONT lf;
     memset(&lf, 0, sizeof(LOGFONT));
 
-    lf.lfHeight = -MulDiv(size, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
+    DpiHelper dpiWindow;
+    dpiWindow.Override(AfxGetMainWnd()->GetSafeHwnd());
+    lf.lfHeight = -MulDiv(size, dpiWindow.DPIY(), 72);
+
     lf.lfQuality = CLEARTYPE_QUALITY;
 
     //lf.lfQuality = ANTIALIASED_QUALITY;
@@ -337,8 +340,8 @@ void CMPCThemeUtil::getFontByFace(CFont& font, CDC* pDC, wchar_t* fontName, int 
 }
 
 void CMPCThemeUtil::getFontByType(CFont& font, CDC* pDC, int type, bool underline, bool bold) {
-    themeMetrics tm = GetMetrics();
-    NONCLIENTMETRICS& m = tm.ncMetrics;
+    NONCLIENTMETRICS m;
+    GetMetrics(&m);
 
     LOGFONT* lf;
     if (type == CaptionFont) {
@@ -352,18 +355,24 @@ void CMPCThemeUtil::getFontByType(CFont& font, CDC* pDC, int type, bool underlin
     } else if (type == MessageFont) {
         lf = &m.lfMessageFont;
     } else if (type == DialogFont) { //hack for compatibility with MS SHell Dlg (8) used in dialogs
+        DpiHelper dpiWindow;
+        dpiWindow.Override(AfxGetMainWnd()->GetSafeHwnd());
+
         LOGFONT tlf;
         memset(&tlf, 0, sizeof(LOGFONT));
-        tlf.lfHeight = -MulDiv(8, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
+        tlf.lfHeight = -MulDiv(8, dpiWindow.DPIY(), 72);
         tlf.lfQuality = CLEARTYPE_QUALITY;
         tlf.lfWeight = FW_REGULAR;
         wcsncpy_s(tlf.lfFaceName, m.lfMessageFont.lfFaceName, LF_FACESIZE);
         //wcsncpy_s(tlf.lfFaceName, _T("MS Shell Dlg"), LF_FACESIZE);
         lf = &tlf;
     } else if (type == fixedFont) {
+        DpiHelper dpiWindow;
+        dpiWindow.Override(AfxGetMainWnd()->GetSafeHwnd());
+
         LOGFONT tlf;
         memset(&tlf, 0, sizeof(LOGFONT));
-        tlf.lfHeight = -MulDiv(10, GetDeviceCaps(pDC->m_hDC, LOGPIXELSY), 72);
+        tlf.lfHeight = -MulDiv(10, dpiWindow.DPIY(), 72);
         tlf.lfQuality = CLEARTYPE_QUALITY;
         tlf.lfWeight = FW_REGULAR;
         wcsncpy_s(tlf.lfFaceName, _T("Consolas"), LF_FACESIZE);
@@ -392,7 +401,10 @@ CSize CMPCThemeUtil::GetTextSize(CString str, HDC hDC, int type) {
     getFontByType(font, pDC, type);
     CFont* pOldFont = pDC->SelectObject(&font);
 
-    CSize cs = pDC->GetTextExtent(str);
+    //CSize cs = pDC->GetTextExtent(str);
+    CRect r = { 0 };
+    pDC->DrawText(str, r, DT_SINGLELINE | DT_CALCRECT);
+    CSize cs = r.Size();
 
     pDC->SelectObject(pOldFont);
 
@@ -409,15 +421,20 @@ CSize CMPCThemeUtil::GetTextSizeDiff(CString str, HDC hDC, int type, CFont* curF
     return cs - curCs;
 }
 
-bool CMPCThemeUtil::haveMetrics = false;
-CMPCThemeUtil::themeMetrics CMPCThemeUtil::_metrics = CMPCThemeUtil::themeMetrics();
-CMPCThemeUtil::themeMetrics& CMPCThemeUtil::GetMetrics() {
-    if (!haveMetrics) {
-        _metrics.ncMetrics.cbSize = sizeof(NONCLIENTMETRICS);
-        ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &CMPCThemeUtil::_metrics.ncMetrics, 0);
-        haveMetrics = true;
+void CMPCThemeUtil::GetMetrics(NONCLIENTMETRICS *m) {
+    m->cbSize = sizeof(NONCLIENTMETRICS);
+    ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), m, 0);
+    DpiHelper dpi, dpiWindow;
+    dpiWindow.Override(AfxGetMainWnd()->GetSafeHwnd());
+
+    //getclientmetrics is ignorant of per window DPI
+    if (dpi.ScaleFactorY() != dpiWindow.ScaleFactorY()) {
+        m->lfCaptionFont.lfHeight = dpiWindow.ScaleSystemToOverrideY(m->lfCaptionFont.lfHeight);
+        m->lfSmCaptionFont.lfHeight = dpiWindow.ScaleSystemToOverrideY(m->lfSmCaptionFont.lfHeight);
+        m->lfMenuFont.lfHeight = dpiWindow.ScaleSystemToOverrideY(m->lfMenuFont.lfHeight);
+        m->lfStatusFont.lfHeight = dpiWindow.ScaleSystemToOverrideY(m->lfStatusFont.lfHeight);
+        m->lfMessageFont.lfHeight = dpiWindow.ScaleSystemToOverrideY(m->lfMessageFont.lfHeight);
     }
-    return CMPCThemeUtil::_metrics;
 }
 
 void CMPCThemeUtil::initMemDC(CDC* pDC, CDC& dcMem, CBitmap& bmMem, CRect rect) {

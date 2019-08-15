@@ -47,6 +47,7 @@ CMPCThemeMenu::~CMPCThemeMenu() {
 void CMPCThemeMenu::initDimensions() {
     if (!hasDimensions) {
         DpiHelper dpi = DpiHelper();
+        dpi.Override(AfxGetMainWnd()->GetSafeHwnd());
 
         subMenuPadding = dpi.ScaleX(20);
         iconSpacing = dpi.ScaleX(22);
@@ -392,7 +393,7 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
 void CMPCThemeMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct) {
     initDimensions();
 
-    HDC hDC = ::GetDC(NULL);
+    HDC hDC = ::GetDC(AfxGetMainWnd()->GetSafeHwnd());
     MenuObject* mo = (MenuObject*)lpMeasureItemStruct->itemData;
 
     if (mo->isSeparator) {

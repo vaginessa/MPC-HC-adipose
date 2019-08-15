@@ -44,15 +44,7 @@ public:
     static CSize GetTextSizeDiff(CString str, HDC hDC, int type, CFont* curFont);
 
 
-    struct themeMetrics {
-        NONCLIENTMETRICS ncMetrics;
-        CSize avgCharSize;
-    };
-
-    static themeMetrics _metrics;
-    static bool haveMetrics;
-    static themeMetrics& GetMetrics();
-    static void clearMetrics() { haveMetrics = false; };
+    static void GetMetrics(NONCLIENTMETRICS *ncMetrics);
     static void initMemDC(CDC* pDC, CDC& dcMem, CBitmap& bmMem, CRect rect);
     static void flushMemDC(CDC* pDC, CDC& dcMem, CRect rect);
     static void DrawBufferedText(CDC* pDC, CString text, CRect rect, UINT format);
