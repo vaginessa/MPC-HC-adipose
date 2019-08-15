@@ -153,8 +153,10 @@ bool CPinInfoWnd::OnApply()
 
 BOOL CPinInfoWnd::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
-    SetDirty(false);
-    return __super::OnWndMsg(message, wParam, lParam, pResult);
+    //we don't need this anymore, as we bypass the CInternalPropertyPageWnd which is what sets it dirty
+    //SetDirty(false); 
+    //we call CWnd implementation because CInternalPropertyPageWnd will set it right back to dirty on a scroll/command message
+    return CWnd::OnWndMsg(message, wParam, lParam, pResult);
 }
 
 BEGIN_MESSAGE_MAP(CPinInfoWnd, CInternalPropertyPageWnd)
