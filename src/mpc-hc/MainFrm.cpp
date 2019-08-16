@@ -977,10 +977,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     UpdateSkypeHandler();
 
-    if (s.bMPCThemeLoaded) {
-        m_popupMenu.fulfillThemeReqs();
-        m_mainPopupMenu.fulfillThemeReqs();
-    }
+    m_popupMenu.fulfillThemeReqs();
+    m_mainPopupMenu.fulfillThemeReqs();
     return 0;
 }
 
@@ -2884,10 +2882,7 @@ void CMainFrame::OnInitMenu(CMenu* pMenu)
             mii.fState = (pSubMenu->GetMenuItemCount()) > 0 ? MF_ENABLED : (MF_DISABLED | MF_GRAYED);
             mii.hSubMenu = *pSubMenu;
             VERIFY(pMenu->SetMenuItemInfo(i, &mii, TRUE));
-            const CAppSettings& s = AfxGetAppSettings();
-            if (s.bMPCThemeLoaded) {
-                pSubMenu->fulfillThemeReqs();
-            }
+            pSubMenu->fulfillThemeReqs();
         }
     }
 }
@@ -2993,10 +2988,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             mii.fState = (pSubMenu->GetMenuItemCount() > 0) ? MF_ENABLED : (MF_DISABLED | MF_GRAYED);
             mii.hSubMenu = *pSubMenu;
             VERIFY(pPopupMenu->SetMenuItemInfo(i, &mii, TRUE));
-            const CAppSettings& s = AfxGetAppSettings();
-            if (s.bMPCThemeLoaded) {
-                pSubMenu->fulfillThemeReqs();
-            }
+            pSubMenu->fulfillThemeReqs();
         }
     }
 
@@ -3069,9 +3061,7 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
             int k = 0;
             CString label = s.m_pnspresets[i].Tokenize(_T(","), k);
             VERIFY(pPopupMenu->InsertMenu(ID_VIEW_RESET, MF_BYCOMMAND, ID_PANNSCAN_PRESETS_START + i, label));
-            if (s.bMPCThemeLoaded) {
-                CMPCThemeMenu::fulfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
-            }
+            CMPCThemeMenu::fulfillThemeReqsItem(pPopupMenu, ID_PANNSCAN_PRESETS_START + i, true);
         }
         //if (j > 0)
         {
@@ -13184,9 +13174,7 @@ void CMainFrame::SetupJumpToSubMenus(CMenu* parentMenu /*= nullptr*/, int iInser
         if (parentMenu && iInsertPos >= 0) {
             if (parentMenu->InsertMenu(iInsertPos + m_nJumpToSubMenusCount, MF_POPUP | MF_BYPOSITION,
                                        (UINT_PTR)(HMENU)subMenu, subMenuName)) {
-                if (s.bMPCThemeLoaded) {
-                    CMPCThemeMenu::fulfillThemeReqsItem(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
-                }
+                CMPCThemeMenu::fulfillThemeReqsItem(parentMenu, iInsertPos + m_nJumpToSubMenusCount);
                 m_nJumpToSubMenusCount++;
             } else {
                 ASSERT(FALSE);
@@ -16732,12 +16720,9 @@ void CMainFrame::UpdateUILanguage()
     //m_hMenuDefault = defaultMenu.Detach();
     m_hMenuDefault = defaultMPCThemeMenu->GetSafeHmenu();
 
-    const CAppSettings& s = AfxGetAppSettings();
-    if (s.bMPCThemeLoaded) {
-        m_popupMenu.fulfillThemeReqs();
-        m_mainPopupMenu.fulfillThemeReqs();
-        defaultMPCThemeMenu->fulfillThemeReqs(true);
-    }
+    m_popupMenu.fulfillThemeReqs();
+    m_mainPopupMenu.fulfillThemeReqs();
+    defaultMPCThemeMenu->fulfillThemeReqs(true);
 
 
     // Reload the dynamic menus

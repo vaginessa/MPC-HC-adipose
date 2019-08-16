@@ -121,10 +121,14 @@ BOOL CMPCThemeMenu::AppendMenu(UINT nFlags, UINT_PTR nIDNewItem, LPCTSTR lpszNew
 
 void CMPCThemeMenu::fulfillThemeReqs(bool isMenubar) {
     if (AfxGetAppSettings().bMPCThemeLoaded) {
+        MENUINFO oldInfo = { sizeof(MENUINFO) };
+        oldInfo.fMask = MIM_STYLE;
+        GetMenuInfo(&oldInfo);
+        
         MENUINFO MenuInfo = { 0 };
         MenuInfo.cbSize = sizeof(MENUINFO);
         MenuInfo.fMask = MIM_BACKGROUND | MIM_STYLE | MIM_APPLYTOSUBMENUS;
-        MenuInfo.dwStyle = MNS_AUTODISMISS;
+        MenuInfo.dwStyle = oldInfo.dwStyle;
         MenuInfo.hbrBack = ::CreateSolidBrush(CMPCTheme::MenuBGColor);
         SetMenuInfo(&MenuInfo);
 
