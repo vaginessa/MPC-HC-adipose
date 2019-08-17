@@ -29,7 +29,9 @@ void CMPCThemeRadioOrCheck::PreSubclassWindow() {
     ASSERT(buttonType != unknownType);
 
     buttonStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
-    CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::DialogFont);
+    if (nullptr == font.m_hObject) {
+        CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::DialogFont);
+    }
     SetFont(&font); //DSUtil checks metrics and resizes.  if our font is a bit different, things can look funny
     CButton::PreSubclassWindow();
 }

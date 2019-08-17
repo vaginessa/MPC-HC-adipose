@@ -96,7 +96,9 @@ void CMPCThemeListBox::PreSubclassWindow() {
         } else {
             SetWindowTheme(GetSafeHwnd(), L"", NULL);
         }
-        themedToolTip.Create(this, TTS_ALWAYSTIP);
+        if (nullptr == themedToolTip.m_hWnd) {
+            themedToolTip.Create(this, TTS_ALWAYSTIP);
+        }
         themedToolTip.enableFlickerHelper();
         setIntegralHeight();
     }
