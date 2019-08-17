@@ -19,10 +19,6 @@ CMPCThemeTreeCtrl::~CMPCThemeTreeCtrl() {
     }
 }
 
-void CMPCThemeTreeCtrl::PreSubclassWindow() {
-    SetLineColor(CMPCTheme::TreeCtrlLineColor);
-}
-
 BOOL CMPCThemeTreeCtrl::PreCreateWindow(CREATESTRUCT& cs) {
     cs.dwExStyle |= WS_EX_CLIENTEDGE;
     return __super::PreCreateWindow(cs);
@@ -39,6 +35,14 @@ void CMPCThemeTreeCtrl::fulfillThemeReqs() {
         SetExtendedStyle(TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER); //necessary to prevent significant flicker
         if (font.m_hObject == nullptr) CMPCThemeUtil::getFontByType(font, GetWindowDC(), CMPCThemeUtil::MenuFont);
         SetFont(&font);
+
+        SetLineColor(CMPCTheme::TreeCtrlLineColor);
+        if (nullptr == tvsTooltip.m_hWnd) {
+            CToolTipCtrl* t = GetToolTips();
+            if (nullptr != t) {
+                tvsTooltip.SubclassWindow(t->m_hWnd);
+            }
+        }
     } else {
         //adipose--enabling this cuts down on a very minor flicker in classic mode;
         //the duplicate line above is necessary due to a non-default bg.
@@ -53,11 +57,57 @@ BEGIN_MESSAGE_MAP(CMPCThemeTreeCtrl, CTreeCtrl)
     ON_WM_ERASEBKGND()
     ON_WM_DRAWITEM()
     ON_WM_NCPAINT()
+    ON_WM_MOUSEMOVE()
     ON_WM_MOUSEWHEEL()
     ON_WM_VSCROLL()
     ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 IMPLEMENT_DYNAMIC(CMPCThemeTreeCtrl, CTreeCtrl)
+
+BOOL CMPCThemeTreeCtrl::PreTranslateMessage(MSG* pMsg) {
+    if (AfxGetAppSettings().bMPCThemeLoaded) {
+        if (!IsWindow(themedToolTip.m_hWnd)) {
+            themedToolTip.Create(this, TTS_ALWAYSTIP);
+            themedToolTip.enableFlickerHelper();
+        }
+        if (IsWindow(themedToolTip.m_hWnd)) {
+            themedToolTip.RelayEvent(pMsg);
+        }
+    }
+    return __super::PreTranslateMessage(pMsg);
+}
+
+void CMPCThemeTreeCtrl::updateToolTip(CPoint point) {
+    if (AfxGetAppSettings().bMPCThemeLoaded && nullptr != themedToolTip) {
+        TOOLINFO ti = { 0 };
+        UINT_PTR tid = OnToolHitTest(point, &ti);
+        //OnToolHitTest returns -1 on failure but doesn't update uId to match
+
+        if (tid == -1 || themedToolTipCid != ti.uId) { //if no tooltip, or id has changed, remove old tool
+            if (themedToolTip.GetToolCount() > 0) {
+                themedToolTip.DelTool(this);
+                themedToolTip.Activate(FALSE);
+            }
+            themedToolTipCid = (UINT_PTR)-1;
+        }
+
+        if (tid != -1 && themedToolTipCid != ti.uId && 0 != ti.uId) {
+
+            themedToolTipCid = ti.uId;
+
+            CRect cr;
+            GetClientRect(&cr); //we reset the tooltip every time we move anyway, so this rect is adequate
+
+            themedToolTip.AddTool(this, LPSTR_TEXTCALLBACK, &cr, ti.uId);
+            themedToolTip.Activate(TRUE);
+        }
+    }
+}
+
+void CMPCThemeTreeCtrl::OnMouseMove(UINT nFlags, CPoint point) {
+    __super::OnMouseMove(nFlags, point);
+    updateToolTip(point);
+}
 
 void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
     LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
@@ -135,12 +185,14 @@ void CMPCThemeTreeCtrl::OnNcPaint() {
     }
 }
 
-//no end scroll notification for treectrl, so handle mousewheel, v an h scrolls :-/
+//no end scroll notification for treectrl, so handle mousewheel, v and h scrolls :-/
 BOOL CMPCThemeTreeCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     BOOL ret = __super::OnMouseWheel(nFlags, zDelta, pt);
     if (nullptr != themedSBHelper) {
         themedSBHelper->updateScrollInfo();
     }
+    ScreenToClient(&pt);
+    updateToolTip(pt);
     return ret;
 }
 
