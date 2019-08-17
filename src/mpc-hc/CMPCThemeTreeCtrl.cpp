@@ -73,7 +73,8 @@ void CMPCThemeTreeCtrl::OnNMCustomdraw(NMHDR *pNMHDR, LRESULT *pResult) {
             *pResult = CDRF_NOTIFYITEMDRAW;
             CDC dc;
             dc.Attach(pNMCD->hdc);
-            doEraseBkgnd(&dc);
+            dc.FillSolidRect(&pNMCD->rc, CMPCTheme::ContentBGColor);
+            //doEraseBkgnd(&dc);
             dc.Detach();
             break;
         }
