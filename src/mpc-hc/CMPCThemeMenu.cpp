@@ -352,10 +352,10 @@ void CMPCThemeMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) {
             t.Remove(TEXT('&'));
             t.Replace(TEXT("{{amp}}"), TEXT("&&"));
 
-            pDC->DrawText(t, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+            pDC->DrawText(t, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE | DT_EXPANDTABS);
         }
         else {
-            pDC->DrawText(menuObject->m_strCaption, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE);
+            pDC->DrawText(menuObject->m_strCaption, rectText, DT_VCENTER | captionAlign | DT_SINGLELINE | DT_EXPANDTABS);
         }
 
         if (!menuObject->isMenubar) {
