@@ -749,9 +749,9 @@ BEGIN
     CONTROL         "Internal:",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,5,207,59,8
     CONTROL         "External:",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,5,224,58,8
     CONTROL         "",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS | UDS_HORZ,64,205,36,13
-    RTEXT           "",IDC_AUTHOR,100,207,190,8
     EDITTEXT        IDC_LOGOFILENAME,64,222,173,13,ES_AUTOHSCROLL | ES_READONLY
     PUSHBUTTON      "Browse...",IDC_BUTTON2,241,222,50,14
+    EDITTEXT        IDC_AUTHOR,103,205,187,13,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
 END
 
 IDD_PPAGEOUTPUT DIALOGEX 0, 0, 296, 241
@@ -1293,6 +1293,10 @@ BEGIN
     BEGIN
         VERTGUIDE, 10
         VERTGUIDE, 119
+    END
+
+    IDD_PPAGEINTERNALFILTERS, DIALOG
+    BEGIN
     END
 
     IDD_PPAGELOGO, DIALOG
@@ -1854,7 +1858,7 @@ BEGIN
             MENUITEM "Captu&re",                    ID_VIEW_CAPTURE
             MENUITEM "Na&vigation",                 ID_VIEW_NAVIGATION
             MENUITEM "&Debug Shaders",              ID_VIEW_DEBUGSHADERS
-	        MENUITEM "Dark Theme (restart)",        ID_VIEW_MPCTHEME
+            MENUITEM "Dark Theme (restart)",        ID_VIEW_MPCTHEME
             POPUP "&Presets..."
             BEGIN
                 MENUITEM "&Minimal",                    ID_VIEW_PRESETS_MINIMAL
@@ -1981,7 +1985,7 @@ BEGIN
             MENUITEM "Captu&re",                    ID_VIEW_CAPTURE
             MENUITEM "Na&vigation",                 ID_VIEW_NAVIGATION
             MENUITEM "&Debug Shaders",              ID_VIEW_DEBUGSHADERS
-	        MENUITEM "Dark Theme (restart)",        ID_VIEW_MPCTHEME
+            MENUITEM "Dark Theme (restart)",        ID_VIEW_MPCTHEME
             POPUP "&Presets..."
             BEGIN
                 MENUITEM "&Minimal",                    ID_VIEW_PRESETS_MINIMAL
@@ -2324,6 +2328,11 @@ BEGIN
 END
 
 IDD_PPAGEEXTERNALFILTERS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_PPAGELOGO AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
